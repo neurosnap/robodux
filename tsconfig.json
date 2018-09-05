@@ -1,0 +1,24 @@
+{
+  "baseUrl": "types",
+  "typeRoots": ["types"],
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "lib": ["es2015", "es2017", "dom"],
+    "declaration": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./src/index.ts",
+  ]
+}
