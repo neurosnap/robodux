@@ -22,21 +22,25 @@ The reason why I decided to create a separate library was primarily for:
 import robodux from 'robodux';
 import { createStore, combineReducers } from 'redux';
 
-const counter = robodux({
+const counter = robodux<number>({
   slice: 'counter',
   initialState: 0,
   actions: {
-    increment: (state) => state + 1,
-    decrement: (state) => state - 1,
-    multiply: (state, payload) => state * payload,
+    increment: (state: number) => state + 1,
+    decrement: (state: number) => state - 1,
+    multiply: (state: number, payload: number) => state * payload,
   },
 });
 
-const user = robodux({
+interface User {
+  name: string;
+}
+
+const user = robodux<User>({
   slice: 'user',
   initialState: { name: '' },
   actions: {
-    setUserName: (state, payload) => {
+    setUserName: (state: User, payload: string) => {
       state.name = payload; // mutate the state all you want with immer
     },
   }
