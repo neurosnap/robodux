@@ -8,24 +8,23 @@
   "author": "Eric Bower",
   "scripts": {
     "build": "tsc",
-    "test": "tsc --noEmit && yarn tape",
+    "test": "tsc --noEmit && jest",
     "prepublish": "yarn build",
-    "tape": "tape -r ts-node/register ./test.ts | tap-dot",
     "precommit": "lint-staged",
-    "prettier": "prettier --write {src,test}/*.{js,ts}"
+    "prettier": "prettier --write {src}/*.ts"
   },
   "devDependencies": {
     "@types/node": "^10.9.3",
-    "@types/tape": "^4.2.32",
     "husky": "^0.14.3",
+    "jest": "^23.5.0",
     "lint-staged": "^7.2.0",
     "prettier": "1.13.6",
-    "tap-dot": "^2.0.0",
-    "tape": "^4.9.1",
-    "ts-node": "^7.0.1",
+    "ts-jest": "^23.1.4",
     "typescript": "^3.1.0-dev.20180831"
   },
-  "dependencies": {},
+  "dependencies": {
+    "immer": "^1.6.0"
+  },
   "lint-staged": {
     "*.{js}": [
       "prettier --write",
