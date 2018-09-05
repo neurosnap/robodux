@@ -22,7 +22,7 @@ The reason why I decided to create a separate library was primarily for:
 import robodux from 'robodux';
 import { createStore, combineReducers } from 'redux';
 
-const { actions, reducer } = robodux({
+const counter = robodux({
   slice: 'counter',
   initialState: 0,
   actions: {
@@ -32,16 +32,31 @@ const { actions, reducer } = robodux({
   },
 });
 
+const user = robodux({
+  slice: 'user',
+  initialState: { name: '' },
+  actions: {
+    setUserName: (state, payload) => {
+      state.name = payload;
+    },
+  }
+})
+
 const reducer = combineReducers({
   counter: counter.reducer,
+  user: user.reducer,
 });
 
 const store = createStore(reducer);
 
-store.dispatch(actions.increment());
-// -> { counter: 1 }
-store.dispatch(actions.increment());
-// -> { counter: 1 }
-store.dispatch(actions.multiply(3));
-// -> { counter: 6 }
+store.dispatch(counter.actions.increment());
+// -> { counter: 1, user: {} }
+store.dispatch(counter.actions.increment());
+// -> { counter: 1, user: {} }
+store.dispatch(counter.actions.multiply(3));
+// -> { counter: 6, user: {} }
+console.log(`${counter.actions.decrement}`);
+// -> counter/decrement
+store.dispatch(user.actions.setUserName('eric'));
+// -> { counter: 6, user: { name: 'eric' } }
 ```
