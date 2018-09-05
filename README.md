@@ -37,7 +37,7 @@ const user = robodux({
   initialState: { name: '' },
   actions: {
     setUserName: (state, payload) => {
-      state.name = payload;
+      state.name = payload; // mutate the state all you want with immer
     },
   }
 })
