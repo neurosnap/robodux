@@ -6,6 +6,10 @@
   "license": "MIT",
   "description": "reduce redux boilerplate",
   "author": "Eric Bower",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neurosnap/robodux.git"
+  },
   "scripts": {
     "build": "tsc",
     "test": "tsc --noEmit && jest",
