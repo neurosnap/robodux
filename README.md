@@ -1,10 +1,23 @@
 # robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
+One of the biggest complaints developers have with redux is the amount of
+boilerplate and new concepts they have to learn to use it.  `robodux` attempts
+to simplify the boilerplate by automatically configuring actions, reducers, and
+selectors.  The way it works is `robodux` will take a list of functions that
+correspond to how state should be updated and then create action types, action
+creators, and basic selectors for the developer to use.  This library tries to
+not make too many assumptions about how developers use redux.  It does not
+do anything magical, simply automates the repetitive tasks with redux.
+
+Also, all reducers created by `robodux` does not send the state object to reducers,
+but a draft of the state that can be mutated directly.
+
 ## Features
 
 * Automatically creates actions, reducer, and selector based on `slice`
 * Reducers leverage `immer` that makes updating state easy
 * When stringifying action creators they return the action type
+* Helper functions for manually creating actions and reducers
 
 ## Why not X?
 
@@ -24,7 +37,7 @@ import robodux from 'robodux';
 import { createStore, combineReducers } from 'redux';
 
 const counter = robodux<number>({
-  slice: 'counter',
+  slice: 'counter', // slice is optional could be blank ''
   initialState: 0,
   actions: {
     increment: (state: number) => state + 1,
@@ -38,7 +51,7 @@ interface User {
 }
 
 const user = robodux<User>({
-  slice: 'user',
+  slice: 'user', // slice is optional could be blank ''
   initialState: { name: '' },
   actions: {
     setUserName: (state: User, payload: string) => {
