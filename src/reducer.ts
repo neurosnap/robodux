@@ -6,13 +6,18 @@ interface ActionsMap<S> {
   [key: string]: (state: S, action: Action<any>) => S | void;
 }
 
-export default function createReducer<S>(
-  initialState: S,
-  actionsMap: ActionsMap<S>,
-) {
+interface ICreateReducer<S> {
+  initialState: S;
+  actions: ActionsMap<S>;
+}
+
+export default function createReducer<S>({
+  initialState,
+  actions,
+}: ICreateReducer<S>) {
   return (state: S = initialState, action: Action<any>) => {
     return createNextState(<any>state, (draft: S) => {
-      const caseReducer = actionsMap[action.type];
+      const caseReducer = actions[action.type];
 
       if (caseReducer) {
         return caseReducer(draft, action.payload);

@@ -13,8 +13,9 @@ The reason why I decided to create a separate library was primarily for:
 
 * typescript support
 * creating reducers with `immer`
-* stringifying actions returns action types for `redux-saga` support
 * removing dependency on `lodash`
+* create action helper
+* create reducer helper
 
 ## Usage
 
@@ -63,4 +64,49 @@ console.log(`${counter.actions.decrement}`);
 // -> counter/decrement
 store.dispatch(user.actions.setUserName('eric'));
 // -> { counter: 6, user: { name: 'eric' } }
+```
+
+## API
+
+### robodux
+
+This is the default export for robodux and will automatically create actions, reducer, and selectors
+for you.
+
+### createAction
+
+This is the helper function that `robodux` uses to create an action.  It is also useful to use
+when not using robodux because when stringifying the function it will return the action type.
+This allows developers to not have to worry about passing around action types, instead they simply
+pass around action creators for reducers, sagas, etc.
+
+```js
+import { createAction } from 'robodux';
+
+const increment = createAction('INCREMENT');
+console.log(increment);
+// -> 'INCREMENT'
+console.log(increment(2));
+// { type: 'INCREMENT', payload: 2 };
+```
+
+### createReducer
+
+This is the helper function that `robodux` uses to create a reducer.  This function maps action types
+to reducer functions.  It will return a reducer.
+
+```js
+import { createReducer } from 'robodux';
+
+const counter = createReducer({
+  initialState: 0,
+  actions: {
+    INCREMENT: (state) => state + 1,
+    DECREMENT: (state) => state - 1,
+    MULTIPLY: (state, payload) => state * payload,
+  }
+});
+
+console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
+// -> 10
 ```

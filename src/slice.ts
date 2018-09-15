@@ -30,7 +30,7 @@ export default function create<State>({
     {},
   );
 
-  const reducer = createReducer(initialState, reducerMap);
+  const reducer = createReducer({ initialState, actions: reducerMap });
 
   const actionMap: ActionMap = actionKeys.reduce(
     (map: ActionMap, action: string) => {
