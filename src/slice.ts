@@ -1,6 +1,7 @@
 import createAction from './action';
 import createReducer from './reducer';
 import { ActionMap } from './types';
+import { createSelector, createSelectorName } from './selector';
 
 type Reduce<State> = (state: State, payload?: any) => State;
 interface ReduceMap<State> {
@@ -41,9 +42,14 @@ export default function create<State>({
     {},
   );
 
+  const selectors = {
+    [createSelectorName(slice)]: createSelector<State>(slice),
+  };
+
   return {
     actions: actionMap,
     reducer,
     slice,
+    selectors,
   };
 }

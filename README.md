@@ -2,7 +2,7 @@
 
 ## Features
 
-* Automatically creates actions and reducer based on `slice`
+* Automatically creates actions, reducer, and selector based on `slice`
 * Reducers leverage `immer` that makes updating state easy
 * When stringifying action creators they return the action type
 
@@ -64,6 +64,11 @@ console.log(`${counter.actions.decrement}`);
 // -> counter/decrement
 store.dispatch(user.actions.setUserName('eric'));
 // -> { counter: 6, user: { name: 'eric' } }
+const state = store.getState();
+console.log(user.selectors.getUser(state));
+// -> { name: 'eric' }
+console.log(counter.selectors.getCounter(state));
+// -> 6
 ```
 
 ## API
