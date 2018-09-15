@@ -1,6 +1,8 @@
-export function createSelector<State extends { [key: string]: any }>(
-  slice: string,
-) {
+interface Hash {
+  [key: string]: any;
+}
+
+export function createSelector<State extends Hash>(slice: string) {
   if (!slice) {
     return (state: State) => state;
   }
@@ -22,5 +24,6 @@ function camelize(str: string) {
     .replace(/(?:^\w|[A-Z]|\b\w)/g, (letter, index) => {
       return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
     })
-    .replace(/\s+/g, '');
+    .replace(/\s+/g, '')
+    .replace(/[-_]/g, '');
 }
