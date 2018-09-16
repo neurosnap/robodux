@@ -21,12 +21,12 @@ but a draft of the state that can be mutated directly.
 
 ## Why not X?
 
-This library was heavily inspired by [autodux](https://github.com/ericelliott/autodux).
+This library was heavily inspired by [autodux](https://github.com/ericelliott/autodux) and [redux-starter-kit](https://github.com/markerikson/redux-starter-kit).
 The reason why I decided to create a separate library was primarily for:
 
 * typescript support
 * creating reducers with `immer`
-* removing dependency on `lodash`
+* no external dependencies besides `immer`
 * create action helper
 * create reducer helper
 
