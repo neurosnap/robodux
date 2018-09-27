@@ -9,15 +9,16 @@ creators, and basic selectors for the developer to use.  This library tries to
 not make too many assumptions about how developers use redux.  It does not
 do anything magical, simply automates the repetitive tasks with redux.
 
-Also, all reducers created by `robodux` does not send the state object to reducers,
-but a draft of the state that can be mutated directly.
+Under the hood every reducer created by `robodux` leverages [immer](https://github.com/mweststrate/immer) to update the store,
+which means reducers are allowed to mutate the state directly.
 
 ## Features
 
 * Automatically creates actions, reducer, and selector based on `slice`
-* Reducers leverage `immer` that makes updating state easy
+* Reducers leverage `immer` which makes updating state easy
 * When stringifying action creators they return the action type
 * Helper functions for manually creating actions and reducers
+* Reducers do no receive entire action object, only payload
 
 ## Why not X?
 
