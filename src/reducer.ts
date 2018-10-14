@@ -15,7 +15,7 @@ export default function createReducer<S>({
   initialState,
   actions,
 }: ICreateReducer<S>) {
-  return (state: S = initialState, action: Action<any>) => {
+  return (state: S = initialState, action: Action<any>): S => {
     return createNextState(<any>state, (draft: S) => {
       const caseReducer = actions[action.type];
 
