@@ -2,13 +2,12 @@ interface Hash {
   [key: string]: any;
 }
 
-export function createSelector<State extends Hash>() {
-  return (state: State) => state;
-}
-
-export function createSelectorSlice<State extends Hash, SliceState>(
+export function createSelector<State extends Hash, SliceState>(
   slice: string,
-): (state: State) => SliceState {
+): (state: State) => SliceState | State {
+  if (!slice) {
+    return (state: State) => state;
+  }
   return (state: State) => state[slice];
 }
 
