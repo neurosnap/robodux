@@ -1,49 +1,52 @@
 import createAction from './action';
 import createReducer from './reducer';
-import { ActionMap } from './types';
 import { createSelector, createSelectorName } from './selector';
 
 type Reduce<State> = (state: State, payload?: any) => State;
 interface ReduceMap<State> {
   [key: string]: Reduce<State>;
 }
-interface ICreate<State> {
+interface ICreate<State, Actions> {
   slice?: string;
-  actions: { [key: string]: Reduce<State> };
+  actions: Record<keyof Actions, Reduce<State>>;
   initialState: State;
 }
 
 const getType = (slice: string, action: string) =>
   slice ? `${slice}/${action}` : action;
 
-export default function create<State>({
+export default function create<SliceState, Actions = any, State = any>({
   slice = '',
-  actions = {},
+  actions,
   initialState,
-}: ICreate<State>) {
-  const actionKeys = Object.keys(actions);
+}: ICreate<SliceState, Actions>) {
+  const actionKeys = Object.keys(actions) as (keyof Actions)[];
 
-  const reducerMap: ReduceMap<State> = actionKeys.reduce(
-    (map: ReduceMap<State>, action: string) => {
-      map[getType(slice, action)] = actions[action];
+  const reducerMap = actionKeys.reduce<ReduceMap<SliceState>>(
+    (map: ReduceMap<SliceState>, action) => {
+      map[getType(slice, action as string)] = actions[action];
       return map;
     },
     {},
   );
 
-  const reducer = createReducer({ initialState, actions: reducerMap });
+  const reducer = createReducer<SliceState>({
+    initialState,
+    actions: reducerMap,
+  });
 
-  const actionMap: ActionMap = actionKeys.reduce(
-    (map: ActionMap, action: string) => {
-      const type = getType(slice, action);
-      map[action] = createAction(type);
+  const actionMap = actionKeys.reduce<Actions>(
+    (map: Actions, action) => {
+      const type = getType(slice, action as string);
+      map[action] = createAction(type) as any;
       return map;
     },
-    {},
+    {} as any,
   );
 
+  const selectorName = createSelectorName(slice);
   const selectors = {
-    [createSelectorName(slice)]: createSelector<State>(slice),
+    [selectorName]: createSelector<State, SliceState>(slice),
   };
 
   return {
