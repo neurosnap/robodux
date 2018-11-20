@@ -2,7 +2,7 @@ import createAction from './action';
 import createReducer from './reducer';
 import { createSelector, createSelectorName } from './selector';
 
-type Reduce<State> = (state: State, payload?: any) => State;
+type Reduce<State> = (state: State, payload?: any) => State | undefined;
 interface ReduceMap<State> {
   [key: string]: Reduce<State>;
 }
