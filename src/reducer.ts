@@ -9,13 +9,15 @@ interface ActionsMap<S> {
 interface ICreateReducer<S> {
   initialState: S;
   actions: ActionsMap<S>;
+  slice?: string;
 }
 
 export default function createReducer<S>({
   initialState,
   actions,
+  slice = '',
 }: ICreateReducer<S>) {
-  return (state: S = initialState, action: Action<any>): S => {
+  const reducer = (state: S = initialState, action: Action<any>): S => {
     return createNextState(<any>state, (draft: S) => {
       const caseReducer = actions[action.type];
 
@@ -26,4 +28,7 @@ export default function createReducer<S>({
       return draft;
     });
   };
+
+  reducer.toString = () => slice;
+  return reducer;
 }

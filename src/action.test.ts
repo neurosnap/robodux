@@ -1,4 +1,4 @@
-import createAction, { getType } from './action';
+import createAction, { getActionType } from './action';
 
 describe('createAction', () => {
   it('should create an action', () => {
@@ -17,9 +17,9 @@ describe('createAction', () => {
   });
 });
 
-describe('getType', () => {
+describe('getActionType', () => {
   it('should return the action type', () => {
     const action = createAction('A_TYPE');
-    expect(getType(action)).toEqual('A_TYPE');
+    expect(getActionType(action)).toEqual('A_TYPE');
   });
 });

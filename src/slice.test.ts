@@ -1,8 +1,14 @@
 import createSlice from './slice';
+import { Action } from './types';
 
 describe('createSlice', () => {
   describe('when slice is empty', () => {
-    const { actions, reducer, selectors } = createSlice({
+    type State = number;
+    interface Actions {
+      increment: () => Action;
+      multiply: (payload: number) => Action<number>;
+    }
+    const { actions, reducer, selectors } = createSlice<State, Actions>({
       actions: {
         increment: (state) => state + 1,
         multiply: (state, payload) => state * payload,
@@ -98,7 +104,7 @@ describe('createSlice', () => {
     });
 
     it('should set the username', () => {
-      expect(reducer({}, actions.setUserName('eric'))).toEqual({
+      expect(reducer({ user: 'hi' }, actions.setUserName('eric'))).toEqual({
         user: 'eric',
       });
     });
