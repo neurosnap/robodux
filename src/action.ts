@@ -1,7 +1,7 @@
-import { Action, ActionType } from './types';
+import { ActionType } from './types';
 
-export default function creator<P>(type: ActionType) {
-  const action = (payload?: P): Action<P> => ({
+export default function creator<P = any>(type: ActionType) {
+  const action = (payload: P) => ({
     type,
     payload,
   });
@@ -10,4 +10,4 @@ export default function creator<P>(type: ActionType) {
   return action;
 }
 
-export const getType = (action: any) => `${action}`;
+export const getActionType = (action: any) => `${action}`;
