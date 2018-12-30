@@ -6,10 +6,10 @@ interface State {
 }
 
 interface Actions {
-  addTest: (p: State) => Action<State>;
-  setTest: (p: State) => Action<State>;
-  removeTest: (p: string[]) => Action<string[]>;
-  resetTest: () => Action;
+  addTest: State;
+  setTest: State;
+  removeTest: string[];
+  resetTest: null;
 }
 
 describe('mapSlice', () => {

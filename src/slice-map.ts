@@ -42,6 +42,6 @@ export default function mapSlice<S, M>({ slice }: IMapSlice<S>) {
       [`set${cap(slice)}`]: set<S>(),
       [`remove${cap(slice)}`]: remove<S>(),
       [`reset${cap(slice)}`]: () => initialState,
-    },
+    } as any,
   });
 }

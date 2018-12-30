@@ -84,11 +84,11 @@ const reducer = combineReducers({
 const store = createStore(reducer);
 
 store.dispatch(counter.actions.increment());
-// -> { counter: 1, user: {} }
+// -> { counter: 1, user: { name: '' } }
 store.dispatch(counter.actions.increment());
-// -> { counter: 1, user: {} }
+// -> { counter: 2, user: { name: '' } }
 store.dispatch(counter.actions.multiply(3));
-// -> { counter: 6, user: {} }
+// -> { counter: 6, user: { name: '' } }
 console.log(`${counter.actions.decrement}`);
 // -> counter/decrement
 store.dispatch(user.actions.setUserName('eric'));
@@ -108,7 +108,7 @@ console.log(counter.selectors.getCounter(state));
 slice passed to the state, then this will assume that this is the entire state shape.
 
 `Actions` helps improve autocompelete and typing for the `actions` object returned from `robodux`.
-Supply an interface where they keys are the action names and the values are the functions that return actions.
+Supply an interface where they keys are the action names and the values are the payload types, which should be null if the action takes no payload.
 
 `State` is the entire state shape for when a slice is used with `robodux`.  This helps type the selectors we
 return which requires the entire state as the parameter and not simply the slice state.
@@ -128,8 +128,8 @@ interface State {
 }
 
 interface Actions {
-  set: (payload: SliceState) => Action;
-  reset: () => Action;
+  set: SliceState;
+  reset: null;
 }
 
 const defaultState = {
@@ -146,9 +146,10 @@ const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
   initialState: defaultState,
 });
 
-const val = selectors.getHi({ hi: defaultState, other: true }); // assumes param is State
-actions.set({ test: 'ok', wow: 0 }); // autocomplete and type helping for payload
-actions.reset();
+const val = selectors.getHi({ hi: defaultState, other: true }); // typechecks param as State
+actions.set({ test: 'ok', wow: 0 }); // autocomplete and type checking for payload, typeerror if called without payload
+actions.reset(); // typechecks to ensure action is called without params
+
 ```
 
 ## Slice Helpers
@@ -234,6 +235,11 @@ console.log(increment);
 // -> 'INCREMENT'
 console.log(increment(2));
 // { type: 'INCREMENT', payload: 2 };
+const storeDetails = createAction('STORE_DETAILS');
+console.log(storeDetails);
+// -> 'STORE_DETAILS'
+console.log(storeDetails({name: 'John', surname: 'Doe'}));
+// { type: 'INCREMENT', payload: {name: 'John', surname: 'Doe'} };
 ```
 
 ### createReducer
