@@ -63,7 +63,7 @@ describe('createSlice', () => {
     const { actions, reducer, selectors } = createSlice({
       actions: {
         increment: (state) => state + 1,
-        multiply: (state: number, payload: number) => state * payload,
+        multiply: (state, payload) => state * payload,
       },
       initialState: 0,
       slice: 'cool',
