@@ -63,7 +63,6 @@ describe('createSlice', () => {
     const { actions, reducer, selectors } = createSlice({
       actions: {
         increment: (state) => state + 1,
-        multiply: (state, payload) => state * payload,
       },
       initialState: 0,
       slice: 'cool',
@@ -72,9 +71,6 @@ describe('createSlice', () => {
     it('should create increment action', () => {
       expect(actions.hasOwnProperty('increment')).toBe(true);
     });
-    it('should create multiply action', () => {
-      expect(actions.hasOwnProperty('multiply')).toBe(true);
-    });
 
     it('should have the correct action for increment', () => {
       expect(actions.increment()).toEqual({
@@ -82,18 +78,9 @@ describe('createSlice', () => {
         payload: undefined,
       });
     });
-    it('should have the correct action for multiply', () => {
-      expect(actions.multiply(5)).toEqual({
-        type: 'cool/multiply',
-        payload: 5,
-      });
-    });
 
     it('should return the correct value from reducer', () => {
       expect(reducer(undefined, actions.increment())).toEqual(1);
-    });
-    it('should return the correct value from reducer when multiplying', () => {
-      expect(reducer(5, actions.multiply(5))).toEqual(25);
     });
 
     it('should create selector with correct name', () => {

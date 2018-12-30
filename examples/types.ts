@@ -1,20 +1,19 @@
 import robodux from '../src/slice';
-import { combineReducers, createStore, applyMiddleware, Dispatch } from 'redux';
-import thunk from 'redux-thunk';
+import { Action, combineReducers, createStore } from 'redux';
 
 interface SliceState {
   test: string;
   wow: number;
 }
 
-interface IState {
+interface State {
   hi: SliceState;
-  auth: ISliceState;
+  other: boolean;
 }
 
 type Actions = {
-  set: SliceState;
-  reset: null;
+  set: (p: SliceState) => Action;
+  reset: () => Action;
 };
 
 const defaultState = {
@@ -22,21 +21,21 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
+const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
   slice: 'hi',
   actions: {
     set: (state, payload) => payload,
-    reset: (state) => defaultState,
+    reset: () => defaultState,
   },
   initialState: defaultState,
 });
 
-const val = selectors.getHi({ hi: defaultState, auth: {} } as IState);
+const val = selectors.getHi({ hi: defaultState, other: true });
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
 
-console.log('\nHi selector: ',val,'\nHi reducer', red);
+console.log(val, red);
 
 interface ISliceState {
   idToken: string;
@@ -46,10 +45,14 @@ interface ISliceState {
 }
 
 interface AuthActions {
-  authSuccess: { idToken: string; userId: string };
-  authStart: null;
-  authFail: Error;
-  authLogout: null;
+  authSuccess: (payload: { idToken: string; userId: string }) => Action;
+  authStart: () => Action;
+  authFail: (error: Error) => Action;
+  authLogout: () => Action;
+}
+
+interface IState {
+  auth: ISliceState;
 }
 
 const initialState: ISliceState = {
@@ -74,15 +77,12 @@ const auth = robodux<ISliceState, AuthActions, IState>({
       state.authenticating = true;
     },
     authSuccess: (state, payload) => {
-      state.authenticating = false;
       state.idToken = payload.idToken;
       state.userId = payload.userId;
     },
   },
   initialState,
 });
-
-// You can destructure and export the reducer, action creators and selectors
 export const {
   reducer: authReducer,
   slice: authSlice,
@@ -90,21 +90,14 @@ export const {
   selectors: { getAuth },
 } = auth;
 
-const rootReducer = combineReducers<IState>({
+const rootReducer = combineReducers({
   hi: reducer,
   auth: authReducer,
 });
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(rootReducer);
 
-const thunkAuthLogout = () => (dispatch: Dispatch, getState: () => IState) => {
-  setTimeout(() => {
-    dispatch(authLogout());
-    console.log("\n\nThunk!!!\n\n You've been logged out!");
-  }, 15000);
-};
-
-console.log('\n\n[auth object]\n', auth, '\n\n');
+console.log('[auth object]', auth);
 /* 
 [auth object]
  { 
@@ -119,110 +112,62 @@ console.log('\n\n[auth object]\n', auth, '\n\n');
   selectors: { getAuth: [Function] }
  }
  */
-console.log('[authLogout action creator]\n', authLogout(), '\n');
+console.log(authLogout());
+// [authLogout action creator]
 /* 
-[authLogout action creator]
 { type: 'auth/authLogout', payload: undefined }
 */
-
 console.log(
-  '[authSuccess actionCreator]\n',
-  authSuccess({ idToken: 'really Long Token', userId: "It's Me" }),
-  '\n',
+  authSuccess({ idToken: 'really Long Token', userId: 'Its Me' }),
 );
 /* 
 [authSuccess actionCreator] 
 { 
   type: 'auth/authSuccess',
-  payload: { 
-    idToken: 'really Long Token',
-    userId: 'It's Me'
-    } 
+  payload: { idToken: 'really Long Token', userId: 'Its Me' } 
 } 
   */
-
-console.log(
-  '\n[authStart action dispatched]\n',
-  'Action: ',
-  store.dispatch(authStart()),
-  '\nNew Auth State: ',
-  getAuth(store.getState()),
-  '\n',
-);
+console.log(authStart());
+// [authStart action creator]
 /* 
-   [authStart action dispatched]
-
-   Action: { type: 'auth/authStart', payload: undefined }
-   
-   New Auth State: { 
-     idToken: '',
-     userId: '',
-     authenticating: true, <- modified by authStart action
-     error: null 
-    }
-    */
-
-console.log(
-  '\n[start: authSuccess action dispatched]\n',
-  'Action: ',
-  store.dispatch(
-    authSuccess({ idToken: 'really Long Token', userId: 'Its Me' }),
-  ),
-  '\nNew Auth State: ',
-  getAuth(store.getState()),
-  '\n[stop: authSuccess action dispatched]\n',
-  "\n*** You've logged in successfully!***\n",
-);
-
-/* 
-[start: authSuccess action dispatched]
- Action:  { 
-  type: 'auth/authSuccess',
-  payload: {
-    idToken: 'really Long Token',
-    userId: 'Its Me'
-  }
-}
-
-New Auth State:  {
-  idToken: 'really Long Token',
-  userId: 'Its Me',
-  authenticating: false,
-  error: null
-}
-[stop: authSuccess action dispatched]
-
-*** You've logged in successfully!***
+{ type: 'auth/authStart', payload: undefined }
 */
 
 console.log(
-  '\n[Thunk dispatched]\n',
-  '\nAction: ',
-  store.dispatch(thunkAuthLogout() as any),
-  '\nUnchanged Auth State: ',
+  store.dispatch(authStart()),
   getAuth(store.getState()),
-  '\n***************\n',
 );
+// '[auth reducer called with undefined state and authStart action]'
 /* 
-[Thunk dispatched]
+Action: { type: 'auth/authStart', payload: undefined }
 
-Action:  undefined
-
-Unchanged Auth State: {
-  idToken: 'really Long Token',
-  userId: 'Its Me',
-  authenticating: false,
-  error: null
+New Auth State: { 
+  idToken: '',
+  userId: '',
+  authenticating: true, <- modified by authStart action
+  error: null 
 }
+*/
+console.log(
+  store.dispatch(
+    authSuccess({ idToken: 'really Long Token', userId: 'Its Me' }),
+  ),
+  getAuth(store.getState()),
+);
+// [auth reducer called with undefined state and authSuccess action]
+/* 
+Action: { 
+  type: 'auth/authSuccess',
+  payload: { 
+    idToken: 'really Long Token',
+     userId: 'Its Me'
+     } 
+    }
 
-***************
-
-
-**AFTER A DELAY OF 15 SECONDS**
-
-
-Thunk!!!
-
- You've been logged out!
- 
-  */
+ New Auth State: {
+  idToken: 'really Long Token', <- modified
+  userId: 'Its Me',             <- modified
+  authenticating: false,        <- modified
+  error: null                   <- not modified
+}
+*/
