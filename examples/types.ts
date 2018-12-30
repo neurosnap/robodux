@@ -1,19 +1,20 @@
 import robodux from '../src/slice';
-import { Action, combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware, Dispatch } from 'redux';
+import thunk from 'redux-thunk';
 
 interface SliceState {
   test: string;
   wow: number;
 }
 
-interface State {
+interface IState {
   hi: SliceState;
-  other: boolean;
+  auth: ISliceState;
 }
 
 type Actions = {
-  set: (p: SliceState) => Action;
-  reset: () => Action;
+  set: SliceState;
+  reset: null;
 };
 
 const defaultState = {
@@ -21,21 +22,21 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
+const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
   slice: 'hi',
   actions: {
     set: (state, payload) => payload,
-    reset: () => defaultState,
+    reset: (state) => defaultState,
   },
   initialState: defaultState,
 });
 
-const val = selectors.getHi({ hi: defaultState, other: true });
+const val = selectors.getHi({ hi: defaultState, auth: {} } as IState);
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
 
-console.log(val, red);
+console.log('\nHi selector: ',val,'\nHi reducer', red);
 
 interface ISliceState {
   idToken: string;
@@ -45,14 +46,10 @@ interface ISliceState {
 }
 
 interface AuthActions {
-  authSuccess: (payload: { idToken: string; userId: string }) => Action;
-  authStart: () => Action;
-  authFail: (error: Error) => Action;
-  authLogout: () => Action;
-}
-
-interface IState {
-  auth: ISliceState;
+  authSuccess: { idToken: string; userId: string };
+  authStart: null;
+  authFail: Error;
+  authLogout: null;
 }
 
 const initialState: ISliceState = {
@@ -77,12 +74,15 @@ const auth = robodux<ISliceState, AuthActions, IState>({
       state.authenticating = true;
     },
     authSuccess: (state, payload) => {
+      state.authenticating = false;
       state.idToken = payload.idToken;
       state.userId = payload.userId;
     },
   },
   initialState,
 });
+
+// You can destructure and export the reducer, action creators and selectors
 export const {
   reducer: authReducer,
   slice: authSlice,
@@ -90,14 +90,21 @@ export const {
   selectors: { getAuth },
 } = auth;
 
-const rootReducer = combineReducers({
+const rootReducer = combineReducers<IState>({
   hi: reducer,
   auth: authReducer,
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
-console.log('[auth object]', auth);
+const thunkAuthLogout = () => (dispatch: Dispatch, getState: () => IState) => {
+  setTimeout(() => {
+    dispatch(authLogout());
+    console.log("\n\nThunk!!!\n\n You've been logged out!");
+  }, 15000);
+};
+
+console.log('\n\n[auth object]\n', auth, '\n\n');
 /* 
 [auth object]
  { 
@@ -112,62 +119,110 @@ console.log('[auth object]', auth);
   selectors: { getAuth: [Function] }
  }
  */
-console.log(authLogout());
-// [authLogout action creator]
+console.log('[authLogout action creator]\n', authLogout(), '\n');
 /* 
+[authLogout action creator]
 { type: 'auth/authLogout', payload: undefined }
 */
+
 console.log(
-  authSuccess({ idToken: 'really Long Token', userId: 'Its Me' }),
+  '[authSuccess actionCreator]\n',
+  authSuccess({ idToken: 'really Long Token', userId: "It's Me" }),
+  '\n',
 );
 /* 
 [authSuccess actionCreator] 
 { 
   type: 'auth/authSuccess',
-  payload: { idToken: 'really Long Token', userId: 'Its Me' } 
+  payload: { 
+    idToken: 'really Long Token',
+    userId: 'It's Me'
+    } 
 } 
   */
-console.log(authStart());
-// [authStart action creator]
-/* 
-{ type: 'auth/authStart', payload: undefined }
-*/
 
 console.log(
+  '\n[authStart action dispatched]\n',
+  'Action: ',
   store.dispatch(authStart()),
+  '\nNew Auth State: ',
   getAuth(store.getState()),
+  '\n',
 );
-// '[auth reducer called with undefined state and authStart action]'
 /* 
-Action: { type: 'auth/authStart', payload: undefined }
+   [authStart action dispatched]
 
-New Auth State: { 
-  idToken: '',
-  userId: '',
-  authenticating: true, <- modified by authStart action
-  error: null 
-}
-*/
+   Action: { type: 'auth/authStart', payload: undefined }
+   
+   New Auth State: { 
+     idToken: '',
+     userId: '',
+     authenticating: true, <- modified by authStart action
+     error: null 
+    }
+    */
+
 console.log(
+  '\n[start: authSuccess action dispatched]\n',
+  'Action: ',
   store.dispatch(
     authSuccess({ idToken: 'really Long Token', userId: 'Its Me' }),
   ),
+  '\nNew Auth State: ',
   getAuth(store.getState()),
+  '\n[stop: authSuccess action dispatched]\n',
+  "\n*** You've logged in successfully!***\n",
 );
-// [auth reducer called with undefined state and authSuccess action]
-/* 
-Action: { 
-  type: 'auth/authSuccess',
-  payload: { 
-    idToken: 'really Long Token',
-     userId: 'Its Me'
-     } 
-    }
 
- New Auth State: {
-  idToken: 'really Long Token', <- modified
-  userId: 'Its Me',             <- modified
-  authenticating: false,        <- modified
-  error: null                   <- not modified
+/* 
+[start: authSuccess action dispatched]
+ Action:  { 
+  type: 'auth/authSuccess',
+  payload: {
+    idToken: 'really Long Token',
+    userId: 'Its Me'
+  }
 }
+
+New Auth State:  {
+  idToken: 'really Long Token',
+  userId: 'Its Me',
+  authenticating: false,
+  error: null
+}
+[stop: authSuccess action dispatched]
+
+*** You've logged in successfully!***
 */
+
+console.log(
+  '\n[Thunk dispatched]\n',
+  '\nAction: ',
+  store.dispatch(thunkAuthLogout() as any),
+  '\nUnchanged Auth State: ',
+  getAuth(store.getState()),
+  '\n***************\n',
+);
+/* 
+[Thunk dispatched]
+
+Action:  undefined
+
+Unchanged Auth State: {
+  idToken: 'really Long Token',
+  userId: 'Its Me',
+  authenticating: false,
+  error: null
+}
+
+***************
+
+
+**AFTER A DELAY OF 15 SECONDS**
+
+
+Thunk!!!
+
+ You've been logged out!
+ 
+  */
