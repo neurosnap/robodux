@@ -151,6 +151,67 @@ actions.set({ test: 'ok', wow: 0 }); // autocomplete and type helping for payloa
 actions.reset();
 ```
 
+## Slice Helpers
+
+There are some common slices that I find myself creating over and over again.
+These helpers will further help reduce the amount of repetitive code written for
+redux.
+
+### map slice (v1.2.0)
+
+These are common operations when dealing with a slice that is a hash map.
+
+```js
+interface State {
+  [key: string]: string;
+}
+
+interface Actions {
+  addTest: (p: State) => Action<State>;
+  setTest: (p: State) => Action<State>;
+  removeTest: (p: string[]) => Action<string[]>;
+  resetTest: () => Action;
+}
+
+const slice = 'test';
+const { reducer, actions } = mapSlice<State, Actions>({ slice });
+const state = { 3: 'three' };
+
+store.dispatch(
+  actions.addTest({
+    1: 'one',
+    2: 'two',
+  })
+);
+/* {
+  1: 'one',
+  2: 'two',
+  3: 'three,
+} */
+
+store.dispatch(
+  actions.setTest({ 4: 'four', 5: 'five', 6: 'six' })
+)
+/* {
+  4: 'four',
+  5: 'five',
+  6: 'six',
+} */
+
+store.dispatch(
+  actions.removeTest(['5', '6'])
+)
+/* {
+  4: 'four'
+} */
+
+store.dispatch(
+  actions.resetTest()
+)
+// {}
+
+```
+
 ## API
 
 ### robodux
