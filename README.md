@@ -154,8 +154,12 @@ actions.reset();
 ## Slice Helpers
 
 There are some common slices that I find myself creating over and over again.
+These helpers will further help reduce the amount of repetitive code written for
+redux.
 
 ### map slice (v1.2.0)
+
+These are common operations when dealing with a slice that is a hash map.
 
 ```js
 interface State {
