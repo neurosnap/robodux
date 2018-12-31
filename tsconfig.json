@@ -9,8 +9,10 @@
     "sourceMap": true,
     "baseUrl": ".",
     "target": "es5",
-    "module": "commonjs",
+    "module": "esnext",
     "outDir": "./dist",
+    "esModuleInterop": true,
+    "strict": true,
     "moduleResolution": "node",
     "lib": ["es2015", "es2017", "dom"],
     "declaration": true
