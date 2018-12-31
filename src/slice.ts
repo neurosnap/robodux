@@ -24,12 +24,13 @@ interface ICreate<State, Actions> {
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
 
+type NoUndefinedActions<Actions>  = Actions extends undefined ? {[s:string]:any} : Actions 
 
 export default function create<
   SliceState,
   Actions = undefined,
   State = any
-  >({ slice = '', actions, initialState }: ICreate<SliceState, Actions extends undefined ? {[s:string]:any} :Actions >) {
+  >({ slice = '', actions, initialState }: ICreate<SliceState, NoUndefinedActions<Actions> >) {
   type Ax = Actions extends undefined ?  {[s:string]:any} : Actions
   const actionKeys = Object.keys(actions) as (keyof Ax)[];
   const createActionType = actionTypeBuilder(slice);
