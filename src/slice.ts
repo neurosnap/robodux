@@ -31,7 +31,7 @@ export default function create<
   Actions = undefined,
   State = any
   >({ slice = '', actions, initialState }: ICreate<SliceState, NoUndefinedActions<Actions> >) {
-  type Ax = Actions extends undefined ?  {[s:string]:any} : Actions
+  type Ax = NoUndefinedActions<Actions>
   const actionKeys = Object.keys(actions) as (keyof Ax)[];
   const createActionType = actionTypeBuilder(slice);
 
