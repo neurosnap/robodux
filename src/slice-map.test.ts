@@ -15,7 +15,7 @@ describe('mapSlice', () => {
   describe('add', () => {
     it('should add items to map', () => {
       const slice = 'test';
-      const { reducer, actions, selectors } = mapSlice<Actions, State>(slice);
+      const { reducer, actions } = mapSlice<State, Actions>(slice);
       const test = {
         1: 'one',
         2: 'two',
@@ -29,7 +29,7 @@ describe('mapSlice', () => {
   describe('set', () => {
     it('should set items to map', () => {
       const slice = 'test';
-      const { reducer, actions } = mapSlice<Actions, State, any>(slice);
+      const { reducer, actions } = mapSlice<State, Actions, any>(slice);
       const test = {
         1: 'one',
         2: 'two',
@@ -43,7 +43,7 @@ describe('mapSlice', () => {
   describe('remove', () => {
     it('should remove items from map', () => {
       const slice = 'test';
-      const { reducer, actions } = mapSlice<Actions, State, any>(slice);
+      const { reducer, actions } = mapSlice<State, Actions, any>(slice);
       const state = { 1: 'one', 2: 'two', 3: 'three' };
       const actual = reducer(state, actions.removeTest(['1', '2']));
       expect(actual).toEqual({ 3: 'three' });
@@ -53,7 +53,7 @@ describe('mapSlice', () => {
   describe('reset', () => {
     it('should reset map', () => {
       const slice = 'test';
-      const { reducer, actions } = mapSlice<Actions, State, any>(slice);
+      const { reducer, actions } = mapSlice<State, Actions, any>(slice);
       const state = { 1: 'one', 2: 'two', 3: 'three' };
       const actual = reducer(state, actions.resetTest());
       expect(actual).toEqual({});

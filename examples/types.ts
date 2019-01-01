@@ -22,7 +22,7 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux<Actions, SliceState, IState>({
+const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
   slice: 'hi',
   actions: {
     set: (state, payload) => payload,
@@ -59,7 +59,7 @@ const initialState: ISliceState = {
   error: null,
 };
 
-const auth = robodux<AuthActions, ISliceState, IState>({
+const auth = robodux<ISliceState, AuthActions, IState>({
   slice: 'auth',
   actions: {
     authFail: (state, error) => {

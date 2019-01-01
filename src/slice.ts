@@ -10,7 +10,10 @@ type ActionReducer<S = any, A = any> = (
   payload: A,
 ) => S | void | undefined;
 // type CReducer2<S = any> = (state: S) => S;
-type Reducer<SS = any, A = Action> = (state: SS | undefined, payload: A) => SS;
+export type Reducer<SS = any, A = Action> = (
+  state: SS | undefined,
+  payload: A,
+) => SS;
 
 type ActionsObj<SS = any, Ax = any> = {
   [K in keyof Ax]: ActionReducer<SS, Ax[K]>
@@ -19,7 +22,7 @@ type ActionsObj<SS = any, Ax = any> = {
 type ActionsAny<P = any> = {
   [Action: string]: P;
 };
-interface ReduceM<SS> {
+export interface ReduceM<SS> {
   [Action: string]: ActionReducer<SS, Action>;
 }
 type Result<A extends ActionsAny = ActionsAny, SS = any, S = SS> = {
@@ -38,6 +41,11 @@ type Result<A extends ActionsAny = ActionsAny, SS = any, S = SS> = {
 type InputWithSlice<SS = any, Ax = ActionsAny> = {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
+  slice: string;
+};
+type InputWithOptionalSlice<SS = any, Ax = ActionsAny> = {
+  initialState: SS;
+  actions: ActionsObj<SS, Ax>;
   slice?: string;
 };
 type InputWithoutSlice<SS = any, Ax = ActionsAny> = {
@@ -50,30 +58,30 @@ const actionTypeBuilder = (slice: string) => (action: string) =>
 
 type NoEmptyObject<S> = Object extends S ? { [slice: string]: any } : S;
 
-export default function create<Actions extends ActionsAny, SliceState>({
-  actions,
-  initialState,
-}: InputWithoutSlice<SliceState, Actions>): Result<Actions, SliceState>;
-
 export default function create<
-  Actions extends ActionsAny,
   SliceState,
+  Actions extends ActionsAny,
   State extends {}
 >({
-  slice,
   actions,
   initialState,
+  slice,
 }: InputWithSlice<SliceState, Actions>): Result<
   Actions,
   SliceState,
   NoEmptyObject<State>
 >;
 
+export default function create<SliceState, Actions extends ActionsAny>({
+  actions,
+  initialState,
+}: InputWithoutSlice<SliceState, Actions>): Result<Actions, SliceState>;
+
 export default function create<Actions extends ActionsAny, SliceState, State>({
   slice = '',
   actions,
   initialState,
-}: InputWithSlice<SliceState, Actions>) {
+}: InputWithOptionalSlice<SliceState, Actions>) {
   type StateX = NoEmptyObject<State>;
   const actionKeys = Object.keys(actions) as (keyof Actions)[];
   const createActionType = actionTypeBuilder(slice);
