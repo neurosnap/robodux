@@ -14,7 +14,7 @@ interface IState {
 
 type Actions = {
   set: SliceState;
-  reset: null;
+  reset: never;
 };
 
 const defaultState = {
@@ -22,7 +22,7 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
+const { actions, selectors, reducer } = robodux<Actions, SliceState, IState>({
   slice: 'hi',
   actions: {
     set: (state, payload) => payload,
@@ -36,7 +36,7 @@ actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
 
-console.log('\nHi selector: ',val,'\nHi reducer', red);
+console.log('\nHi selector: ', val, '\nHi reducer', red);
 
 interface ISliceState {
   idToken: string;
@@ -47,9 +47,9 @@ interface ISliceState {
 
 interface AuthActions {
   authSuccess: { idToken: string; userId: string };
-  authStart: null;
+  authStart: never;
   authFail: Error;
-  authLogout: null;
+  authLogout: never;
 }
 
 const initialState: ISliceState = {
@@ -59,7 +59,7 @@ const initialState: ISliceState = {
   error: null,
 };
 
-const auth = robodux<ISliceState, AuthActions, IState>({
+const auth = robodux<AuthActions, ISliceState, IState>({
   slice: 'auth',
   actions: {
     authFail: (state, error) => {

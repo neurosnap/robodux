@@ -28,9 +28,11 @@ function remove<S = Obj>() {
   };
 }
 
-export default function mapSlice<S, M = undefined>(slice: string) {
-  const initialState = {} as S;
-  return robodux<S, M>({
+export default function mapSlice<A, SS extends {} = any, S extends {} = any>(
+  slice: string,
+) {
+  const initialState = {} as SS;
+  return robodux<A, SS, S>({
     slice,
     initialState,
     actions: {

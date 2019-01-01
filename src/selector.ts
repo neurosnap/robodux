@@ -4,9 +4,9 @@ interface Hash {
 
 export function createSelector<State extends Hash, SliceState>(
   slice: string,
-): (state: State) => SliceState | State {
+): (state: State) => SliceState {
   if (!slice) {
-    return (state: State) => state;
+    return (state: State) => <any>state;
   }
   return (state: State) => state[slice];
 }

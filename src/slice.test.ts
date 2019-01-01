@@ -1,14 +1,13 @@
 import createSlice from './slice';
-import { Action } from './types';
 
 describe('createSlice', () => {
   describe('when slice is empty', () => {
     type State = number;
     interface Actions {
-      increment: null;
+      increment: never;
       multiply: number;
     }
-    const { actions, reducer, selectors } = createSlice<State, Actions>({
+    const { actions, reducer, selectors } = createSlice<Actions, State>({
       actions: {
         increment: (state) => state + 1,
         multiply: (state, payload) => state * payload,
@@ -63,7 +62,7 @@ describe('createSlice', () => {
     const { actions, reducer, selectors } = createSlice({
       actions: {
         increment: (state) => state + 1,
-        multiply: (state, payload) => state * payload,
+        multiply: (state, payload: number) => state * payload,
       },
       initialState: 0,
       slice: 'cool',
@@ -108,7 +107,7 @@ describe('createSlice', () => {
   describe('when mutating state object', () => {
     const { actions, reducer } = createSlice({
       actions: {
-        setUserName: (state, payload) => {
+        setUserName: (state, payload: string) => {
           state.user = payload;
         },
       },
