@@ -36,7 +36,7 @@ actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
 
-console.log('\nHi selector: ', val, '\nHi reducer', red);
+console.log('\n\nHi selector: ', val, '\n\nHi reducer', red);
 
 interface ISliceState {
   idToken: string;
