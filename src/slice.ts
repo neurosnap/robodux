@@ -2,7 +2,6 @@ import createAction from './action';
 import createReducer from './reducer';
 import { createSelector, createSelectorName } from './selector';
 import { Action } from './types';
-import { AnyAction } from 'redux';
 
 // type GetPayloadType<A> = A extends ((payload: infer P) => Action) ? P : A extends ((payload: infer P) => RAction) ? P : A;
 
@@ -11,10 +10,7 @@ type ActionReducer<S = any, A = any> = (
   payload: A,
 ) => S | void | undefined;
 // type CReducer2<S = any> = (state: S) => S;
-type Reducer<SS = any, A = AnyAction> = (
-  state: SS | undefined,
-  payload: A,
-) => SS;
+type Reducer<SS = any, A = Action> = (state: SS | undefined, payload: A) => SS;
 
 type ActionsObj<SS = any, Ax = any> = {
   [K in keyof Ax]: ActionReducer<SS, Ax[K]>
@@ -24,11 +20,11 @@ type ActionsAny<P = any> = {
   [Action: string]: P;
 };
 interface ReduceM<SS> {
-  [Action: string]: ActionReducer<SS, AnyAction>;
+  [Action: string]: ActionReducer<SS, Action>;
 }
 type Result<A extends ActionsAny = ActionsAny, SS = any, S = SS> = {
   slice: string;
-  reducer: Reducer<SS, AnyAction>;
+  reducer: Reducer<SS, Action>;
   selectors: { [x: string]: (state: S) => SS };
   actions: {
     [key in keyof A]: Object extends A[key]
