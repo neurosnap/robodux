@@ -6,7 +6,7 @@ import { Action } from './types';
 // type GetPayloadType<A> = A extends ((payload: infer P) => Action) ? P : A extends ((payload: infer P) => RAction) ? P : A;
 
 type ActionReducer<S = any, A = any> = (
-  state: S | undefined,
+  state: S,
   payload: A,
 ) => S | void | undefined;
 // type CReducer2<S = any> = (state: S) => S;
