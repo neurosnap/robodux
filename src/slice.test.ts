@@ -49,11 +49,11 @@ describe('createSlice', () => {
 
     describe('when using selectors', () => {
       it('should create selector with correct name', () => {
-        expect(selectors.hasOwnProperty('getState')).toBe(true);
+        expect(selectors.hasOwnProperty('getSlice')).toBe(true);
       });
 
       it('should return the slice state data', () => {
-        expect(selectors.getState(2)).toEqual(2);
+        expect(selectors.getSlice(2)).toEqual(2);
       });
     });
   });
@@ -96,11 +96,11 @@ describe('createSlice', () => {
     });
 
     it('should create selector with correct name', () => {
-      expect(selectors.hasOwnProperty('getCool')).toBe(true);
+      expect(selectors.hasOwnProperty('getSlice')).toBe(true);
     });
 
     it('should return the slice state data', () => {
-      expect(selectors.getCool({ cool: 2 })).toEqual(2);
+      expect(selectors.getSlice({ cool: 2 })).toEqual(2);
     });
   });
 

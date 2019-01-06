@@ -1,16 +1,20 @@
 import createAction from './action';
-import createReducer from './reducer';
-import { createSelector, createSelectorName } from './selector';
+import createReducer, { NoEmptyArray } from './reducer';
+import { createSelector } from './selector';
 import { Action } from './types';
 
-// type GetPayloadType<A> = A extends ((payload: infer P) => Action) ? P : A extends ((payload: infer P) => RAction) ? P : A;
-
-type ActionReducer<S = any, A = any> = (
-  state: S,
+type ActionReducer<SS = any, A = any> = (
+  state: SS,
   payload: A,
-) => S | void | undefined;
-// type CReducer2<S = any> = (state: S) => S;
-export type Reducer<SS = any, A = Action> = (
+) => SS | void | undefined;
+
+type ActionReducerWithSlice<SS = any, A = any, S = any> = (
+  state: SS,
+  payload: A,
+  _FullState: S, // Third argument can be used to type cast State
+) => SS | void | undefined;
+
+export type Reducer<SS = any, A extends Action = Action> = (
   state: SS | undefined,
   payload: A,
 ) => SS;
@@ -18,83 +22,118 @@ export type Reducer<SS = any, A = Action> = (
 type ActionsObj<SS = any, Ax = any> = {
   [K in keyof Ax]: ActionReducer<SS, Ax[K]>
 };
-
-type ActionsAny<P = any> = {
-  [Action: string]: P;
+type ActionsObjWithSlice<SS = any, Ax = any, S = any> = {
+  [K in keyof Ax]: ActionReducerWithSlice<SS, Ax[K], S>
 };
-export interface ReduceM<SS> {
-  [Action: string]: ActionReducer<SS, Action>;
+
+interface ActionsAny<P = any> {
+  [Action: string]: P;
 }
-type Result<A extends ActionsAny = ActionsAny, SS = any, S = SS> = {
-  slice: string;
+export interface AnyState {
+  [slice: string]: any;
+}
+
+export interface ReducerMap<SS, A = Action> {
+  [Action: string]: ActionReducer<SS, A>;
+}
+
+export interface Slice<A = any, SS = any, S = SS, str = ''> {
+  slice: SS extends S ? '' : str;
   reducer: Reducer<SS, Action>;
-  selectors: { [x: string]: (state: S) => SS };
+  selectors: {
+    getSlice: (state: S) => SS;
+  };
   actions: {
-    [key in keyof A]: Object extends A[key]
+    [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
       ? (payload?: any) => Action
       : A[key] extends never
-        ? () => Action
-        : (payload: A[key]) => Action<A[key]>
+      ? () => Action
+      : (payload: A[key]) => Action<A[key]>
   };
-};
+}
 
-type InputWithSlice<SS = any, Ax = ActionsAny> = {
+interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
+  initialState: SS;
+  actions: ActionsObjWithSlice<SS, Ax, S>;
+  slice: keyof S;
+}
+interface InputWithoutSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
-  slice: string;
-};
-type InputWithOptionalSlice<SS = any, Ax = ActionsAny> = {
+}
+interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
-  slice?: string;
-};
-type InputWithoutSlice<SS = any, Ax = ActionsAny> = {
+  slice: '';
+}
+interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
-  actions: ActionsObj<SS, Ax>;
-};
+  actions: ActionsObjWithSlice<SS, Ax, S>;
+  slice?: keyof S;
+}
 
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
+//#region
 
-type NoEmptyObject<S> = Object extends S ? { [slice: string]: any } : S;
-
-export default function create<
+export default function createSlice<
   SliceState,
   Actions extends ActionsAny,
-  State extends {}
+  State extends AnyState
 >({
+  slice,
+  actions,
+  initialState,
+}: InputWithSlice<NoEmptyArray<SliceState>, Actions, State>): Slice<
+  Actions,
+  NoEmptyArray<SliceState>,
+  State,
+  typeof slice
+>;
+
+export default function createSlice<SliceState, Actions extends ActionsAny>({
   actions,
   initialState,
   slice,
-}: InputWithSlice<SliceState, Actions>): Result<
+}: InputWithBlankSlice<NoEmptyArray<SliceState>, Actions>): Slice<
   Actions,
-  SliceState,
-  NoEmptyObject<State>
+  NoEmptyArray<SliceState>,
+  NoEmptyArray<SliceState>,
+  typeof slice
 >;
 
-export default function create<SliceState, Actions extends ActionsAny>({
+export default function createSlice<SliceState, Actions extends ActionsAny>({
   actions,
   initialState,
-}: InputWithoutSlice<SliceState, Actions>): Result<Actions, SliceState>;
+}: InputWithoutSlice<NoEmptyArray<SliceState>, Actions>): Slice<
+  Actions,
+  NoEmptyArray<SliceState>
+>;
 
-export default function create<Actions extends ActionsAny, SliceState, State>({
+export default function createSlice<
+  SliceState,
+  Actions extends ActionsAny,
+  State extends AnyState
+>({
+  actions,
+  initialState,
   slice = '',
-  actions,
-  initialState,
-}: InputWithOptionalSlice<SliceState, Actions>) {
-  type StateX = NoEmptyObject<State>;
+}: InputWithOptionalSlice<NoEmptyArray<SliceState>, Actions, State>) {
   const actionKeys = Object.keys(actions) as (keyof Actions)[];
-  const createActionType = actionTypeBuilder(slice);
+  const createActionType = actionTypeBuilder(<string>slice);
 
-  const reducerMap = actionKeys.reduce<ReduceM<SliceState>>((map, action) => {
-    (<any>map)[createActionType(<string>action)] = actions[action];
-    return map;
-  }, {});
+  const reducerMap = actionKeys.reduce<ReducerMap<SliceState>>(
+    (map, action) => {
+      (<any>map)[createActionType(<string>action)] = actions[action];
+      return map;
+    },
+    {},
+  );
 
   const reducer = createReducer<SliceState>({
     initialState,
     actions: reducerMap,
-    slice,
+    slice: <string>slice,
   });
 
   const actionMap = actionKeys.reduce<
@@ -102,8 +141,8 @@ export default function create<Actions extends ActionsAny, SliceState, State>({
       [key in keyof Actions]: Object extends Actions[key]
         ? (payload?: any) => Action
         : Actions[key] extends never
-          ? () => Action
-          : (payload: Actions[key]) => Action<Actions[key]>
+        ? () => Action
+        : (payload: Actions[key]) => Action<Actions[key]>
     }
   >(
     (map, action) => {
@@ -114,9 +153,8 @@ export default function create<Actions extends ActionsAny, SliceState, State>({
     {} as any,
   );
 
-  const selectorName = createSelectorName(slice);
   const selectors = {
-    [selectorName]: createSelector<StateX, SliceState>(slice),
+    getSlice: createSelector<State, SliceState>(<string>slice),
   };
   return {
     actions: actionMap,
