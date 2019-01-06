@@ -31,7 +31,7 @@ const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
   initialState: defaultState,
 });
 
-const val = selectors.getHi({ hi: defaultState, auth: {} } as IState);
+const val = selectors.getSlice({ hi: defaultState, auth: {} } as IState);
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
@@ -87,7 +87,7 @@ export const {
   reducer: authReducer,
   slice: authSlice,
   actions: { authFail, authStart, authSuccess, authLogout },
-  selectors: { getAuth },
+  selectors: { getSlice: getAuth },
 } = auth;
 
 const rootReducer = combineReducers<IState>({
