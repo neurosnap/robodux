@@ -32,7 +32,7 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "immer": "^1.6.0"
+    "immer": "^1.10.0"
   },
   "lint-staged": {
     "*.{js}": [

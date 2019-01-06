@@ -15,7 +15,7 @@ export default function createReducer<S, SS extends S = any>({
   initialState,
   actions,
   slice = '',
-}: CreateReducer<NoEmptyArray<SS>>): Reducer<NoEmptyArray<SS>> {
+}: CreateReducer<NoEmptyArray<SS>>) {
   const reducer = (state = initialState, action: Action<any>) => {
     return createNextState(state, (draft) => {
       const caseReducer = actions[action.type];
