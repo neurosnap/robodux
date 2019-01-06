@@ -47,30 +47,30 @@ interface State {
 }
 
 interface CounterActions {
-  increment: (payload: number) => Action;
-  decrement: (payload: number) => Action;
-  multiply: (payload: number) => Action;
+  increment: never;  // <- indicates no payload expected
+  decrement: never;
+  multiply: number;  // <- indicates a payload of type number is required
 }
 
 const counter = robodux<number, CounterActions, State>({
-  slice: 'counter', // slice is optional could be blank ''
+  slice: 'counter', // slice is optional could be blank '' or left out completely
   initialState: 0,
   actions: {
-    increment: (state: number) => state + 1,
-    decrement: (state: number) => state - 1,
-    multiply: (state: number, payload: number) => state * payload,
+    increment: (state) => state + 1,  // state is type cast as a number from the supplied slicestate type
+    decrement: (state) => state - 1,
+    multiply: (state, payload) => state * payload,  // payload here is type cast as number as from CounterActions
   },
 });
 
 interface UserActions {
-  setUserName: (payload: string) => Action;
+  setUserName: string;
 }
 
 const user = robodux<User, UserActions, State>({
   slice: 'user', // slice is optional could be blank ''
   initialState: { name: '' },
   actions: {
-    setUserName: (state: User, payload: string) => {
+    setUserName: (state, payload) => {
       state.name = payload; // mutate the state all you want with immer
     },
   }
@@ -84,15 +84,15 @@ const reducer = combineReducers({
 const store = createStore(reducer);
 
 store.dispatch(counter.actions.increment());
-// -> { counter: 1, user: { name: '' } }
+// New State -> { counter: 1, user: { name: '' } }
 store.dispatch(counter.actions.increment());
-// -> { counter: 2, user: { name: '' } }
+// New State -> { counter: 2, user: { name: '' } }
 store.dispatch(counter.actions.multiply(3));
-// -> { counter: 6, user: { name: '' } }
+// New State -> { counter: 6, user: { name: '' } }
 console.log(`${counter.actions.decrement}`);
 // -> counter/decrement
 store.dispatch(user.actions.setUserName('eric'));
-// -> { counter: 6, user: { name: 'eric' } }
+// New State -> { counter: 6, user: { name: 'eric' } }
 const state = store.getState();
 console.log(user.selectors.getUser(state));
 // -> { name: 'eric' }
@@ -108,7 +108,7 @@ console.log(counter.selectors.getCounter(state));
 slice passed to the state, then this will assume that this is the entire state shape.
 
 `Actions` helps improve autocompelete and typing for the `actions` object returned from `robodux`.
-Supply an interface where they keys are the action names and the values are the payload types, which should be null if the action takes no payload.
+Supply an interface where they keys are the action names and the values are the payload types, which should be `never` if the action takes no payload.
 
 `State` is the entire state shape for when a slice is used with `robodux`.  This helps type the selectors we
 return which requires the entire state as the parameter and not simply the slice state.
@@ -128,8 +128,9 @@ interface State {
 }
 
 interface Actions {
-  set: SliceState;
-  reset: null;
+  setTest: string;
+  setWow: number;
+  reset: never;
 }
 
 const defaultState = {
@@ -139,15 +140,47 @@ const defaultState = {
 
 const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
   slice: 'hi',
-  actions: {
-    set: (state: SliceState, payload: SliceState) => payload,
-    reset: () => defaultState,
-  },
   initialState: defaultState,
+  actions: {
+    setTest: (state, payload) => { state.test = payload }, // payload is type string from Actions
+    setWow: (state, payload) => {state.wow = payload }, // payload is type number from Actions
+    reset: (state) => defaultState,
+  },
 });
 
-const val = selectors.getHi({ hi: defaultState, other: true }); // typechecks param as State
-actions.set({ test: 'ok', wow: 0 }); // autocomplete and type checking for payload, typeerror if called without payload
+const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks param as State
+actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
+actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
+actions.reset(); // typechecks to ensure action is called without params
+
+```
+
+### Usage without explicit types
+
+Robodux can be used without supplying interfaces, it will instead infer the types for you
+
+```js
+import robodux from 'robodux';
+import { Action } from 'redux';
+
+const defaultState = {
+  test: '',
+  wow: 0,
+};
+
+const { actions, selectors, reducer } = robodux({
+  slice: 'hi',
+  initialState: defaultState,
+  actions: { // state type is inferred from initial state
+    setTest: (state, payload: string) => { state.test = payload }, // payload is typecast as string
+    setWow: (state, payload: number) => {state.wow = payload }, // payload is typecast as number
+    reset: (state, payload: never) => defaultState,
+  },
+});
+
+const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks param has `hi` key
+actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
+actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
 actions.reset(); // typechecks to ensure action is called without params
 
 ```
@@ -168,14 +201,14 @@ interface State {
 }
 
 interface Actions {
-  addTest: (p: State) => Action<State>;
-  setTest: (p: State) => Action<State>;
-  removeTest: (p: string[]) => Action<string[]>;
-  resetTest: () => Action;
+  addTest: State;
+  setTest: State;
+  removeTest: string[];
+  resetTest: never;
 }
 
 const slice = 'test';
-const { reducer, actions } = mapSlice<State, Actions>({ slice });
+const { reducer, actions } = mapSlice<State, Actions>(slice);
 const state = { 3: 'three' };
 
 store.dispatch(
