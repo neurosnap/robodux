@@ -60,10 +60,10 @@ const initialState: ISliceState = {
 };
 
 const auth = robodux<ISliceState, AuthActions, IState>({
-  slice: 'auth',
+  slice: 'auth', // slice is checked to ensure it is a key in IState
   actions: {
-    authFail: (state, error) => {
-      state.error = error;
+    authFail: (state, payload) => {
+      state.error = payload;
       state.authenticating = false;
     },
     authLogout: (state) => {
@@ -90,6 +90,38 @@ export const {
   selectors: { getSlice: getAuth },
 } = auth;
 
+const authWithoutInterface = robodux({
+  slice: 'auth',
+  actions: {
+    authFail2: (state, payload: Error) => {
+      state.error = payload;
+      state.authenticating = false;
+    },
+    authLogout2: (state, payload: never, _: IState) => {
+      // useless third arg can be used to type cast State
+      state.idToken = null;
+      state.userId = null;
+    },
+    authStart2: (state, payload: never) => {
+      state.authenticating = true;
+    },
+    authSuccess2: (state, payload: { idToken: string; userId: string }) => {
+      state.authenticating = false;
+      state.idToken = payload.idToken;
+      state.userId = payload.userId;
+    },
+  },
+  initialState,
+});
+
+// You can destructure and export the reducer, action creators and selectors
+export const {
+  reducer: authReducer2,
+  slice: authSlice2,
+  actions: { authFail2, authStart2, authSuccess2, authLogout2 },
+  selectors: { getSlice: getAuth2 },
+} = authWithoutInterface;
+
 const rootReducer = combineReducers<IState>({
   hi: reducer,
   auth: authReducer,
@@ -105,41 +137,14 @@ const thunkAuthLogout = () => (dispatch: Dispatch, getState: () => IState) => {
 };
 
 console.log('\n\n[auth object]\n', auth, '\n\n');
-/* 
-[auth object]
- { 
-   actions: { 
-     authFail: { [Function: action] toString: [Function] },
-     authLogout: { [Function: action] toString: [Function] },
-     authStart: { [Function: action] toString: [Function] },
-     authSuccess: { [Function: action] toString: [Function] } 
-    },
-  reducer: { [Function: reducer] toString: [Function] },
-  slice: 'auth',
-  selectors: { getAuth: [Function] }
- }
- */
+
 console.log('[authLogout action creator]\n', authLogout(), '\n');
-/* 
-[authLogout action creator]
-{ type: 'auth/authLogout', payload: undefined }
-*/
 
 console.log(
   '[authSuccess actionCreator]\n',
   authSuccess({ idToken: 'really Long Token', userId: "It's Me" }),
   '\n',
 );
-/* 
-[authSuccess actionCreator] 
-{ 
-  type: 'auth/authSuccess',
-  payload: { 
-    idToken: 'really Long Token',
-    userId: 'It's Me'
-    } 
-} 
-  */
 
 console.log(
   '\n[authStart action dispatched]\n',
@@ -149,18 +154,6 @@ console.log(
   getAuth(store.getState()),
   '\n',
 );
-/* 
-   [authStart action dispatched]
-
-   Action: { type: 'auth/authStart', payload: undefined }
-   
-   New Auth State: { 
-     idToken: '',
-     userId: '',
-     authenticating: true, <- modified by authStart action
-     error: null 
-    }
-    */
 
 console.log(
   '\n[start: authSuccess action dispatched]\n',
@@ -174,27 +167,6 @@ console.log(
   "\n*** You've logged in successfully!***\n",
 );
 
-/* 
-[start: authSuccess action dispatched]
- Action:  { 
-  type: 'auth/authSuccess',
-  payload: {
-    idToken: 'really Long Token',
-    userId: 'Its Me'
-  }
-}
-
-New Auth State:  {
-  idToken: 'really Long Token',
-  userId: 'Its Me',
-  authenticating: false,
-  error: null
-}
-[stop: authSuccess action dispatched]
-
-*** You've logged in successfully!***
-*/
-
 console.log(
   '\n[Thunk dispatched]\n',
   '\nAction: ',
@@ -203,26 +175,3 @@ console.log(
   getAuth(store.getState()),
   '\n***************\n',
 );
-/* 
-[Thunk dispatched]
-
-Action:  undefined
-
-Unchanged Auth State: {
-  idToken: 'really Long Token',
-  userId: 'Its Me',
-  authenticating: false,
-  error: null
-}
-
-***************
-
-
-**AFTER A DELAY OF 15 SECONDS**
-
-
-Thunk!!!
-
- You've been logged out!
- 
-  */
