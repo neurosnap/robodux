@@ -47,8 +47,8 @@ export interface Slice<A = any, SS = any, S = SS, str = ''> {
     [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
       ? (payload?: any) => Action
       : A[key] extends never
-      ? () => Action
-      : (payload: A[key]) => Action<A[key]>
+        ? () => Action
+        : (payload: A[key]) => Action<A[key]>
   };
 }
 
@@ -74,7 +74,6 @@ interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
 
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
-//#region
 
 export default function createSlice<
   SliceState,
@@ -141,8 +140,8 @@ export default function createSlice<
       [key in keyof Actions]: Object extends Actions[key]
         ? (payload?: any) => Action
         : Actions[key] extends never
-        ? () => Action
-        : (payload: Actions[key]) => Action<Actions[key]>
+          ? () => Action
+          : (payload: Actions[key]) => Action<Actions[key]>
     }
   >(
     (map, action) => {

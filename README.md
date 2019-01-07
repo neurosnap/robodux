@@ -182,7 +182,6 @@ const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks
 actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
 actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
 actions.reset(); // typechecks to ensure action is called without params
-
 ```
 
 ## Slice Helpers

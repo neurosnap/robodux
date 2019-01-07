@@ -1,6 +1,4 @@
-import { ActionType } from './types';
-
-export default function creator<P = any>(type: ActionType) {
+export default function creator<P = any>(type: string) {
   const action = (payload: P) => ({
     type,
     payload,
