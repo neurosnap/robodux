@@ -1,28 +1,27 @@
 import createNextState from 'immer';
 
 import { Action } from './types';
+import { ReducerMap } from './slice';
 
-interface ActionsMap<S> {
-  [key: string]: (state: S, action: Action<any>) => S | void;
-}
-
-interface ICreateReducer<S> {
-  initialState: S;
-  actions: ActionsMap<S>;
+export type CreateReducer<SS = any> = {
+  initialState: SS;
+  actions: ReducerMap<SS, any>;
   slice?: string;
-}
+};
 
-export default function createReducer<S>({
+export type NoEmptyArray<State> = State extends never[] ? any[] : State;
+
+export default function createReducer<S, SS extends S = any>({
   initialState,
   actions,
   slice = '',
-}: ICreateReducer<S>) {
-  const reducer = (state: S = initialState, action: Action<any>): S => {
-    return createNextState(<any>state, (draft: S) => {
+}: CreateReducer<NoEmptyArray<SS>>) {
+  const reducer = (state = initialState, action: Action<any>) => {
+    return createNextState(state, (draft) => {
       const caseReducer = actions[action.type];
 
       if (caseReducer) {
-        return caseReducer(draft, action.payload);
+        return caseReducer(draft as NoEmptyArray<SS>, action.payload);
       }
 
       return draft;

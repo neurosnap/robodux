@@ -1,10 +1,7 @@
-import robodux from './slice';
+import robodux, { AnyState } from './slice';
+import { NoEmptyArray } from './reducer';
 
 const cap = (t: string) => t.charAt(0).toUpperCase() + t.substr(1);
-
-interface IMapSlice<S> {
-  slice: string;
-}
 
 type Obj = {
   [key: string]: any;
@@ -32,16 +29,20 @@ function remove<S = Obj>() {
   };
 }
 
-export default function mapSlice<S, M>({ slice }: IMapSlice<S>) {
-  const initialState = {} as S;
-  return robodux<S, M>({
+export default function mapSlice<
+  SS extends AnyState = any,
+  A = any,
+  S extends AnyState = any
+>(slice: keyof S) {
+  const initialState = {} as NoEmptyArray<SS>;
+  return robodux<SS, A, S>({
     slice,
     initialState,
     actions: {
-      [`add${cap(slice)}`]: add<S>(),
-      [`set${cap(slice)}`]: set<S>(),
-      [`remove${cap(slice)}`]: remove<S>(),
-      [`reset${cap(slice)}`]: () => initialState,
-    },
+      [`add${cap(<string>slice)}`]: add<S>(),
+      [`set${cap(<string>slice)}`]: set<S>(),
+      [`remove${cap(<string>slice)}`]: remove<S>(),
+      [`reset${cap(<string>slice)}`]: () => initialState,
+    } as any,
   });
 }

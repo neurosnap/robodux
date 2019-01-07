@@ -1,12 +1,11 @@
 import createSlice from './slice';
-import { Action } from './types';
 
 describe('createSlice', () => {
   describe('when slice is empty', () => {
     type State = number;
     interface Actions {
-      increment: () => Action;
-      multiply: (payload: number) => Action<number>;
+      increment: never;
+      multiply: number;
     }
     const { actions, reducer, selectors } = createSlice<State, Actions>({
       actions: {
@@ -50,11 +49,11 @@ describe('createSlice', () => {
 
     describe('when using selectors', () => {
       it('should create selector with correct name', () => {
-        expect(selectors.hasOwnProperty('getState')).toBe(true);
+        expect(selectors.hasOwnProperty('getSlice')).toBe(true);
       });
 
       it('should return the slice state data', () => {
-        expect(selectors.getState(2)).toEqual(2);
+        expect(selectors.getSlice(2)).toEqual(2);
       });
     });
   });
@@ -63,6 +62,7 @@ describe('createSlice', () => {
     const { actions, reducer, selectors } = createSlice({
       actions: {
         increment: (state) => state + 1,
+        multiply: (state, payload: number) => state * payload,
       },
       initialState: 0,
       slice: 'cool',
@@ -71,6 +71,9 @@ describe('createSlice', () => {
     it('should create increment action', () => {
       expect(actions.hasOwnProperty('increment')).toBe(true);
     });
+    it('should create multiply action', () => {
+      expect(actions.hasOwnProperty('multiply')).toBe(true);
+    });
 
     it('should have the correct action for increment', () => {
       expect(actions.increment()).toEqual({
@@ -78,24 +81,33 @@ describe('createSlice', () => {
         payload: undefined,
       });
     });
+    it('should have the correct action for multiply', () => {
+      expect(actions.multiply(5)).toEqual({
+        type: 'cool/multiply',
+        payload: 5,
+      });
+    });
 
     it('should return the correct value from reducer', () => {
       expect(reducer(undefined, actions.increment())).toEqual(1);
     });
+    it('should return the correct value from reducer when multiplying', () => {
+      expect(reducer(5, actions.multiply(5))).toEqual(25);
+    });
 
     it('should create selector with correct name', () => {
-      expect(selectors.hasOwnProperty('getCool')).toBe(true);
+      expect(selectors.hasOwnProperty('getSlice')).toBe(true);
     });
 
     it('should return the slice state data', () => {
-      expect(selectors.getCool({ cool: 2 })).toEqual(2);
+      expect(selectors.getSlice({ cool: 2 })).toEqual(2);
     });
   });
 
   describe('when mutating state object', () => {
     const { actions, reducer } = createSlice({
       actions: {
-        setUserName: (state, payload) => {
+        setUserName: (state, payload: string) => {
           state.user = payload;
         },
       },
