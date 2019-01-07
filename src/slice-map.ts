@@ -33,7 +33,7 @@ export default function mapSlice<
   SS extends AnyState = any,
   A = any,
   S extends AnyState = any
->(slice: keyof S) {
+>({ slice }: { slice: keyof S }) {
   const initialState = {} as NoEmptyArray<SS>;
   return robodux<SS, A, S>({
     slice,

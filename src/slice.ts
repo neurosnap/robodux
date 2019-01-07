@@ -52,6 +52,11 @@ export interface Slice<A = any, SS = any, S = SS, str = ''> {
   };
 }
 
+interface InputWithSliceNoType<SS = any, Ax = ActionsAny> {
+  initialState: SS;
+  actions: ActionsObjWithSlice<SS, Ax>;
+  slice: string;
+}
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
@@ -75,6 +80,14 @@ interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
 
+export default function createSlice<SliceState, Actions extends ActionsAny>({
+  actions,
+  initialState,
+  slice,
+}: InputWithSliceNoType<NoEmptyArray<SliceState>, Actions>): Slice<
+  Actions,
+  NoEmptyArray<SliceState>
+>;
 export default function createSlice<
   SliceState,
   Actions extends ActionsAny,
@@ -100,7 +113,6 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   NoEmptyArray<SliceState>,
   typeof slice
 >;
-
 export default function createSlice<SliceState, Actions extends ActionsAny>({
   actions,
   initialState,
