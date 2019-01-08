@@ -29,6 +29,7 @@ type ActionsObjWithSlice<SS = any, Ax = any, S = any> = {
 interface ActionsAny<P = any> {
   [Action: string]: P;
 }
+
 export interface AnyState {
   [slice: string]: any;
 }
@@ -52,11 +53,6 @@ export interface Slice<A = any, SS = any, S = SS, str = ''> {
   };
 }
 
-interface InputWithSliceNoType<SS = any, Ax = ActionsAny> {
-  initialState: SS;
-  actions: ActionsObjWithSlice<SS, Ax>;
-  slice: string;
-}
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
@@ -65,11 +61,6 @@ interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
 interface InputWithoutSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
-}
-interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
-  initialState: SS;
-  actions: ActionsObj<SS, Ax>;
-  slice: '';
 }
 interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
@@ -80,14 +71,6 @@ interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
 
-export default function createSlice<SliceState, Actions extends ActionsAny>({
-  actions,
-  initialState,
-  slice,
-}: InputWithSliceNoType<NoEmptyArray<SliceState>, Actions>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>
->;
 export default function createSlice<
   SliceState,
   Actions extends ActionsAny,
@@ -103,22 +86,17 @@ export default function createSlice<
   typeof slice
 >;
 
-export default function createSlice<SliceState, Actions extends ActionsAny>({
-  actions,
-  initialState,
-  slice,
-}: InputWithBlankSlice<NoEmptyArray<SliceState>, Actions>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>,
-  NoEmptyArray<SliceState>,
-  typeof slice
->;
-export default function createSlice<SliceState, Actions extends ActionsAny>({
+export default function createSlice<
+  SliceState,
+  Actions extends ActionsAny,
+  State = SliceState
+>({
   actions,
   initialState,
 }: InputWithoutSlice<NoEmptyArray<SliceState>, Actions>): Slice<
   Actions,
-  NoEmptyArray<SliceState>
+  NoEmptyArray<SliceState>,
+  State
 >;
 
 export default function createSlice<
@@ -167,6 +145,7 @@ export default function createSlice<
   const selectors = {
     getSlice: createSelector<State, SliceState>(<string>slice),
   };
+
   return {
     actions: actionMap,
     reducer,
