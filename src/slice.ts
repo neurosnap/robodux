@@ -86,21 +86,6 @@ export default function createSlice<
   actions,
   initialState,
   slice,
-}: InputWithBlankSlice<NoEmptyArray<SliceState>, Actions>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>,
-  NoEmptyArray<State>,
-  typeof slice
->;
-
-export default function createSlice<
-  SliceState,
-  Actions extends ActionsAny,
-  State extends AnyState
->({
-  slice,
-  actions,
-  initialState,
 }: InputWithSlice<NoEmptyArray<SliceState>, Actions, State>): Slice<
   Actions,
   NoEmptyArray<SliceState>,
@@ -108,17 +93,23 @@ export default function createSlice<
   typeof slice
 >;
 
-export default function createSlice<
-  SliceState,
-  Actions extends ActionsAny,
-  State = SliceState
->({
+export default function createSlice<SliceState, Actions extends ActionsAny>({
+  actions,
+  initialState,
+  slice,
+}: InputWithBlankSlice<NoEmptyArray<SliceState>, Actions>): Slice<
+  Actions,
+  NoEmptyArray<SliceState>,
+  NoEmptyArray<SliceState>,
+  typeof slice
+>;
+
+export default function createSlice<SliceState, Actions extends ActionsAny>({
   actions,
   initialState,
 }: InputWithoutSlice<NoEmptyArray<SliceState>, Actions>): Slice<
   Actions,
-  NoEmptyArray<SliceState>,
-  State
+  NoEmptyArray<SliceState>
 >;
 
 export default function createSlice<

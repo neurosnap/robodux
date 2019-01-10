@@ -3,6 +3,13 @@
   "version": "2.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    ">=3.1": {
+      "*": [
+        "ts3.1/*"
+      ]
+    }
+  },
   "license": "MIT",
   "description": "reduce redux boilerplate",
   "author": "Eric Bower",
@@ -12,7 +19,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "tsc --noEmit && jest",
+    "tc": "typings-checker --allow-expect-error --project tsconfig.json type-tests/test.ts",
+    "test": "tsc && yarn tc && jest",
     "prepublish": "yarn build",
     "precommit": "lint-staged",
     "prettier": "prettier --write {src}/*.ts"
@@ -29,7 +37,8 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "ts-jest": "^23.1.4",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "typings-checker": "^2.0.0"
   },
   "dependencies": {
     "immer": "^1.10.0"
