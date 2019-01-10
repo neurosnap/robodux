@@ -38,11 +38,13 @@ export interface ReducerMap<SS, A = Action> {
   [Action: string]: ActionReducer<SS, A>;
 }
 
+type NoBadState<S> = S extends { [x: string]: {} } ? AnyState : S;
+
 export interface Slice<A = any, SS = any, S = SS, str = ''> {
   slice: SS extends S ? '' : str;
   reducer: Reducer<SS, Action>;
   selectors: {
-    getSlice: (state: S) => SS;
+    getSlice: (state: NoBadState<S>) => SS;
   };
   actions: {
     [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
@@ -53,6 +55,11 @@ export interface Slice<A = any, SS = any, S = SS, str = ''> {
   };
 }
 
+interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
+  initialState: SS;
+  actions: ActionsObj<SS, Ax>;
+  slice: '';
+}
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
@@ -70,6 +77,21 @@ interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
 
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
+
+export default function createSlice<
+  SliceState,
+  Actions extends ActionsAny,
+  State extends AnyState
+>({
+  actions,
+  initialState,
+  slice,
+}: InputWithBlankSlice<NoEmptyArray<SliceState>, Actions>): Slice<
+  Actions,
+  NoEmptyArray<SliceState>,
+  NoEmptyArray<State>,
+  typeof slice
+>;
 
 export default function createSlice<
   SliceState,
