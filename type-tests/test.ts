@@ -37,7 +37,7 @@ addTwo.slice;
 // $ExpectType { getSlice: (state: number) => number; }
 addTwo.selectors;
 
-const addThree = createSlice<number, { add: number }, any>({
+const addThree = createSlice<number, { add: number }>({
   slice: 'something',
   actions: { add: (state, p: number) => state + p },
   initialState: 0,
