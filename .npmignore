@@ -5,3 +5,4 @@ tsconfig.json
 tsconfig.test.json
 .travis.yml
 yarn.lock
+yarn-error.log
