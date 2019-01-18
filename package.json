@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "tc": "typings-checker --allow-expect-error --project tsconfig.json type-tests/test.ts",
+    "tc": "typings-checker --allow-expect-error --project tsconfig.json type-tests/*.ts",
     "test": "tsc && yarn tc && jest",
     "prepublish": "yarn build",
     "precommit": "lint-staged",

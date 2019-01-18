@@ -43,9 +43,7 @@ type NoBadState<S> = S extends { [x: string]: {} } ? AnyState : S;
 export interface Slice<A = any, SS = any, S = SS, str = ''> {
   slice: SS extends S ? '' : str;
   reducer: Reducer<SS, Action>;
-  selectors: {
-    getSlice: (state: NoBadState<S>) => SS;
-  };
+  selectors: { getSlice: (state: NoBadState<S>) => SS };
   actions: {
     [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
       ? (payload?: any) => Action
@@ -111,7 +109,7 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
 }: InputWithSlice<NoEmptyArray<SliceState>, Actions>): Slice<
   Actions,
   NoEmptyArray<SliceState>,
-  null,
+  AnyState,
   typeof slice
 >;
 
