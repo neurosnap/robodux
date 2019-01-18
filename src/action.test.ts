@@ -2,7 +2,7 @@ import createAction, { getActionType } from './action';
 
 describe('createAction', () => {
   it('should create an action', () => {
-    const action = createAction('A_TYPE');
+    const action = createAction<string>('A_TYPE');
     expect(action('something')).toEqual({
       type: 'A_TYPE',
       payload: 'something',
@@ -17,10 +17,10 @@ describe('createAction', () => {
   });
 
   it('should create an action with payload', () => {
-    const action = createAction('A_TYPE');
+    const action = createAction<boolean>('A_TYPE');
     expect(action(false)).toEqual({
       type: 'A_TYPE',
-      payload: false
+      payload: false,
     });
   });
 

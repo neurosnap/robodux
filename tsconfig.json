@@ -13,11 +13,12 @@
     "outDir": "./dist",
     "strict": true,
     "moduleResolution": "node",
-    "lib": ["es2015", "es2017", "dom"],
+    "lib": ["es2015", "es2017"],
     "declaration": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "type_tests"
   ],
   "include": [
     "./src/index.ts",
