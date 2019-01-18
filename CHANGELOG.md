@@ -1,5 +1,9 @@
 # CHANGES
 
+## v2.1.0 (01-16-2019
+
+* :sparkles: Added assign slice helper
+
 ## v2.0.0 (01-06-2019)
 
 * :sparkles: Better typescript support
