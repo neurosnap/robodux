@@ -7,11 +7,11 @@ type Obj = {
   [key: string]: any;
 };
 
-export function set<S = Obj>() {
+export function setMap<S = Obj>() {
   return (state: S, payload: S): S => payload;
 }
 
-export function add<S = Obj>() {
+export function addMap<S = Obj>() {
   return (state: S, payload: S): S => {
     Object.keys(payload).forEach((key) => {
       state[key as keyof S] = payload[key as keyof S];
@@ -20,7 +20,7 @@ export function add<S = Obj>() {
   };
 }
 
-export function remove<S = Obj>() {
+export function removeMap<S = Obj>() {
   return (state: S, payload: string[]): S => {
     payload.forEach((key) => {
       delete state[key as keyof S];
@@ -39,9 +39,9 @@ export default function mapSlice<
     slice,
     initialState,
     actions: {
-      [`add${cap(<string>slice)}`]: add<S>(),
-      [`set${cap(<string>slice)}`]: set<S>(),
-      [`remove${cap(<string>slice)}`]: remove<S>(),
+      [`add${cap(<string>slice)}`]: addMap<S>(),
+      [`set${cap(<string>slice)}`]: setMap<S>(),
+      [`remove${cap(<string>slice)}`]: removeMap<S>(),
       [`reset${cap(<string>slice)}`]: () => initialState,
     } as any,
   });

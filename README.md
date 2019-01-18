@@ -9,7 +9,8 @@ creators, and basic selectors for the developer to use.  This library tries to
 not make too many assumptions about how developers use redux.  It does not
 do anything magical, simply automates the repetitive tasks with redux.
 
-Under the hood every reducer created by `robodux` leverages [immer](https://github.com/mweststrate/immer) to update the store,
+Under the hood every reducer created by `robodux` leverages
+[immer](https://github.com/mweststrate/immer) to update the store,
 which means reducers are allowed to mutate the state directly.
 
 ## Features
@@ -19,6 +20,7 @@ which means reducers are allowed to mutate the state directly.
 * When stringifying action creators they return the action type
 * Helper functions for manually creating actions and reducers
 * Reducers do no receive entire action object, only payload
+* Slice helpers to further reduce repetitive reducer types (map slice, assign slice)
 
 ## Why not X?
 
@@ -195,8 +197,13 @@ redux.
 These are common operations when dealing with a slice that is a hash map.
 
 ```js
-interface State {
+import { mapSlice } from 'robodux';
+
+interface SliceState {
   [key: string]: string;
+}
+interface State {
+  test: SliceState
 }
 
 interface Actions {
@@ -207,7 +214,7 @@ interface Actions {
 }
 
 const slice = 'test';
-const { reducer, actions } = mapSlice<State, Actions>(slice);
+const { reducer, actions } = mapSlice<SliceState, Actions, State>(slice);
 const state = { 3: 'three' };
 
 store.dispatch(
@@ -242,6 +249,44 @@ store.dispatch(
   actions.resetTest()
 )
 // {}
+
+```
+
+### assign slice (v2.1.0)
+
+These are common operations when dealing with a slice that simply needs to be set or reset
+
+```js
+import { assignSlice } from 'robodux';
+
+type SliceState = string;
+
+interface Actions {
+  setTest: SliceState;
+  resetTest: never;
+}
+
+interface State {
+  test: SliceState;
+}
+
+const slice = 'token';
+const { reducer, actions } = assignSlice<SliceState, Actions, State>({ slice, initialState: '' });
+
+store.dispatch(
+  actions.setToken('some-token')
+);
+/* redux state: { token: 'some-token' } */
+
+store.dispatch(
+  actions.setToken('another-token')
+)
+/* redux state: { token: 'another-token' } */
+
+store.dispatch(
+  actions.resetTest()
+)
+// redux state: { token: '' }
 
 ```
 
@@ -294,3 +339,11 @@ const counter = createReducer({
 console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
 // -> 10
 ```
+
+### mapSlice
+
+See slice helpers for more info
+
+### assignSlice
+
+See slice helpers for more info
