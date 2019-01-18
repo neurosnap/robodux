@@ -1,17 +1,17 @@
-import robodux, { AnyState } from './slice';
+import robodux, { AnyState, ActionsAny } from './slice';
 import { NoEmptyArray } from './reducer';
 
-const cap = (t: string) => t.charAt(0).toUpperCase() + t.substr(1);
+export const cap = (t: string) => t.charAt(0).toUpperCase() + t.substr(1);
 
 type Obj = {
   [key: string]: any;
 };
 
-function set<S = Obj>() {
+export function set<S = Obj>() {
   return (state: S, payload: S): S => payload;
 }
 
-function add<S = Obj>() {
+export function add<S = Obj>() {
   return (state: S, payload: S): S => {
     Object.keys(payload).forEach((key) => {
       state[key as keyof S] = payload[key as keyof S];
@@ -20,7 +20,7 @@ function add<S = Obj>() {
   };
 }
 
-function remove<S = Obj>() {
+export function remove<S = Obj>() {
   return (state: S, payload: string[]): S => {
     payload.forEach((key) => {
       delete state[key as keyof S];
@@ -30,10 +30,10 @@ function remove<S = Obj>() {
 }
 
 export default function mapSlice<
-  SS extends AnyState = any,
-  A = any,
-  S extends AnyState = any
->({ slice }: { slice: keyof S }) {
+  SS extends AnyState = AnyState,
+  A extends ActionsAny = any,
+  S extends AnyState = AnyState
+>(slice: keyof S) {
   const initialState = {} as NoEmptyArray<SS>;
   return robodux<SS, A, S>({
     slice,

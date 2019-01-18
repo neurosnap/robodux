@@ -26,7 +26,7 @@ type ActionsObjWithSlice<SS = any, Ax = any, S = any> = {
   [K in keyof Ax]: ActionReducerWithSlice<SS, Ax[K], S>
 };
 
-interface ActionsAny<P = any> {
+export interface ActionsAny<P = any> {
   [Action: string]: P;
 }
 
