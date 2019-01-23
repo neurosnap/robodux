@@ -42,6 +42,7 @@ type NoBadState<S> = S extends { [x: string]: {} } ? AnyState : S;
 
 export interface Slice<A = any, SS = any, S = SS, str = ''> {
   slice: SS extends S ? '' : str;
+  userImmer?: boolean;
   reducer: Reducer<SS, Action>;
   selectors: { getSlice: (state: NoBadState<S>) => SS };
   actions: {
@@ -57,20 +58,24 @@ interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
   slice: '';
+  useImmer?: boolean;
 }
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice: keyof S;
+  useImmer?: boolean;
 }
 interface InputWithoutSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
+  useImmer?: boolean;
 }
 interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice?: keyof S;
+  useImmer?: boolean;
 }
 
 const actionTypeBuilder = (slice: string) => (action: string) =>
@@ -129,6 +134,7 @@ export default function createSlice<
   actions,
   initialState,
   slice = '',
+  useImmer = true,
 }: InputWithOptionalSlice<NoEmptyArray<SliceState>, Actions, State>) {
   const actionKeys = Object.keys(actions) as (keyof Actions)[];
   const createActionType = actionTypeBuilder(<string>slice);
@@ -145,6 +151,7 @@ export default function createSlice<
     initialState,
     actions: reducerMap,
     slice: <string>slice,
+    useImmer,
   });
 
   const actionMap = actionKeys.reduce<

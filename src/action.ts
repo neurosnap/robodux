@@ -22,6 +22,7 @@ export default function creator<P = any, T extends string = string>(
   }
 
   action.toString = (): T => `${type}` as T;
+  action.type = type;
   return action;
 }
 

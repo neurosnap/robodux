@@ -102,6 +102,23 @@ console.log(counter.selectors.getCounter(state));
 // -> 6
 ```
 
+Without immer:
+
+```js
+const user = robodux<User, UserActions, State>({
+  slice: 'user', // slice is optional could be blank ''
+  initialState: { name: '' },
+  actions: {
+    setUserName: (state, payload) => {
+      return { ...state, name: payload }
+    },
+  },
+  useImmer: false,
+})
+
+
+```
+
 ## Types
 
 `robodux` accepts three generics: `SliceState`, `Actions`, `State`.
@@ -307,12 +324,13 @@ pass around action creators for reducers, sagas, etc.
 ```js
 import { createAction } from 'robodux';
 
-const increment = createAction('INCREMENT');
+const increment = createAction<number, 'INCREMENT'>('INCREMENT');
 console.log(increment);
 // -> 'INCREMENT'
 console.log(increment(2));
 // { type: 'INCREMENT', payload: 2 };
-const storeDetails = createAction('STORE_DETAILS');
+const detailType = 'STORE_DETAILS';
+const storeDetails = createAction<{ name: string, surname: string }, typeof detailType>(detailType);
 console.log(storeDetails);
 // -> 'STORE_DETAILS'
 console.log(storeDetails({name: 'John', surname: 'Doe'}));
@@ -334,6 +352,25 @@ const counter = createReducer({
     DECREMENT: (state) => state - 1,
     MULTIPLY: (state, payload) => state * payload,
   }
+});
+
+console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
+// -> 10
+```
+
+Without `immer`
+
+```js
+import { createReducer } from 'robodux';
+
+const counter = createReducer({
+  initialState: 0,
+  actions: {
+    INCREMENT: (state) => state + 1,
+    DECREMENT: (state) => state - 1,
+    MULTIPLY: (state, payload) => state * payload,
+  },
+  useImmer: false,
 });
 
 console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
