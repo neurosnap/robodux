@@ -20,3 +20,9 @@ const testThree = createAction<{ error: string }>('SOMETHING');
 testThree({ error: true });
 // $ExpectType { type: string; payload?: { error: string; } | undefined; }
 testThree({ error: 'nice' });
+
+// testing type generic
+const type = 'SOMETHING';
+const testFour = createAction<number, typeof type>(type);
+// $ExpextType { type: "SOMETHING"; payload?: number | undefined; }
+testFour(2);

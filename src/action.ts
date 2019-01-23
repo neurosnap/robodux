@@ -1,9 +1,15 @@
-type Creator<P = any> = (p: P) => { type: string; payload?: P };
-type CreatorNoPayload = () => { type: string };
+type Creator<P = any, T extends string = string> = (
+  p: P,
+) => { type: T; payload?: P };
+type CreatorNoPayload<T extends string = string> = () => { type: T };
 
 export default function creator(type: string): CreatorNoPayload;
-export default function creator<P>(type: string): Creator<P>;
-export default function creator<P = any>(type: string): CreatorNoPayload {
+export default function creator<P, T extends string = string>(
+  type: string,
+): Creator<P, T>;
+export default function creator<P = any, T extends string = string>(
+  type: T,
+): CreatorNoPayload {
   function action(payload?: P) {
     if (typeof payload === 'undefined') {
       return { type };
@@ -15,7 +21,7 @@ export default function creator<P = any>(type: string): CreatorNoPayload {
     };
   }
 
-  action.toString = () => `${type}`;
+  action.toString = (): T => `${type}` as T;
   return action;
 }
 
