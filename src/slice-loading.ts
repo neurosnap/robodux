@@ -15,7 +15,7 @@ export const defaultLoadingItem = () => ({
 export default function createLoadingSlice<
   A extends ActionsAny = any,
   S extends AnyState = AnyState
->(slice: keyof S) {
+>({ slice, extraActions }: { slice: keyof S; extraActions?: ActionsAny }) {
   const initialState = defaultLoadingItem();
   return robodux<LoadingItemState, A, S>({
     slice,
@@ -37,5 +37,6 @@ export default function createLoadingSlice<
         success: false,
       }),
     } as any,
+    extraActions,
   });
 }

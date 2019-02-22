@@ -14,7 +14,7 @@ describe('loadingSlice', () => {
   describe('loading', () => {
     it('should set the state to loading', () => {
       const slice = 'loading';
-      const { reducer, actions } = loadingSlice<Actions, State>(slice);
+      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
       const state = { error: '', loading: false, success: false };
       const actual = reducer(state, actions.loading());
 
@@ -29,7 +29,7 @@ describe('loadingSlice', () => {
   describe('success', () => {
     it('should set the state to loading', () => {
       const slice = 'loading';
-      const { reducer, actions } = loadingSlice<Actions, State>(slice);
+      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
       const state = { error: '', loading: true, success: false };
       const actual = reducer(state, actions.loadingSuccess());
 
@@ -43,7 +43,7 @@ describe('loadingSlice', () => {
 
   describe('error', () => {
     const slice = 'loading';
-    const { reducer, actions } = loadingSlice<Actions, State>(slice);
+    const { reducer, actions } = loadingSlice<Actions, State>({ slice });
     const state = { error: '', loading: true, success: false };
     const actual = reducer(state, actions.loadingError('some error'));
 

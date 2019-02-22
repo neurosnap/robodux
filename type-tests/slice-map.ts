@@ -1,7 +1,7 @@
 import mapSlice from '../src/slice-map';
 
 // testing no params
-const one = mapSlice('SLICE');
+const one = mapSlice({ slice: 'SLICE' });
 // $ExpectType { [x: string]: (payload?: any) => Action<any>; }
 one.actions;
 // $ExpectType Reducer<AnyState, Action<any>>
@@ -27,7 +27,7 @@ interface Actions {
 interface State {
   slice: SliceState;
 }
-const two = mapSlice<SliceState, Actions, State>('slice');
+const two = mapSlice<SliceState, Actions, State>({ slice: 'slice' });
 // $ExpectType { add: (payload: SliceState) => Action<SliceState>; set: (payload: SliceState) => Action<SliceState>; remove: (payload: string[]) => Action<string[]>; reset: () => Action<any>; }
 two.actions;
 // $ExpectType Reducer<SliceState, Action<any>>

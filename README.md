@@ -16,11 +16,12 @@ which means reducers are allowed to mutate the state directly.
 ## Features
 
 * Automatically creates actions, reducer, and selector based on `slice`
+* Action types are prefixed with `slice`
 * Reducers leverage `immer` which makes updating state easy
 * When stringifying action creators they return the action type
 * Helper functions for manually creating actions and reducers
 * Reducers do no receive entire action object, only payload
-* Slice helpers to further reduce repetitive reducer types (map slice, assign slice)
+* Slice helpers to further reduce repetitive reducer types (map slice, assign slice, loading slice)
 
 ## Why not X?
 
@@ -32,6 +33,7 @@ The reason why I decided to create a separate library was primarily for:
 * no external dependencies besides `immer`
 * create action helper
 * create reducer helper
+* slice helpers
 
 ## Usage
 
@@ -55,7 +57,7 @@ interface CounterActions {
 }
 
 const counter = robodux<number, CounterActions, State>({
-  slice: 'counter', // slice is optional could be blank '' or left out completely
+  slice: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
   initialState: 0,
   actions: {
     increment: (state) => state + 1,  // state is type cast as a number from the supplied slicestate type
@@ -100,6 +102,57 @@ console.log(user.selectors.getUser(state));
 // -> { name: 'eric' }
 console.log(counter.selectors.getCounter(state));
 // -> 6
+```
+
+### without explicit types
+
+Robodux can be used without supplying interfaces, it will instead infer the types for you
+
+```js
+import robodux from 'robodux';
+import { Action } from 'redux';
+
+const defaultState = {
+  test: '',
+  wow: 0,
+};
+
+const { actions, selectors, reducer } = robodux({
+  slice: 'hi',
+  initialState: defaultState,
+  actions: { // state type is inferred from initial state
+    setTest: (state, payload: string) => { state.test = payload }, // payload is typecast as string
+    setWow: (state, payload: number) => {state.wow = payload }, // payload is typecast as number
+    reset: (state, payload: never) => defaultState,
+  },
+});
+
+const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks param has `hi` key
+actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
+actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
+actions.reset(); // typechecks to ensure action is called without params
+```
+
+### extraActions (v3.0)
+
+By default `robodux` will prefix any action type with the name of the slice.  However,
+sometimes it is necessary to allow external action types to effect the reducer.
+
+```js
+const user = robodux<User, UserActions, State>({
+  slice: 'user', // slice is optional could be blank ''
+  initialState: { name: '' },
+  actions: {
+    setUserName: (state, payload) => {
+      state.name = payload; // mutate the state all you want with immer
+    },
+  },
+  extraActions: {
+    setAddress: (state, payload) => {
+      state.address = payload;
+    }
+  }
+})
 ```
 
 ## Types
@@ -157,35 +210,6 @@ actions.reset(); // typechecks to ensure action is called without params
 
 ```
 
-### Usage without explicit types
-
-Robodux can be used without supplying interfaces, it will instead infer the types for you
-
-```js
-import robodux from 'robodux';
-import { Action } from 'redux';
-
-const defaultState = {
-  test: '',
-  wow: 0,
-};
-
-const { actions, selectors, reducer } = robodux({
-  slice: 'hi',
-  initialState: defaultState,
-  actions: { // state type is inferred from initial state
-    setTest: (state, payload: string) => { state.test = payload }, // payload is typecast as string
-    setWow: (state, payload: number) => {state.wow = payload }, // payload is typecast as number
-    reset: (state, payload: never) => defaultState,
-  },
-});
-
-const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks param has `hi` key
-actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
-actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
-actions.reset(); // typechecks to ensure action is called without params
-```
-
 ## Slice Helpers
 
 There are some common slices that I find myself creating over and over again.
@@ -195,6 +219,8 @@ redux.
 ### map slice (v1.2.0)
 
 These are common operations when dealing with a slice that is a hash map.
+
+params: { slice, extraActions }
 
 ```js
 import { mapSlice } from 'robodux';
@@ -214,7 +240,7 @@ interface Actions {
 }
 
 const slice = 'test';
-const { reducer, actions } = mapSlice<SliceState, Actions, State>(slice);
+const { reducer, actions } = mapSlice<SliceState, Actions, State>({ slice });
 const state = { 3: 'three' };
 
 store.dispatch(
@@ -256,6 +282,8 @@ store.dispatch(
 
 These are common operations when dealing with a slice that simply needs to be set or reset
 
+params: { slice, initialState, extraActions }
+
 ```js
 import { assignSlice } from 'robodux';
 
@@ -290,9 +318,11 @@ store.dispatch(
 
 ```
 
-### loading slice
+### loading slice (v3.0)
 
 Helper slice that will handle loading data
+
+params: { slice, extraActions }
 
 ```js
 import { loadingSlice, LoadingItemState } from 'robodux';
@@ -381,3 +411,7 @@ See slice helpers for more info
 ### assignSlice
 
 See slice helpers for more info
+
+### loadingSlice
+
+See slice helper for more info
