@@ -214,7 +214,7 @@ interface Actions {
 }
 
 const slice = 'test';
-const { reducer, actions } = mapSlice<SliceState, Actions, State>(slice);
+const { reducer, actions } = mapSlice<SliceState, Actions, State>({ slice });
 const state = { 3: 'three' };
 
 store.dispatch(

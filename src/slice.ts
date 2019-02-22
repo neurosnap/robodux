@@ -57,20 +57,24 @@ interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
   slice: '';
+  extraActions?: ActionsObj<SS, Ax>;
 }
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice: keyof S;
+  extraActions?: ActionsObjWithSlice<SS, Ax, S>;
 }
 interface InputWithoutSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
+  extraActions?: ActionsObj<SS, Ax>;
 }
 interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice?: keyof S;
+  extraActions?: ActionsObjWithSlice<SS, Ax, S>;
 }
 
 const actionTypeBuilder = (slice: string) => (action: string) =>
@@ -129,6 +133,7 @@ export default function createSlice<
   actions,
   initialState,
   slice = '',
+  extraActions,
 }: InputWithOptionalSlice<NoEmptyArray<SliceState>, Actions, State>) {
   const actionKeys = Object.keys(actions) as (keyof Actions)[];
   const createActionType = actionTypeBuilder(<string>slice);
@@ -138,7 +143,7 @@ export default function createSlice<
       (<any>map)[createActionType(<string>action)] = actions[action];
       return map;
     },
-    {},
+    extraActions || {},
   );
 
   const reducer = createReducer<SliceState>({
