@@ -290,6 +290,40 @@ store.dispatch(
 
 ```
 
+### loading slice
+
+Helper slice that will handle loading data
+
+```js
+import { loadingSlice, LoadingItemState } from 'robodux';
+
+interface Actions {
+  loading: never;
+  loadingSuccess: never;
+  loadingError: string;
+}
+
+interface State {
+  loading: LoadingItemState;
+}
+
+const { actions, reducer } = loadingSlice<Actions, State>('loading');
+store.dispatch(
+  actions.loading()
+)
+// redux state: { loading: { error: '', loading: true, success: false } }
+
+store.dispatch(
+  actions.loadingSuccess()
+)
+// redux state: { loading: { error: '', loading: false, success: true } }
+
+store.dispatch(
+  actions.loadingError('something happened')
+)
+// redux state: { loading: { error: 'something happened', loading: false, success: false } }
+```
+
 ## API
 
 ### robodux
