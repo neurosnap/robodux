@@ -57,24 +57,24 @@ interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
   slice: '';
-  extraActions?: ActionsObj<SS, Ax>;
+  extraActions?: ActionsAny;
 }
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice: keyof S;
-  extraActions?: ActionsObjWithSlice<SS, Ax, S>;
+  extraActions?: ActionsAny;
 }
 interface InputWithoutSlice<SS = any, Ax = ActionsAny> {
   initialState: SS;
   actions: ActionsObj<SS, Ax>;
-  extraActions?: ActionsObj<SS, Ax>;
+  extraActions?: ActionsAny;
 }
 interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice?: keyof S;
-  extraActions?: ActionsObjWithSlice<SS, Ax, S>;
+  extraActions?: ActionsAny;
 }
 
 const actionTypeBuilder = (slice: string) => (action: string) =>

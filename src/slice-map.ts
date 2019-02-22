@@ -44,6 +44,6 @@ export default function mapSlice<
       [`remove${cap(<string>slice)}`]: removeMap<S>(),
       [`reset${cap(<string>slice)}`]: () => initialState,
     } as any,
-    extraActions: extraActions as any,
+    extraActions,
   });
 }

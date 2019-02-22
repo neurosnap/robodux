@@ -21,6 +21,6 @@ export default function assignSlice<
       [`set${cap(<string>slice)}`]: (s: SS, p: SS) => p,
       [`reset${cap(<string>slice)}`]: () => initialState,
     } as any,
-    extraActions: extraActions as any,
+    extraActions,
   });
 }

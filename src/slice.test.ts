@@ -121,4 +121,33 @@ describe('createSlice', () => {
       });
     });
   });
+
+  describe('when adding extra actions', () => {
+    it('should create action reducer pair without action type namespacing', () => {
+      const { actions, reducer } = createSlice({
+        actions: {
+          setUserName: (state, payload: string) => {
+            state.user = payload;
+          },
+        },
+        extraActions: {
+          another: (state, payload) => {
+            state.another = payload;
+          },
+        },
+        initialState: { user: '', another: '' },
+        slice: 'user',
+      });
+
+      expect(
+        reducer(
+          { user: 'hi', another: '' },
+          { type: 'another', payload: 'wow' },
+        ),
+      ).toEqual({
+        another: 'wow',
+        user: 'hi',
+      });
+    });
+  });
 });
