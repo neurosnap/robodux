@@ -6,7 +6,7 @@
 * :sparkles: `loadingSlice` is a new slice helper that handles loading states
 * :boom: `mapSlice` now accepts an object instead of a `slice` string, e.g. mapSlice('aSlice') -> mapSlice({ slice: 'aSlice' })
 
-## v2.1.0 (01-16-2019
+## v2.1.0 (01-16-2019)
 
 * :sparkles: Added assign slice helper
 
