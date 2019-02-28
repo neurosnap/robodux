@@ -337,7 +337,7 @@ interface State {
   loading: LoadingItemState;
 }
 
-const { actions, reducer } = loadingSlice<Actions, State>('loading');
+const { actions, reducer } = loadingSlice<Actions, State>({ slice: 'loading' });
 store.dispatch(
   actions.loading()
 )
