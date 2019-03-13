@@ -46,16 +46,6 @@ describe('createSlice', () => {
         expect(reducer(2, actions.multiply(3))).toEqual(6);
       });
     });
-
-    describe('when using selectors', () => {
-      it('should create selector with correct name', () => {
-        expect(selectors.hasOwnProperty('getSlice')).toBe(true);
-      });
-
-      it('should return the slice state data', () => {
-        expect(selectors.getSlice(2)).toEqual(2);
-      });
-    });
   });
 
   describe('when passing slice', () => {
@@ -93,14 +83,6 @@ describe('createSlice', () => {
     });
     it('should return the correct value from reducer when multiplying', () => {
       expect(reducer(5, actions.multiply(5))).toEqual(25);
-    });
-
-    it('should create selector with correct name', () => {
-      expect(selectors.hasOwnProperty('getSlice')).toBe(true);
-    });
-
-    it('should return the slice state data', () => {
-      expect(selectors.getSlice({ cool: 2 })).toEqual(2);
     });
   });
 

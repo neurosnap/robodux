@@ -25,5 +25,3 @@ export default function creator<P = any, T extends string = string>(
   action.type = type;
   return action;
 }
-
-export const getActionType = (action: any) => `${action}`;

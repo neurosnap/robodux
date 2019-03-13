@@ -1,6 +1,5 @@
 import createAction from './action';
 import createReducer, { NoEmptyArray } from './reducer';
-import { createSelector } from './selector';
 import {
   Action,
   Reducer,
@@ -141,14 +140,9 @@ export default function createSlice<
     {} as any,
   );
 
-  const selectors = {
-    getSlice: createSelector<State, SliceState>(<string>slice),
-  };
-
   return {
     actions: actionMap,
     reducer,
     slice,
-    selectors,
   };
 }

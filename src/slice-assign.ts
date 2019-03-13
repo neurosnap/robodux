@@ -1,8 +1,7 @@
 import robodux from './slice';
 import { AnyState, ActionsAny } from './types';
 import { NoEmptyArray } from './reducer';
-
-export const cap = (t: string) => t.charAt(0).toUpperCase() + t.substr(1);
+import { cap } from './util';
 
 interface Params<SS, S> {
   initialState: NoEmptyArray<SS>;
