@@ -1,5 +1,6 @@
-import robodux, { AnyState, ActionsAny } from './slice';
+import robodux from './slice';
 import { NoEmptyArray } from './reducer';
+import { AnyState, ActionsAny } from './types';
 
 export const cap = (t: string) => t.charAt(0).toUpperCase() + t.substr(1);
 

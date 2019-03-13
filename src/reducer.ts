@@ -1,7 +1,7 @@
 import createNextState from 'immer';
 
 import { Action } from './types';
-import { ReducerMap } from './slice';
+import { ReducerMap } from './types';
 
 export type CreateReducer<SS = any> = {
   initialState: SS;
