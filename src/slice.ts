@@ -8,13 +8,11 @@ import {
   ActionsAny,
   AnyState,
   ReducerMap,
-  NoBadState,
 } from './types';
 
 export interface Slice<A = any, SS = any, S = SS, str = ''> {
   slice: SS extends S ? '' : str;
   reducer: Reducer<SS, Action>;
-  selectors: { getSlice: (state: NoBadState<S>) => SS };
   actions: {
     [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
       ? (payload?: any) => Action

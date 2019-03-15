@@ -7,7 +7,7 @@ describe('createSlice', () => {
       increment: never;
       multiply: number;
     }
-    const { actions, reducer, selectors } = createSlice<State, Actions>({
+    const { actions, reducer } = createSlice<State, Actions>({
       actions: {
         increment: (state) => state + 1,
         multiply: (state, payload) => state * payload,
@@ -49,7 +49,7 @@ describe('createSlice', () => {
   });
 
   describe('when passing slice', () => {
-    const { actions, reducer, selectors } = createSlice({
+    const { actions, reducer } = createSlice({
       actions: {
         increment: (state) => state + 1,
         multiply: (state, payload: number) => state * payload,
