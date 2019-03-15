@@ -1,49 +1,18 @@
 import createAction from './action';
 import createReducer, { NoEmptyArray } from './reducer';
-import { createSelector } from './selector';
-import { Action } from './types';
-
-type ActionReducer<SS = any, A = any> = (
-  state: SS,
-  payload: A,
-) => SS | void | undefined;
-
-type ActionReducerWithSlice<SS = any, A = any, S = any> = (
-  state: SS,
-  payload: A,
-  _FullState: S, // Third argument can be used to type cast State
-) => SS | void | undefined;
-
-export type Reducer<SS = any, A extends Action = Action> = (
-  state: SS | undefined,
-  payload: A,
-) => SS;
-
-type ActionsObj<SS = any, Ax = any> = {
-  [K in keyof Ax]: ActionReducer<SS, Ax[K]>
-};
-type ActionsObjWithSlice<SS = any, Ax = any, S = any> = {
-  [K in keyof Ax]: ActionReducerWithSlice<SS, Ax[K], S>
-};
-
-export interface ActionsAny<P = any> {
-  [Action: string]: P;
-}
-
-export interface AnyState {
-  [slice: string]: any;
-}
-
-export interface ReducerMap<SS, A = Action> {
-  [Action: string]: ActionReducer<SS, A>;
-}
-
-type NoBadState<S> = S extends { [x: string]: {} } ? AnyState : S;
+import {
+  Action,
+  Reducer,
+  ActionsObj,
+  ActionsObjWithSlice,
+  ActionsAny,
+  AnyState,
+  ReducerMap,
+} from './types';
 
 export interface Slice<A = any, SS = any, S = SS, str = ''> {
   slice: SS extends S ? '' : str;
   reducer: Reducer<SS, Action>;
-  selectors: { getSlice: (state: NoBadState<S>) => SS };
   actions: {
     [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
       ? (payload?: any) => Action
@@ -169,14 +138,9 @@ export default function createSlice<
     {} as any,
   );
 
-  const selectors = {
-    getSlice: createSelector<State, SliceState>(<string>slice),
-  };
-
   return {
     actions: actionMap,
     reducer,
     slice,
-    selectors,
   };
 }

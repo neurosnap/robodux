@@ -8,8 +8,6 @@ one.actions;
 one.reducer;
 // $ExpectType "SLICE"
 one.slice;
-// $ExpectType { getSlice: (state: { SLICE: any; }) => AnyState; }
-one.selectors;
 
 // testing with params
 interface Obj {
@@ -34,5 +32,3 @@ two.actions;
 two.reducer;
 // $ExpectType "slice"
 two.slice;
-// $ExpectType { getSlice: (state: State) => SliceState; }
-two.selectors;

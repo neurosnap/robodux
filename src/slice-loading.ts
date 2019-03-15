@@ -1,4 +1,5 @@
-import robodux, { AnyState, ActionsAny } from './slice';
+import robodux from './slice';
+import { AnyState, ActionsAny } from './types';
 
 export interface LoadingItemState {
   error: string;

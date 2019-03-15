@@ -1,5 +1,12 @@
 # CHANGES
 
+## v4.0.0 (03-13-2019)
+
+* :hammer: removed `selectors` from robodux
+
+`selectors` in robodux was struggling to be useful and ultimately we decided
+to remove it entirely from the library.
+
 ## v3.0.0 (02-21-2019)
 
 * :sparkles: `extraActions` parameter to `robodux` allows reducers to listen to external action types

@@ -22,7 +22,7 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
+const { actions, reducer, slice } = robodux<SliceState, Actions, IState>({
   slice: 'hi',
   actions: {
     set: (state, payload) => payload,
@@ -31,7 +31,7 @@ const { actions, selectors, reducer } = robodux<SliceState, Actions, IState>({
   initialState: defaultState,
 });
 
-const val = selectors.getSlice({ hi: defaultState, auth: {} } as IState);
+const val = { hi: defaultState, auth: {} }[slice];
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
@@ -87,7 +87,6 @@ export const {
   reducer: authReducer,
   slice: authSlice,
   actions: { authFail, authStart, authSuccess, authLogout },
-  selectors: { getSlice: getAuth },
 } = auth;
 
 const authWithoutInterface = robodux({
@@ -119,7 +118,6 @@ export const {
   reducer: authReducer2,
   slice: authSlice2,
   actions: { authFail2, authStart2, authSuccess2, authLogout2 },
-  selectors: { getSlice: getAuth2 },
 } = authWithoutInterface;
 
 const rootReducer = combineReducers<IState>({
@@ -145,6 +143,8 @@ console.log(
   authSuccess({ idToken: 'really Long Token', userId: "It's Me" }),
   '\n',
 );
+
+const getAuth = (state) => state[authSlice];
 
 console.log(
   '\n[authStart action dispatched]\n',

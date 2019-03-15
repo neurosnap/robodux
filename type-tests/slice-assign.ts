@@ -8,8 +8,6 @@ one.actions;
 one.reducer;
 // $ExpectType "SLICE"
 one.slice;
-// $ExpectType { getSlice: (state: { SLICE: any; }) => boolean; }
-one.selectors;
 
 // testing with params
 type SliceState = boolean;
@@ -30,5 +28,3 @@ two.actions;
 two.reducer;
 // $ExpectType "slice"
 two.slice;
-// $ExpectType { getSlice: (state: State) => boolean; }
-two.selectors;

@@ -98,9 +98,9 @@ console.log(`${counter.actions.decrement}`);
 store.dispatch(user.actions.setUserName('eric'));
 // New State -> { counter: 6, user: { name: 'eric' } }
 const state = store.getState();
-console.log(user.selectors.getUser(state));
+console.log(state[users.slice]);
 // -> { name: 'eric' }
-console.log(counter.selectors.getCounter(state));
+console.log(state[counter.slice]);
 // -> 6
 ```
 
@@ -127,7 +127,6 @@ const { actions, selectors, reducer } = robodux({
   },
 });
 
-const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks param has `hi` key
 actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
 actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
 actions.reset(); // typechecks to ensure action is called without params
@@ -203,7 +202,6 @@ const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
   },
 });
 
-const val = selectors.getSlice({ hi: defaultState, other: true }); // typechecks param as State
 actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
 actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
 actions.reset(); // typechecks to ensure action is called without params

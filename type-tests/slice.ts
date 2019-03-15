@@ -22,8 +22,6 @@ addOne.actions;
 addOne.reducer;
 // $ExpectType ""
 addOne.slice;
-// $ExpectType { getSlice: (state: number) => number; }
-addOne.selectors;
 
 // testing InputWithoutSlice and no params
 const addTwo = createSlice({
@@ -36,8 +34,6 @@ addTwo.actions;
 addTwo.reducer;
 // $ExpectType ""
 addTwo.slice;
-// $ExpectType { getSlice: (state: number) => number; }
-addTwo.selectors;
 
 // testing InputWithSlice and 3 params
 const slice = 'something';
@@ -55,8 +51,6 @@ addThree.actions;
 addThree.reducer;
 // $ExpectType "something"
 addThree.slice;
-// $ExpectType { getSlice: (state: ThreeState) => number; }
-addThree.selectors;
 
 // testing InputWithSlice and 2 params
 const addFour = createSlice<number, { add: number }>({
@@ -70,8 +64,6 @@ addFour.actions;
 addFour.reducer;
 // $ExpectType string | number | symbol
 addFour.slice;
-// $ExpectType { getSlice: (state: AnyState) => number; }
-addFour.selectors;
 
 // testing InputWithSlice and no params
 const addFive = createSlice({
@@ -85,8 +77,6 @@ addFive.actions;
 addFive.reducer;
 // $ExpectType "something"
 addFive.slice;
-// $ExpectType { getSlice: (state: { something: any; } & { something: any; }) => number; }
-addFive.selectors;
 
 // testing InputWithBlankSlice and 2 params
 const addSix = createSlice<number, { add: number }>({
@@ -100,8 +90,6 @@ addSix.actions;
 addSix.reducer;
 // $ExpectType ""
 addSix.slice;
-// $ExpectType { getSlice: (state: number) => number; }
-addSix.selectors;
 
 // testing InputWithBlankSlice and no params
 const addSeven = createSlice({
@@ -115,8 +103,6 @@ addSeven.actions;
 addSeven.reducer;
 // $ExpectType ""
 addSeven.slice;
-// $ExpectType { getSlice: (state: { : any; } & { : any; }) => number; }
-addSeven.selectors;
 
 // testing InputWithSlice initialized let
 let eightSlice = 'something';
@@ -131,5 +117,3 @@ addEight.actions;
 addEight.reducer;
 // $ExpectType string | number
 addEight.slice;
-// $ExpectType { getSlice: (state: AnyState) => number; }
-addEight.selectors;

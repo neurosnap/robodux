@@ -1,7 +1,7 @@
-import robodux, { AnyState, ActionsAny } from './slice';
+import robodux from './slice';
 import { NoEmptyArray } from './reducer';
-
-export const cap = (t: string) => t.charAt(0).toUpperCase() + t.substr(1);
+import { AnyState, ActionsAny } from './types';
+import { cap } from './util';
 
 type Obj = {
   [key: string]: any;
