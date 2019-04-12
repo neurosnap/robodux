@@ -1,5 +1,9 @@
 # CHANGES
 
+## v4.1.0 (04-11-2019)
+
+* :sparkles: add new action `patchX` to `mapSlice` which allows partial updates to an entity
+
 ## v4.0.0 (03-13-2019)
 
 * :hammer: removed `selectors` from robodux
