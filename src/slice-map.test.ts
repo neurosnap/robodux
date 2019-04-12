@@ -1,4 +1,5 @@
 import mapSlice from './slice-map';
+import { PatchEntity } from './types';
 
 interface State {
   [key: string]: string;
@@ -9,6 +10,7 @@ interface Actions {
   setTest: State;
   removeTest: string[];
   resetTest: never;
+  patchTest: PatchEntity<State>;
 }
 
 describe('mapSlice', () => {
@@ -57,6 +59,63 @@ describe('mapSlice', () => {
       const state = { 1: 'one', 2: 'two', 3: 'three' };
       const actual = reducer(state, actions.resetTest());
       expect(actual).toEqual({});
+    });
+  });
+
+  describe('patch', () => {
+    describe('when entity is an object', () => {
+      it('should update a prop', () => {
+        interface State {
+          [key: string]: { name: string };
+        }
+
+        interface PatchActions {
+          patchTest: PatchEntity<State>;
+        }
+
+        const slice = 'test';
+        const { reducer, actions } = mapSlice<State, PatchActions, any>({
+          slice,
+        });
+        const state = {
+          1: { name: 'one' },
+          2: { name: 'two' },
+          3: { name: 'three' },
+        };
+        const actual = reducer(
+          state,
+          actions.patchTest({ 2: { name: 'four' } }),
+        );
+        expect(actual).toEqual({
+          1: { name: 'one' },
+          2: { name: 'four' },
+          3: { name: 'three' },
+        });
+      });
+    });
+  });
+
+  describe('when entity is *not* an object', () => {
+    it('should update a prop', () => {
+      interface State {
+        [key: string]: string;
+      }
+
+      interface PatchActions {
+        patchTest: PatchEntity<State>;
+      }
+
+      const slice = 'test';
+      const { reducer, actions } = mapSlice<State, PatchActions, any>({
+        slice,
+      });
+      const state = {
+        1: 'one',
+        2: 'two',
+        3: 'three',
+      };
+      const actual = reducer(state, actions.patchTest({ 2: 'cool' }));
+      expect(actual).toEqual({ '1': 'one', '2': 'two', '3': 'three' });
     });
   });
 });

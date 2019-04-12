@@ -28,11 +28,12 @@ export function removeMap<S = AnyState>() {
 export function patchMap<S = AnyState, A extends ActionsAny = any>() {
   return (state: S, payload: { [key: string]: Partial<A[keyof A]> }): S => {
     Object.keys(payload).forEach((id) => {
+      if (typeof payload[id] !== 'object') {
+        return state;
+      }
+
       Object.keys(payload[id]).forEach((key) => {
-        if (
-          state.hasOwnProperty(id) &&
-          state[id as keyof S].hasOwnProperty(key)
-        ) {
+        if (state.hasOwnProperty(id)) {
           (state as any)[id][key] = payload[id][key];
         }
       });
