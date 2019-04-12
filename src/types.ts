@@ -39,3 +39,7 @@ export interface ReducerMap<SS, A = Action> {
 }
 
 export type NoBadState<S> = S extends { [x: string]: {} } ? AnyState : S;
+
+export interface PatchEntity<T> {
+  [key: string]: Partial<T[keyof T]>;
+}

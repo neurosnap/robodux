@@ -221,52 +221,70 @@ These are common operations when dealing with a slice that is a hash map.
 params: { slice, extraActions }
 
 ```js
-import { mapSlice } from 'robodux';
+import { mapSlice, PatchEntity } from 'robodux';
 
 interface SliceState {
-  [key: string]: string;
+  [key: string]: { name: string, email: string };
 }
 interface State {
   test: SliceState
 }
 
+// NOTE: you only need to type the actions you are going to use
 interface Actions {
   addTest: State;
   setTest: State;
   removeTest: string[];
   resetTest: never;
+  patchTest: PatchEntity<State>;
 }
 
 const slice = 'test';
 const { reducer, actions } = mapSlice<SliceState, Actions, State>({ slice });
-const state = { 3: 'three' };
+const state = {
+  3: { name: 'three', email: 'three@three.com' }
+};
 
 store.dispatch(
   actions.addTest({
-    1: 'one',
-    2: 'two',
+    1: { name: 'one', email: 'one@one.com' },
+    2: { name: 'two', email: 'two@two.com' },
   })
 );
 /* {
-  1: 'one',
-  2: 'two',
-  3: 'three,
+  1: { name: 'one', email: 'one@one.com' },
+  2: { name: 'two', email: 'two@two.com' },
+  3: { name: 'three', email: 'three@three.com' },
 } */
 
 store.dispatch(
-  actions.setTest({ 4: 'four', 5: 'five', 6: 'six' })
+  actions.setTest({
+    4: { name: 'four', email: 'four@four.com' },
+    5: { name: 'five', email: 'five@five.com' },
+    6: { name: 'six': email: 'six@six.com' },
+  })
 )
 /* {
-  4: 'four',
-  5: 'five',
-  6: 'six',
+  4: { name: 'four', email: 'four@four.com' },
+  5: { name: 'five', email: 'five@five.com' },
+  6: { name: 'six': email: 'six@six.com' },
 } */
 
 store.dispatch(
   actions.removeTest(['5', '6'])
 )
 /* {
-  4: 'four'
+  4: { name: 'four', email: 'four@four.com' },
+} */
+
+// only update a part of the entity
+store.dispatch(
+  actions.patchTest({
+    4: { name: 'five' }
+  })
+)
+/* {
+  4: { name: 'five', email: 'four@four.com' },
 } */
 
 store.dispatch(
