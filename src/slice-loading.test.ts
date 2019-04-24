@@ -5,22 +5,40 @@ interface State {
 }
 
 interface Actions {
-  loading: never;
-  loadingSuccess: never;
+  loading: string;
+  loadingSuccess: string;
   loadingError: string;
 }
 
 describe('loadingSlice', () => {
   describe('loading', () => {
     it('should set the state to loading', () => {
+      interface OtherActions {
+        loading: never;
+      }
       const slice = 'loading';
-      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
-      const state = { error: '', loading: false, success: false };
+      const { reducer, actions } = loadingSlice<OtherActions, State>({ slice });
+      const state = { error: '', message: '', loading: false, success: false };
       const actual = reducer(state, actions.loading());
 
       expect(actual).toEqual({
         loading: true,
         error: '',
+        message: '',
+        success: false,
+      });
+    });
+
+    it('should set the state to loading with a message', () => {
+      const slice = 'loading';
+      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
+      const state = { error: '', message: '', loading: false, success: false };
+      const actual = reducer(state, actions.loading('hi there'));
+
+      expect(actual).toEqual({
+        loading: true,
+        error: '',
+        message: 'hi there',
         success: false,
       });
     });
@@ -28,14 +46,32 @@ describe('loadingSlice', () => {
 
   describe('success', () => {
     it('should set the state to loading', () => {
+      interface OtherActions {
+        loadingSuccess: never;
+      }
       const slice = 'loading';
-      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
-      const state = { error: '', loading: true, success: false };
+      const { reducer, actions } = loadingSlice<OtherActions, State>({ slice });
+      const state = { error: '', message: '', loading: true, success: false };
       const actual = reducer(state, actions.loadingSuccess());
 
       expect(actual).toEqual({
         loading: false,
         error: '',
+        message: '',
+        success: true,
+      });
+    });
+
+    it('should set the state to loading with a message', () => {
+      const slice = 'loading';
+      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
+      const state = { error: '', message: '', loading: true, success: false };
+      const actual = reducer(state, actions.loadingSuccess('wow'));
+
+      expect(actual).toEqual({
+        loading: false,
+        error: '',
+        message: 'wow',
         success: true,
       });
     });
@@ -44,11 +80,12 @@ describe('loadingSlice', () => {
   describe('error', () => {
     const slice = 'loading';
     const { reducer, actions } = loadingSlice<Actions, State>({ slice });
-    const state = { error: '', loading: true, success: false };
+    const state = { error: '', message: 'cool', loading: true, success: false };
     const actual = reducer(state, actions.loadingError('some error'));
 
     expect(actual).toEqual({
       loading: false,
+      message: '',
       error: 'some error',
       success: false,
     });

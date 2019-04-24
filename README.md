@@ -344,8 +344,8 @@ params: { slice, extraActions }
 import { loadingSlice, LoadingItemState } from 'robodux';
 
 interface Actions {
-  loading: never;
-  loadingSuccess: never;
+  loading: string;
+  loadingSuccess: string;
   loadingError: string;
 }
 
@@ -355,14 +355,14 @@ interface State {
 
 const { actions, reducer } = loadingSlice<Actions, State>({ slice: 'loading' });
 store.dispatch(
-  actions.loading()
+  actions.loading('something loading')
 )
-// redux state: { loading: { error: '', loading: true, success: false } }
+// redux state: { loading: { error: '', message: 'something loading', loading: true, success: false } }
 
 store.dispatch(
-  actions.loadingSuccess()
+  actions.loadingSuccess('great success')
 )
-// redux state: { loading: { error: '', loading: false, success: true } }
+// redux state: { loading: { error: '', message: 'great success', loading: false, success: true } }
 
 store.dispatch(
   actions.loadingError('something happened')
