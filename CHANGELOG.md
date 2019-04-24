@@ -1,5 +1,10 @@
 # CHANGES
 
+## v4.2.0 (04-24-2019)
+
+* :sparkles: loading slice has a reset action
+* :sparkles: loading slice now accepts a message when loading or success
+
 ## v4.1.0 (04-11-2019)
 
 * :sparkles: add new action `patchX` to `mapSlice` which allows partial updates to an entity
