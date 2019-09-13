@@ -1,6 +1,6 @@
 # CHANGES
 
-## v4.3.0 (09-12-2019)
+## v5.0.0 (09-12-2019)
 
 * :sparkles: `createActionMap` helper function to combine actions from multiple slices
 * :sparkles: `createReducerMap` helper function to combine reducers from multiple slices

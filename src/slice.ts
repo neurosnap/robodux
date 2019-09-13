@@ -25,7 +25,7 @@ interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   reducts: ActionsObjWithSlice<SS, Ax, S>;
   name: keyof S;
-  extraActions?: ActionsAny;
+  extraReducers?: ActionsAny;
 }
 
 const actionTypeBuilder = (slice: string) => (action: string) =>
@@ -61,7 +61,7 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   reducts,
   initialState,
   name,
-  extraActions,
+  extraReducers,
 }: InputWithSlice<NoEmptyArray<SliceState>, Actions>) {
   if (!name) {
     throw new Error(`${name as string} must not be blank`);
@@ -75,13 +75,13 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
       (<any>map)[createActionType(<string>action)] = reducts[action];
       return map;
     },
-    extraActions || {},
+    extraReducers || {},
   );
 
   const reducer = createReducer<SliceState>({
     initialState,
     actions: reducerMap,
-    slice: <string>name,
+    name: <string>name,
   });
 
   const actionMap = actionKeys.reduce<

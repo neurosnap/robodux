@@ -57,9 +57,9 @@ interface CounterActions {
 }
 
 const counter = robodux<number, CounterActions, State>({
-  slice: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
+  name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,  // state is type cast as a number from the supplied slicestate type
     decrement: (state) => state - 1,
     multiply: (state, payload) => state * payload,  // payload here is type cast as number as from CounterActions
@@ -71,9 +71,9 @@ interface UserActions {
 }
 
 const user = robodux<User, UserActions, State>({
-  slice: 'user', // slice is optional could be blank ''
+  name: 'user', // slice is optional could be blank ''
   initialState: { name: '' },
-  actions: {
+  reducts: {
     setUserName: (state, payload) => {
       state.name = payload; // mutate the state all you want with immer
     },
@@ -98,9 +98,9 @@ console.log(`${counter.actions.decrement}`);
 store.dispatch(user.actions.setUserName('eric'));
 // New State -> { counter: 6, user: { name: 'eric' } }
 const state = store.getState();
-console.log(state[users.slice]);
+console.log(state[users.name]);
 // -> { name: 'eric' }
-console.log(state[counter.slice]);
+console.log(state[counter.name]);
 // -> 6
 ```
 
@@ -118,9 +118,9 @@ const defaultState = {
 };
 
 const { actions, selectors, reducer } = robodux({
-  slice: 'hi',
+  name: 'hi',
   initialState: defaultState,
-  actions: { // state type is inferred from initial state
+  reducts: { // state type is inferred from initial state
     setTest: (state, payload: string) => { state.test = payload }, // payload is typecast as string
     setWow: (state, payload: number) => {state.wow = payload }, // payload is typecast as number
     reset: (state, payload: never) => defaultState,
@@ -132,21 +132,21 @@ actions.setTest(0); // autocomplete and type checking for payload(number), typee
 actions.reset(); // typechecks to ensure action is called without params
 ```
 
-### extraActions (v3.0)
+### extraReducers (v5.0)
 
 By default `robodux` will prefix any action type with the name of the slice.  However,
 sometimes it is necessary to allow external action types to effect the reducer.
 
 ```js
 const user = robodux<User, UserActions, State>({
-  slice: 'user', // slice is optional could be blank ''
+  name: 'user',
   initialState: { name: '' },
-  actions: {
+  reducts: {
     setUserName: (state, payload) => {
       state.name = payload; // mutate the state all you want with immer
     },
   },
-  extraActions: {
+  extraReducers: {
     setAddress: (state, payload) => {
       state.address = payload;
     }
@@ -164,25 +164,25 @@ a composition of slices.
 import { createSlice, createActionMap, createReducerMap } from 'robodux';
 
 const counter = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,
     decrement: (state) => state - 1,
   }
 });
 
 const counterLoader = createSlice({
-  slice: 'counterLoader',
+  name: 'counterLoader',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload: boolean) => payload,
   };
 })
 
 const selectors = {
-  getCounter = (state) => state[counter.slice],
-  getCounterLoader = (state) => state[counterLoader.slice],
+  getCounter = (state) => state[counter.name],
+  getCounterLoader = (state) => state[counterLoader.name],
 };
 
 const actions = createActionMap(counter, counterLoader);
@@ -235,9 +235,9 @@ const defaultState = {
 };
 
 const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
-  slice: 'hi',
+  name: 'hi',
   initialState: defaultState,
-  actions: {
+  reducts: {
     setTest: (state, payload) => { state.test = payload }, // payload is type string from Actions
     setWow: (state, payload) => {state.wow = payload }, // payload is type number from Actions
     reset: (state) => defaultState,
@@ -260,7 +260,7 @@ redux.
 
 These are common operations when dealing with a slice that is a hash map.
 
-params: { slice, extraActions }
+params: { name, extraReducers }
 
 ```js
 import { mapSlice, PatchEntity } from 'robodux';
@@ -281,8 +281,8 @@ interface Actions {
   patchTest: PatchEntity<State>;
 }
 
-const slice = 'test';
-const { reducer, actions } = mapSlice<SliceState, Actions, State>({ slice });
+const name = 'test';
+const { reducer, actions } = mapSlice<SliceState, Actions, State>({ name });
 const state = {
   3: { name: 'three', email: 'three@three.com' }
 };
@@ -340,7 +340,7 @@ store.dispatch(
 
 These are common operations when dealing with a slice that simply needs to be set or reset
 
-params: { slice, initialState, extraActions }
+params: { name, initialState, extraReducers }
 
 ```js
 import { assignSlice } from 'robodux';
@@ -356,8 +356,8 @@ interface State {
   test: SliceState;
 }
 
-const slice = 'token';
-const { reducer, actions } = assignSlice<SliceState, Actions, State>({ slice, initialState: '' });
+const name = 'token';
+const { reducer, actions } = assignSlice<SliceState, Actions, State>({ name, initialState: '' });
 
 store.dispatch(
   actions.setToken('some-token')
@@ -380,7 +380,7 @@ store.dispatch(
 
 Helper slice that will handle loading data
 
-params: { slice, extraActions }
+params: { name, extraReducers }
 
 ```js
 import { loadingSlice, LoadingItemState } from 'robodux';
@@ -395,7 +395,7 @@ interface State {
   loading: LoadingItemState;
 }
 
-const { actions, reducer } = loadingSlice<Actions, State>({ slice: 'loading' });
+const { actions, reducer } = loadingSlice<Actions, State>({ name: 'loading' });
 store.dispatch(
   actions.loading('something loading')
 )
@@ -462,7 +462,7 @@ console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
 // -> 10
 ```
 
-### createActionMap (v4.3.0)
+### createActionMap (v5.0.0)
 
 This is a helper function to combine actions from multiple slices.  This is create
 when composing multiple slices into a module that will then be exported.
@@ -471,18 +471,18 @@ when composing multiple slices into a module that will then be exported.
 import { createSlice, createActionMap } from 'robodux';
 
 const counter = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,
     decrement: (state) => state - 1,
   },
 });
 
 const loading = createSlice({
-  slice: 'loading',
+  name: 'loading',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload) => payload,
   }
 });
@@ -506,7 +506,7 @@ const actions = createActionMap(counter, loading);
 export { actions };
 ```
 
-### createReducerMap (v4.3.0)
+### createReducerMap (v5.0.0)
 
 This is a helper function to combine reducers from multiple slices.  This is useful
 when composing multiple slices into a module that will then be exported.  This does *not* use `combineReducers` under the hood, it simply creates an object where the key is the slice name and the value is the reducer function.
@@ -515,18 +515,18 @@ when composing multiple slices into a module that will then be exported.  This d
 import { createSlice, createReducerMap } from 'robodux';
 
 const counter = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,
     decrement: (state) => state - 1,
   },
 });
 
 const loading = createSlice({
-  slice: 'loading',
+  name: 'loading',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload) => payload,
   }
 });
@@ -534,8 +534,8 @@ const loading = createSlice({
 /*
 This is the same thing as doing this:
 const reducers = {
-  [counter.slice]: counter.reducer,
-  [loading.slice]: loading.reducer,
+  [counter.name]: counter.reducer,
+  [loading.name]: loading.reducer,
 };
 */
 const reducers = createReducerMap(counter, loading);

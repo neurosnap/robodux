@@ -16,8 +16,8 @@ describe('loadingSlice', () => {
       interface OtherActions {
         loading: never;
       }
-      const slice = 'loading';
-      const { reducer, actions } = loadingSlice<OtherActions, State>({ slice });
+      const name = 'loading';
+      const { reducer, actions } = loadingSlice<OtherActions, State>({ name });
       const state = { error: '', message: '', loading: false, success: false };
       const actual = reducer(state, actions.loading());
 
@@ -30,8 +30,8 @@ describe('loadingSlice', () => {
     });
 
     it('should set the state to loading with a message', () => {
-      const slice = 'loading';
-      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
+      const name = 'loading';
+      const { reducer, actions } = loadingSlice<Actions, State>({ name });
       const state = { error: '', message: '', loading: false, success: false };
       const actual = reducer(state, actions.loading('hi there'));
 
@@ -49,8 +49,8 @@ describe('loadingSlice', () => {
       interface OtherActions {
         loadingSuccess: never;
       }
-      const slice = 'loading';
-      const { reducer, actions } = loadingSlice<OtherActions, State>({ slice });
+      const name = 'loading';
+      const { reducer, actions } = loadingSlice<OtherActions, State>({ name });
       const state = { error: '', message: '', loading: true, success: false };
       const actual = reducer(state, actions.loadingSuccess());
 
@@ -63,8 +63,8 @@ describe('loadingSlice', () => {
     });
 
     it('should set the state to loading with a message', () => {
-      const slice = 'loading';
-      const { reducer, actions } = loadingSlice<Actions, State>({ slice });
+      const name = 'loading';
+      const { reducer, actions } = loadingSlice<Actions, State>({ name });
       const state = { error: '', message: '', loading: true, success: false };
       const actual = reducer(state, actions.loadingSuccess('wow'));
 
@@ -78,8 +78,8 @@ describe('loadingSlice', () => {
   });
 
   describe('error', () => {
-    const slice = 'loading';
-    const { reducer, actions } = loadingSlice<Actions, State>({ slice });
+    const name = 'loading';
+    const { reducer, actions } = loadingSlice<Actions, State>({ name });
     const state = { error: '', message: 'cool', loading: true, success: false };
     const actual = reducer(state, actions.loadingError('some error'));
 

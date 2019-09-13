@@ -40,7 +40,7 @@ export function combine(...args: any[]): any {
 interface TSlice<A = any, SS = any> {
   actions: { [K in keyof A]: A[K] };
   reducer: Reducer<SS, Action>;
-  slice: string;
+  name: string;
 }
 
 export function createActionMap<A>(a: TSlice<A>): MergeIntersections<A>;
@@ -73,17 +73,17 @@ export function createActionMap(...args: any[]): any {
 }
 
 export function createReducerMap<
-  KV extends Array<{ slice: P; reducer: Reducer }>,
+  KV extends Array<{ name: P; reducer: Reducer }>,
   P extends keyof any
 >(
   ...args: KV
-): { [K in KV[number]['slice']]: Extract<KV[number], { slice: K }>['reducer'] };
+): { [K in KV[number]['name']]: Extract<KV[number], { name: K }>['reducer'] };
 export function createReducerMap(...args: any[]): any {
   return args.reduce((acc, slice) => {
-    if (acc.hasOwnProperty(slice.slice)) {
-      console.warn(`Reducer collision detected: ${slice.slice} already exists`);
+    if (acc.hasOwnProperty(slice.name)) {
+      console.warn(`Reducer collision detected: ${slice.name} already exists`);
     }
-    acc[slice.slice] = slice.reducer;
+    acc[slice.name] = slice.reducer;
     return acc;
   }, {});
 }

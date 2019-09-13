@@ -47,7 +47,7 @@ export default function mapSlice<
   SS extends AnyState = AnyState,
   A extends ActionsAny = any,
   S extends AnyState = AnyState
->({ name, extraActions }: { name: keyof S; extraActions?: ActionsAny }) {
+>({ name, extraReducers }: { name: keyof S; extraReducers?: ActionsAny }) {
   const initialState = {} as NoEmptyArray<SS>;
   return robodux<SS, A, S>({
     name,
@@ -59,6 +59,6 @@ export default function mapSlice<
       [`remove${cap(<string>name)}`]: removeMap<S>(),
       [`reset${cap(<string>name)}`]: () => initialState,
     } as any,
-    extraActions,
+    extraReducers,
   });
 }

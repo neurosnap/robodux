@@ -45,17 +45,17 @@ const loading = (
 export default function createLoadingSlice<
   A extends ActionsAny = any,
   S extends AnyState = AnyState
->({ slice, extraActions }: { slice: keyof S; extraActions?: ActionsAny }) {
+>({ name, extraReducers }: { name: keyof S; extraReducers?: ActionsAny }) {
   const initialState = defaultLoadingItem();
   return robodux<LoadingItemState, A, S>({
-    slice,
+    name,
     initialState,
-    actions: {
-      [`${slice}Error`]: error,
-      [`${slice}Success`]: success,
-      [slice]: loading,
-      [`${slice}Reset`]: (state: LoadingItemState) => initialState,
+    reducts: {
+      [`${name}Error`]: error,
+      [`${name}Success`]: success,
+      [name]: loading,
+      [`${name}Reset`]: (state: LoadingItemState) => initialState,
     } as any,
-    extraActions,
+    extraReducers,
   });
 }
