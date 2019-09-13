@@ -28,6 +28,9 @@ export function combine(...args: any[]): any {
   const newObj: any = {};
   for (const obj of args) {
     for (const key in obj) {
+      if (newObj.hasOwnProperty(key)) {
+        console.warn(`collision detected: ${key} already exists`, args);
+      }
       newObj[key] = obj[key];
     }
   }
@@ -77,6 +80,9 @@ export function createReducerMap<
 ): { [K in KV[number]['slice']]: Extract<KV[number], { slice: K }>['reducer'] };
 export function createReducerMap(...args: any[]): any {
   return args.reduce((acc, slice) => {
+    if (acc.hasOwnProperty(slice.slice)) {
+      console.warn(`Reducer collision detected: ${slice.slice} already exists`);
+    }
     acc[slice.slice] = slice.reducer;
     return acc;
   }, {});

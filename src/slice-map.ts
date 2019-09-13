@@ -47,17 +47,17 @@ export default function mapSlice<
   SS extends AnyState = AnyState,
   A extends ActionsAny = any,
   S extends AnyState = AnyState
->({ slice, extraActions }: { slice: keyof S; extraActions?: ActionsAny }) {
+>({ name, extraActions }: { name: keyof S; extraActions?: ActionsAny }) {
   const initialState = {} as NoEmptyArray<SS>;
   return robodux<SS, A, S>({
-    slice,
+    name,
     initialState,
-    actions: {
-      [`add${cap(<string>slice)}`]: addMap<S>(),
-      [`set${cap(<string>slice)}`]: setMap<S>(),
-      [`patch${cap(<string>slice)}`]: patchMap<S, A>(),
-      [`remove${cap(<string>slice)}`]: removeMap<S>(),
-      [`reset${cap(<string>slice)}`]: () => initialState,
+    reducts: {
+      [`add${cap(<string>name)}`]: addMap<S>(),
+      [`set${cap(<string>name)}`]: setMap<S>(),
+      [`patch${cap(<string>name)}`]: patchMap<S, A>(),
+      [`remove${cap(<string>name)}`]: removeMap<S>(),
+      [`reset${cap(<string>name)}`]: () => initialState,
     } as any,
     extraActions,
   });
