@@ -1,4 +1,4 @@
-import robodux from './slice';
+import createSlice from './slice';
 import { AnyState, ActionsAny } from './types';
 
 export interface LoadingItemState {
@@ -47,8 +47,9 @@ export default function createLoadingSlice<
   S extends AnyState = AnyState
 >({ name, extraReducers }: { name: keyof S; extraReducers?: ActionsAny }) {
   const initialState = defaultLoadingItem();
-  return robodux<LoadingItemState, A, S>({
+  return createSlice<LoadingItemState, A, S>({
     name,
+    useImmer: false,
     initialState,
     reducts: {
       [`${name}Error`]: error,

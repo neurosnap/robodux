@@ -1,4 +1,4 @@
-import robodux from './slice';
+import createSlice from './slice';
 import { AnyState, ActionsAny } from './types';
 import { NoEmptyArray } from './reducer';
 import { cap } from './util';
@@ -14,8 +14,9 @@ export default function assignSlice<
   A extends ActionsAny = any,
   S extends AnyState = AnyState
 >({ name, initialState, extraReducers }: Params<SS, S>) {
-  return robodux<SS, A, S>({
+  return createSlice<SS, A, S>({
     name,
+    useImmer: false,
     initialState,
     reducts: {
       [`set${cap(<string>name)}`]: (s: SS, p: SS) => p,

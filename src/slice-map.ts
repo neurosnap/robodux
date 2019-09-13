@@ -1,4 +1,4 @@
-import robodux from './slice';
+import createSlice from './slice';
 import { NoEmptyArray } from './reducer';
 import { AnyState, ActionsAny } from './types';
 import { cap } from './util';
@@ -49,8 +49,9 @@ export default function mapSlice<
   S extends AnyState = AnyState
 >({ name, extraReducers }: { name: keyof S; extraReducers?: ActionsAny }) {
   const initialState = {} as NoEmptyArray<SS>;
-  return robodux<SS, A, S>({
+  return createSlice<SS, A, S>({
     name,
+    useImmer: false,
     initialState,
     reducts: {
       [`add${cap(<string>name)}`]: addMap<S>(),
