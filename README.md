@@ -154,6 +154,48 @@ const user = robodux<User, UserActions, State>({
 })
 ```
 
+## Creating a module
+
+The recommended way to use this library is by creating a module.  A module is
+a composition of slices.
+
+```js
+// counter.js
+import { createSlice, createActionMap, createReducerMap } from 'robodux';
+
+const counter = createSlice({
+  slice: 'counter',
+  initialState: 0,
+  actions: {
+    increment: (state) => state + 1,
+    decrement: (state) => state - 1,
+  }
+});
+
+const counterLoader = createSlice({
+  slice: 'counterLoader',
+  initialState: false,
+  actions: {
+    loading: (state, payload: boolean) => payload,
+  };
+})
+
+const selectors = {
+  getCounter = (state) => state[counter.slice],
+  getCounterLoader = (state) => state[counterLoader.slice],
+};
+
+const actions = createActionMap(counter, counterLoader);
+const reducers = createReducerMap(counter, counterLoader);
+
+// creating a consistent API is very important for maintainability
+// so all modules should export the same API
+export { selectors, actions, reducers };
+```
+
+All of my apps are setup in a similar way.  An app is a composition of modules
+and the UI.  To read more about why apps should be set up this way then read my blog article: https://erock.io/scaling-js-codebase-multiple-platforms/
+
 ## Types
 
 `robodux` accepts three generics: `SliceState`, `Actions`, `State`.
