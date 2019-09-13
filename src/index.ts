@@ -6,5 +6,6 @@ export { default as loadingSlice } from './slice-loading';
 export * from './slice-loading';
 export * from './types';
 export * from './util';
+export * from './combine';
 import robodux from './slice';
 export default robodux;
