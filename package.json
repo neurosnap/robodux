@@ -34,7 +34,7 @@
     "typings-checker": "^2.0.0"
   },
   "dependencies": {
-    "immer": "^1.10.0"
+    "immer": "^4.0.0"
   },
   "lint-staged": {
     "*.{js}": [

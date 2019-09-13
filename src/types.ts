@@ -31,7 +31,7 @@ export interface ActionsAny<P = any> {
 }
 
 export interface AnyState {
-  [slice: string]: any;
+  [name: string]: any;
 }
 
 export interface ReducerMap<SS, A = Action> {
