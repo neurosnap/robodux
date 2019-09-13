@@ -3,7 +3,6 @@ import createReducer, { NoEmptyArray } from './reducer';
 import {
   Action,
   Reducer,
-  ActionsObj,
   ActionsObjWithSlice,
   ActionsAny,
   AnyState,
@@ -22,27 +21,10 @@ export interface Slice<A = any, SS = any, S = SS, str = ''> {
   };
 }
 
-interface InputWithBlankSlice<SS = any, Ax = ActionsAny> {
-  initialState: SS;
-  actions: ActionsObj<SS, Ax>;
-  slice: '';
-  extraActions?: ActionsAny;
-}
 interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   actions: ActionsObjWithSlice<SS, Ax, S>;
   slice: keyof S;
-  extraActions?: ActionsAny;
-}
-interface InputWithoutSlice<SS = any, Ax = ActionsAny> {
-  initialState: SS;
-  actions: ActionsObj<SS, Ax>;
-  extraActions?: ActionsAny;
-}
-interface InputWithOptionalSlice<SS = any, Ax = ActionsAny, S = any> {
-  initialState: SS;
-  actions: ActionsObjWithSlice<SS, Ax, S>;
-  slice?: keyof S;
   extraActions?: ActionsAny;
 }
 
@@ -68,17 +50,6 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   actions,
   initialState,
   slice,
-}: InputWithBlankSlice<NoEmptyArray<SliceState>, Actions>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>,
-  NoEmptyArray<SliceState>,
-  typeof slice
->;
-
-export default function createSlice<SliceState, Actions extends ActionsAny>({
-  actions,
-  initialState,
-  slice,
 }: InputWithSlice<NoEmptyArray<SliceState>, Actions>): Slice<
   Actions,
   NoEmptyArray<SliceState>,
@@ -89,21 +60,9 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
 export default function createSlice<SliceState, Actions extends ActionsAny>({
   actions,
   initialState,
-}: InputWithoutSlice<NoEmptyArray<SliceState>, Actions>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>
->;
-
-export default function createSlice<
-  SliceState,
-  Actions extends ActionsAny,
-  State extends AnyState
->({
-  actions,
-  initialState,
-  slice = '',
+  slice,
   extraActions,
-}: InputWithOptionalSlice<NoEmptyArray<SliceState>, Actions, State>) {
+}: InputWithSlice<NoEmptyArray<SliceState>, Actions>) {
   const actionKeys = Object.keys(actions) as (keyof Actions)[];
   const createActionType = actionTypeBuilder(<string>slice);
 

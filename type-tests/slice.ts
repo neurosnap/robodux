@@ -1,40 +1,5 @@
 import createSlice from '../src/slice';
 
-// $ExpectError Property 'actions' is missing in type '{ initialState: number; }' but required in type 'InputWithoutSlice<number, {}>'.
-createSlice({ initialState: 0 });
-
-// $ExpectError Property 'initialState' is missing in type '{ actions: {}; }' but required in type 'InputWithoutSlice<{}, {}>'.
-createSlice({ actions: {} });
-
-createSlice({ actions: {}, initialState: 0 });
-
-// $ExpectError Object is of type 'unknown'.
-createSlice({ actions: { add: (state, p) => state + p }, initialState: 0 });
-
-// testing InputWithoutSlice and 2 params
-const addOne = createSlice<number, { add: number }>({
-  actions: { add: (state, p) => state + p },
-  initialState: 0,
-});
-// $ExpectType { add: (payload: number) => Action<number>; }
-addOne.actions;
-// $ExpectType Reducer<number, Action<any>>
-addOne.reducer;
-// $ExpectType ""
-addOne.slice;
-
-// testing InputWithoutSlice and no params
-const addTwo = createSlice({
-  actions: { add: (state, p: number) => state + p },
-  initialState: 0,
-});
-// $ExpectType { add: (payload: number) => Action<number>; }
-addTwo.actions;
-// $ExpectType Reducer<number, Action<any>>
-addTwo.reducer;
-// $ExpectType ""
-addTwo.slice;
-
 // testing InputWithSlice and 3 params
 const slice = 'something';
 interface ThreeState {
