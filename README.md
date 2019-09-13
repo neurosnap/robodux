@@ -420,6 +420,93 @@ console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
 // -> 10
 ```
 
+### createActionMap (v4.3.0)
+
+This is a helper function to combine actions from multiple slices.  This is create
+when composing multiple slices into a module that will then be exported.
+
+```js
+import { createSlice, createActionMap } from 'robodux';
+
+const counter = createSlice({
+  slice: 'counter',
+  initialState: 0,
+  actions: {
+    increment: (state) => state + 1,
+    decrement: (state) => state - 1,
+  },
+});
+
+const loading = createSlice({
+  slice: 'loading',
+  initialState: false,
+  actions: {
+    loading: (state, payload) => payload,
+  }
+});
+
+/*
+This is the same as doing this:
+const actions = {
+  ...counter.actions.
+  ...loading.actions,
+};
+*/
+const actions = createActionMap(counter, loading);
+/*
+{
+  inc: (payload?: any) => Action<any>;
+  dec: (payload?: any) => Action<any>;
+  loading: (payload: boolean) => Action<boolean>;
+}
+*/
+
+export { actions };
+```
+
+### createReducerMap (v4.3.0)
+
+This is a helper function to combine reducers from multiple slices.  This is useful
+when composing multiple slices into a module that will then be exported.  This does *not* use `combineReducers` under the hood, it simply creates an object where the key is the slice name and the value is the reducer function.
+
+```js
+import { createSlice, createReducerMap } from 'robodux';
+
+const counter = createSlice({
+  slice: 'counter',
+  initialState: 0,
+  actions: {
+    increment: (state) => state + 1,
+    decrement: (state) => state - 1,
+  },
+});
+
+const loading = createSlice({
+  slice: 'loading',
+  initialState: false,
+  actions: {
+    loading: (state, payload) => payload,
+  }
+});
+
+/*
+This is the same thing as doing this:
+const reducers = {
+  [counter.slice]: counter.reducer,
+  [loading.slice]: loading.reducer,
+};
+*/
+const reducers = createReducerMap(counter, loading);
+/*
+{
+  counter: Reducer<number, Action<any>>;
+  loading: Reducer<boolean, Action<any>>;
+}
+*/
+
+export { reducers };
+```
+
 ### mapSlice
 
 See slice helpers for more info

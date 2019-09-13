@@ -14,12 +14,12 @@ const loadingSlice = createSlice({
   slice: 'loading',
   initialState: false,
   actions: {
-    loading: () => true,
+    loading: (state, payload: boolean) => payload,
   },
 });
 
 const actions = createActionMap(counterSlice, loadingSlice);
-// $ExpectType { inc: (payload?: any) => Action<any>; dec: (payload?: any) => Action<any>; loading: (payload?: any) => Action<any>; }
+// $ExpectType { inc: (payload?: any) => Action<any>; dec: (payload?: any) => Action<any>; loading: (payload: boolean) => Action<boolean>; }
 actions;
 const reducers = createReducerMap(counterSlice, loadingSlice);
 // $ExpectType { counter: Reducer<number, Action<any>>; loading: Reducer<boolean, Action<any>>; }

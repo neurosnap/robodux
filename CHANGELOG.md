@@ -1,5 +1,10 @@
 # CHANGES
 
+## v4.3.0 (09-12-2019)
+
+* :sparkles: `createActionMap` helper function to combine actions from multiple slices
+* :sparkles: `createReducerMap` helper function to combine reducers from multiple slices
+
 ## v4.2.0 (04-24-2019)
 
 * :sparkles: loading slice has a reset action
