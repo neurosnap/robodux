@@ -63,6 +63,10 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   slice,
   extraActions,
 }: InputWithSlice<NoEmptyArray<SliceState>, Actions>) {
+  if (!slice) {
+    throw new Error(`${slice as any} must not be blank`);
+  }
+
   const actionKeys = Object.keys(actions) as (keyof Actions)[];
   const createActionType = actionTypeBuilder(<string>slice);
 

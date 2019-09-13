@@ -43,32 +43,6 @@ addFive.reducer;
 // $ExpectType "something"
 addFive.slice;
 
-// testing InputWithBlankSlice and 2 params
-const addSix = createSlice<number, { add: number }>({
-  slice: '',
-  actions: { add: (state, p: number) => state + p },
-  initialState: 0,
-});
-// $ExpectType { add: (payload: number) => Action<number>; }
-addSix.actions;
-// $ExpectType Reducer<number, Action<any>>
-addSix.reducer;
-// $ExpectType ""
-addSix.slice;
-
-// testing InputWithBlankSlice and no params
-const addSeven = createSlice({
-  slice: '',
-  actions: { add: (state, p: number) => state + p },
-  initialState: 0,
-});
-// $ExpectType { add: (payload: number) => Action<number>; }
-addSeven.actions;
-// $ExpectType Reducer<number, Action<any>>
-addSeven.reducer;
-// $ExpectType ""
-addSeven.slice;
-
 // testing InputWithSlice initialized let
 let eightSlice = 'something';
 const addEight = createSlice({
