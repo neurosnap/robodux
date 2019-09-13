@@ -5,7 +5,7 @@ import { ReducerMap } from './types';
 
 export type CreateReducer<SS = any> = {
   initialState: SS;
-  actions: ReducerMap<SS, any>;
+  reducers: ReducerMap<SS, any>;
   name?: string;
 };
 
@@ -13,15 +13,15 @@ export type NoEmptyArray<State> = State extends never[] ? any[] : State;
 
 export default function createReducer<S, SS extends S = any>({
   initialState,
-  actions,
+  reducers,
   name = '',
 }: CreateReducer<NoEmptyArray<SS>>) {
   const reducer = (state = initialState, action: Action<any>) => {
-    return createNextState(state, (draft) => {
-      const caseReducer = actions[action.type];
+    return createNextState(state, (draft: NoEmptyArray<SS>) => {
+      const caseReducer = reducers[action.type];
 
       if (caseReducer) {
-        return caseReducer(draft as NoEmptyArray<SS>, action.payload);
+        return caseReducer(draft, action.payload);
       }
 
       return draft;

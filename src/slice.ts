@@ -80,7 +80,7 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
 
   const reducer = createReducer<SliceState>({
     initialState,
-    actions: reducerMap,
+    reducers: reducerMap,
     name: <string>name,
   });
 
