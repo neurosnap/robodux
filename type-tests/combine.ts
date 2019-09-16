@@ -2,18 +2,18 @@ import createSlice from '../src/slice';
 import { createActionMap, createReducerMap } from '../src/combine';
 
 const counterSlice = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     inc: (state) => state + 1,
     dec: (state) => state - 1,
   },
 });
 
 const loadingSlice = createSlice({
-  slice: 'loading',
+  name: 'loading',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload: boolean) => payload,
   },
 });

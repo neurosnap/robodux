@@ -1,61 +1,14 @@
 import createSlice from './slice';
 
 describe('createSlice', () => {
-  describe('when slice is empty', () => {
-    type State = number;
-    interface Actions {
-      increment: never;
-      multiply: number;
-    }
-    const { actions, reducer } = createSlice<State, Actions>({
-      actions: {
-        increment: (state) => state + 1,
-        multiply: (state, payload) => state * payload,
-      },
-      initialState: 0,
-    });
-
-    it('should create increment action', () => {
-      expect(actions.hasOwnProperty('increment')).toBe(true);
-    });
-
-    it('should create multiply action', () => {
-      expect(actions.hasOwnProperty('multiply')).toBe(true);
-    });
-
-    it('should have the correct action for increment', () => {
-      expect(actions.increment()).toEqual({
-        type: 'increment',
-        payload: undefined,
-      });
-    });
-
-    it('should have the correct action for multiply', () => {
-      expect(actions.multiply(3)).toEqual({
-        type: 'multiply',
-        payload: 3,
-      });
-    });
-
-    describe('when using reducer', () => {
-      it('should return the correct value from reducer with increment', () => {
-        expect(reducer(undefined, actions.increment())).toEqual(1);
-      });
-
-      it('should return the correct value from reducer with multiply', () => {
-        expect(reducer(2, actions.multiply(3))).toEqual(6);
-      });
-    });
-  });
-
   describe('when passing slice', () => {
     const { actions, reducer } = createSlice({
-      actions: {
+      reducts: {
         increment: (state) => state + 1,
         multiply: (state, payload: number) => state * payload,
       },
       initialState: 0,
-      slice: 'cool',
+      name: 'cool',
     });
 
     it('should create increment action', () => {
@@ -88,13 +41,13 @@ describe('createSlice', () => {
 
   describe('when mutating state object', () => {
     const { actions, reducer } = createSlice({
-      actions: {
+      reducts: {
         setUserName: (state, payload: string) => {
           state.user = payload;
         },
       },
       initialState: { user: '' },
-      slice: 'user',
+      name: 'user',
     });
 
     it('should set the username', () => {
@@ -104,21 +57,21 @@ describe('createSlice', () => {
     });
   });
 
-  describe('when adding extra actions', () => {
+  describe('when adding extra reducers', () => {
     it('should create action reducer pair without action type namespacing', () => {
       const { actions, reducer } = createSlice({
-        actions: {
+        reducts: {
           setUserName: (state, payload: string) => {
             state.user = payload;
           },
         },
-        extraActions: {
+        extraReducers: {
           another: (state, payload) => {
             state.another = payload;
           },
         },
         initialState: { user: '', another: '' },
-        slice: 'user',
+        name: 'user',
       });
 
       expect(
@@ -131,5 +84,17 @@ describe('createSlice', () => {
         user: 'hi',
       });
     });
+  });
+
+  describe('when trying to pass a blank name', () => {
+    expect(() =>
+      createSlice({
+        name: '',
+        initialState: '',
+        reducts: {
+          add: (state) => state,
+        },
+      }),
+    ).toThrowError('createSlice name must not be blank');
   });
 });

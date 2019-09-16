@@ -22,16 +22,16 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, reducer, slice } = robodux<SliceState, Actions, IState>({
-  slice: 'hi',
-  actions: {
+const { actions, reducer, name } = robodux<SliceState, Actions, IState>({
+  name: 'hi',
+  reducts: {
     set: (state, payload) => payload,
     reset: (state) => defaultState,
   },
   initialState: defaultState,
 });
 
-const val = { hi: defaultState, auth: {} }[slice];
+const val = { hi: defaultState, auth: {} }[name];
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
@@ -60,8 +60,8 @@ const initialState: ISliceState = {
 };
 
 const auth = robodux<ISliceState, AuthActions, IState>({
-  slice: 'auth', // slice is checked to ensure it is a key in IState
-  actions: {
+  name: 'auth', // slice is checked to ensure it is a key in IState
+  reducts: {
     authFail: (state, payload) => {
       state.error = payload;
       state.authenticating = false;
@@ -85,13 +85,13 @@ const auth = robodux<ISliceState, AuthActions, IState>({
 // You can destructure and export the reducer, action creators and selectors
 export const {
   reducer: authReducer,
-  slice: authSlice,
+  name: authSlice,
   actions: { authFail, authStart, authSuccess, authLogout },
 } = auth;
 
 const authWithoutInterface = robodux({
-  slice: 'auth',
-  actions: {
+  name: 'auth',
+  reducts: {
     authFail2: (state, payload: Error) => {
       state.error = payload;
       state.authenticating = false;
@@ -116,7 +116,7 @@ const authWithoutInterface = robodux({
 // You can destructure and export the reducer, action creators and selectors
 export const {
   reducer: authReducer2,
-  slice: authSlice2,
+  name: authSlice2,
   actions: { authFail2, authStart2, authSuccess2, authLogout2 },
 } = authWithoutInterface;
 

@@ -28,6 +28,9 @@ export function combine(...args: any[]): any {
   const newObj: any = {};
   for (const obj of args) {
     for (const key in obj) {
+      if (newObj.hasOwnProperty(key)) {
+        console.warn(`collision detected: ${key} already exists`, args);
+      }
       newObj[key] = obj[key];
     }
   }
@@ -37,7 +40,7 @@ export function combine(...args: any[]): any {
 interface TSlice<A = any, SS = any> {
   actions: { [K in keyof A]: A[K] };
   reducer: Reducer<SS, Action>;
-  slice: string;
+  name: string;
 }
 
 export function createActionMap<A>(a: TSlice<A>): MergeIntersections<A>;
@@ -70,14 +73,17 @@ export function createActionMap(...args: any[]): any {
 }
 
 export function createReducerMap<
-  KV extends Array<{ slice: P; reducer: Reducer }>,
+  KV extends Array<{ name: P; reducer: Reducer }>,
   P extends keyof any
 >(
   ...args: KV
-): { [K in KV[number]['slice']]: Extract<KV[number], { slice: K }>['reducer'] };
+): { [K in KV[number]['name']]: Extract<KV[number], { name: K }>['reducer'] };
 export function createReducerMap(...args: any[]): any {
   return args.reduce((acc, slice) => {
-    acc[slice.slice] = slice.reducer;
+    if (acc.hasOwnProperty(slice.name)) {
+      console.warn(`Reducer collision detected: ${slice.name} already exists`);
+    }
+    acc[slice.name] = slice.reducer;
     return acc;
   }, {});
 }

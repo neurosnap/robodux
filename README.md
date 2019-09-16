@@ -1,39 +1,42 @@
 # robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
 One of the biggest complaints developers have with redux is the amount of
-boilerplate and new concepts they have to learn to use it.  `robodux` attempts
-to simplify the boilerplate by automatically configuring actions, reducers, and
-selectors.  The way it works is `robodux` will take a list of functions that
+boilerplate and new concepts they have to learn to use it. `robodux` attempts to
+simplify the boilerplate by automatically configuring actions, reducers, and
+selectors. The way it works is `robodux` will take a list of functions that
 correspond to how state should be updated and then create action types, action
-creators, and basic selectors for the developer to use.  This library tries to
-not make too many assumptions about how developers use redux.  It does not
-do anything magical, simply automates the repetitive tasks with redux.
+creators, and basic selectors for the developer to use. This library tries to
+not make too many assumptions about how developers use redux. It does not do
+anything magical, simply automates the repetitive tasks with redux.
 
 Under the hood every reducer created by `robodux` leverages
-[immer](https://github.com/mweststrate/immer) to update the store,
-which means reducers are allowed to mutate the state directly.
+[immer](https://github.com/mweststrate/immer) to update the store, which means
+reducers are allowed to mutate the state directly.
 
 ## Features
 
-* Automatically creates actions, reducer, and selector based on `slice`
-* Action types are prefixed with `slice`
-* Reducers leverage `immer` which makes updating state easy
-* When stringifying action creators they return the action type
-* Helper functions for manually creating actions and reducers
-* Reducers do no receive entire action object, only payload
-* Slice helpers to further reduce repetitive reducer types (map slice, assign slice, loading slice)
+- Automatically creates actions, reducer, and selector based on `slice`
+- Action types are prefixed with `slice`
+- Reducers leverage `immer` which makes updating state easy
+- When stringifying action creators they return the action type
+- Helper functions for manually creating actions and reducers
+- Reducers do no receive entire action object, only payload
+- Slice helpers to further reduce repetitive reducer types (map slice, assign
+  slice, loading slice)
 
 ## Why not X?
 
-This library was heavily inspired by [autodux](https://github.com/ericelliott/autodux) and [redux-starter-kit](https://github.com/markerikson/redux-starter-kit).
-The reason why I decided to create a separate library was primarily for:
+This library was heavily inspired by
+[autodux](https://github.com/ericelliott/autodux) and
+[redux-starter-kit](https://github.com/markerikson/redux-starter-kit). The
+reason why I decided to create a separate library was primarily for:
 
-* typescript support
-* creating reducers with `immer`
-* no external dependencies besides `immer`
-* create action helper
-* create reducer helper
-* slice helpers
+- typescript support
+- creating reducers with `immer`
+- no external dependencies besides `immer`
+- create action helper
+- create reducer helper
+- slice helpers
 
 ## Usage
 
@@ -57,9 +60,9 @@ interface CounterActions {
 }
 
 const counter = robodux<number, CounterActions, State>({
-  slice: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
+  name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,  // state is type cast as a number from the supplied slicestate type
     decrement: (state) => state - 1,
     multiply: (state, payload) => state * payload,  // payload here is type cast as number as from CounterActions
@@ -71,9 +74,9 @@ interface UserActions {
 }
 
 const user = robodux<User, UserActions, State>({
-  slice: 'user', // slice is optional could be blank ''
+  name: 'user', // slice is optional could be blank ''
   initialState: { name: '' },
-  actions: {
+  reducts: {
     setUserName: (state, payload) => {
       state.name = payload; // mutate the state all you want with immer
     },
@@ -98,15 +101,16 @@ console.log(`${counter.actions.decrement}`);
 store.dispatch(user.actions.setUserName('eric'));
 // New State -> { counter: 6, user: { name: 'eric' } }
 const state = store.getState();
-console.log(state[users.slice]);
+console.log(state[users.name]);
 // -> { name: 'eric' }
-console.log(state[counter.slice]);
+console.log(state[counter.name]);
 // -> 6
 ```
 
 ### without explicit types
 
-Robodux can be used without supplying interfaces, it will instead infer the types for you
+Robodux can be used without supplying interfaces, it will instead infer the
+types for you
 
 ```js
 import robodux from 'robodux';
@@ -118,11 +122,16 @@ const defaultState = {
 };
 
 const { actions, selectors, reducer } = robodux({
-  slice: 'hi',
+  name: 'hi',
   initialState: defaultState,
-  actions: { // state type is inferred from initial state
-    setTest: (state, payload: string) => { state.test = payload }, // payload is typecast as string
-    setWow: (state, payload: number) => {state.wow = payload }, // payload is typecast as number
+  reducts: {
+    // state type is inferred from initial state
+    setTest: (state, payload: string) => {
+      state.test = payload;
+    }, // payload is typecast as string
+    setWow: (state, payload: number) => {
+      state.wow = payload;
+    }, // payload is typecast as number
     reset: (state, payload: never) => defaultState,
   },
 });
@@ -132,21 +141,22 @@ actions.setTest(0); // autocomplete and type checking for payload(number), typee
 actions.reset(); // typechecks to ensure action is called without params
 ```
 
-### extraActions (v3.0)
+### extraReducers (v5.0)
 
-By default `robodux` will prefix any action type with the name of the slice.  However,
-sometimes it is necessary to allow external action types to effect the reducer.
+By default `robodux` will prefix any action type with the name of the slice.
+However, sometimes it is necessary to allow external action types to effect the
+reducer.
 
 ```js
 const user = robodux<User, UserActions, State>({
-  slice: 'user', // slice is optional could be blank ''
+  name: 'user',
   initialState: { name: '' },
-  actions: {
+  reducts: {
     setUserName: (state, payload) => {
       state.name = payload; // mutate the state all you want with immer
     },
   },
-  extraActions: {
+  extraReducers: {
     setAddress: (state, payload) => {
       state.address = payload;
     }
@@ -156,33 +166,33 @@ const user = robodux<User, UserActions, State>({
 
 ## Creating a module
 
-The recommended way to use this library is by creating a module.  A module is
-a composition of slices.
+The recommended way to use this library is by creating a module. A module is a
+composition of slices.
 
 ```js
 // counter.js
 import { createSlice, createActionMap, createReducerMap } from 'robodux';
 
 const counter = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,
     decrement: (state) => state - 1,
   }
 });
 
 const counterLoader = createSlice({
-  slice: 'counterLoader',
+  name: 'counterLoader',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload: boolean) => payload,
   };
 })
 
 const selectors = {
-  getCounter = (state) => state[counter.slice],
-  getCounterLoader = (state) => state[counterLoader.slice],
+  getCounter = (state) => state[counter.name],
+  getCounterLoader = (state) => state[counterLoader.name],
 };
 
 const actions = createActionMap(counter, counterLoader);
@@ -193,21 +203,26 @@ const reducers = createReducerMap(counter, counterLoader);
 export { selectors, actions, reducers };
 ```
 
-All of my apps are setup in a similar way.  An app is a composition of modules
-and the UI.  To read more about why apps should be set up this way then read my blog article: https://erock.io/scaling-js-codebase-multiple-platforms/
+All of my apps are setup in a similar way. An app is a composition of modules
+and the UI. To read more about why apps should be set up this way then read my
+blog article: https://erock.io/scaling-js-codebase-multiple-platforms/
 
 ## Types
 
 `robodux` accepts three generics: `SliceState`, `Actions`, `State`.
 
-`SliceState` is the state shape of the particular slice created with `robodux`.  If there is no
-slice passed to the state, then this will assume that this is the entire state shape.
+`SliceState` is the state shape of the particular slice created with `robodux`.
+If there is no slice passed to the state, then this will assume that this is the
+entire state shape.
 
-`Actions` helps improve autocompelete and typing for the `actions` object returned from `robodux`.
-Supply an interface where they keys are the action names and the values are the payload types, which should be `never` if the action takes no payload.
+`Actions` helps improve autocompelete and typing for the `actions` object
+returned from `robodux`. Supply an interface where they keys are the action
+names and the values are the payload types, which should be `never` if the
+action takes no payload.
 
-`State` is the entire state shape for when a slice is used with `robodux`.  This helps type the selectors we
-return which requires the entire state as the parameter and not simply the slice state.
+`State` is the entire state shape for when a slice is used with `robodux`. This
+helps type the selectors we return which requires the entire state as the
+parameter and not simply the slice state.
 
 ```js
 import robodux from 'robodux';
@@ -235,9 +250,9 @@ const defaultState = {
 };
 
 const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
-  slice: 'hi',
+  name: 'hi',
   initialState: defaultState,
-  actions: {
+  reducts: {
     setTest: (state, payload) => { state.test = payload }, // payload is type string from Actions
     setWow: (state, payload) => {state.wow = payload }, // payload is type number from Actions
     reset: (state) => defaultState,
@@ -247,7 +262,6 @@ const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
 actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
 actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
 actions.reset(); // typechecks to ensure action is called without params
-
 ```
 
 ## Slice Helpers
@@ -260,7 +274,7 @@ redux.
 
 These are common operations when dealing with a slice that is a hash map.
 
-params: { slice, extraActions }
+params: { name, extraReducers }
 
 ```js
 import { mapSlice, PatchEntity } from 'robodux';
@@ -281,8 +295,8 @@ interface Actions {
   patchTest: PatchEntity<State>;
 }
 
-const slice = 'test';
-const { reducer, actions } = mapSlice<SliceState, Actions, State>({ slice });
+const name = 'test';
+const { reducer, actions } = mapSlice<SliceState, Actions, State>({ name });
 const state = {
   3: { name: 'three', email: 'three@three.com' }
 };
@@ -333,14 +347,14 @@ store.dispatch(
   actions.resetTest()
 )
 // {}
-
 ```
 
 ### assign slice (v2.1.0)
 
-These are common operations when dealing with a slice that simply needs to be set or reset
+These are common operations when dealing with a slice that simply needs to be
+set or reset
 
-params: { slice, initialState, extraActions }
+params: { name, initialState, extraReducers }
 
 ```js
 import { assignSlice } from 'robodux';
@@ -356,8 +370,8 @@ interface State {
   test: SliceState;
 }
 
-const slice = 'token';
-const { reducer, actions } = assignSlice<SliceState, Actions, State>({ slice, initialState: '' });
+const name = 'token';
+const { reducer, actions } = assignSlice<SliceState, Actions, State>({ name, initialState: '' });
 
 store.dispatch(
   actions.setToken('some-token')
@@ -373,14 +387,13 @@ store.dispatch(
   actions.resetTest()
 )
 // redux state: { token: '' }
-
 ```
 
 ### loading slice (v3.0)
 
 Helper slice that will handle loading data
 
-params: { slice, extraActions }
+params: { name, extraReducers }
 
 ```js
 import { loadingSlice, LoadingItemState } from 'robodux';
@@ -395,7 +408,7 @@ interface State {
   loading: LoadingItemState;
 }
 
-const { actions, reducer } = loadingSlice<Actions, State>({ slice: 'loading' });
+const { actions, reducer } = loadingSlice<Actions, State>({ name: 'loading' });
 store.dispatch(
   actions.loading('something loading')
 )
@@ -416,15 +429,25 @@ store.dispatch(
 
 ### robodux
 
-This is the default export for robodux and will automatically create actions, reducer, and selectors
-for you.
+This is the default export for robodux and will automatically create actions,
+reducer, and selectors for you.
+
+```
+{
+  name: string, // required
+  useImmer: boolean, // default, true, determines whether or not to use immer
+  initialState: any, // the initial state for the reducer
+  reducts: object, // the action to reducer map
+}
+```
 
 ### createAction
 
-This is the helper function that `robodux` uses to create an action.  It is also useful to use
-when not using robodux because when stringifying the function it will return the action type.
-This allows developers to not have to worry about passing around action types, instead they simply
-pass around action creators for reducers, sagas, etc.
+This is the helper function that `robodux` uses to create an action. It is also
+useful to use when not using robodux because when stringifying the function it
+will return the action type. This allows developers to not have to worry about
+passing around action types, instead they simply pass around action creators for
+reducers, sagas, etc.
 
 ```js
 import { createAction } from 'robodux';
@@ -437,21 +460,30 @@ console.log(increment(2));
 const storeDetails = createAction('STORE_DETAILS');
 console.log(storeDetails);
 // -> 'STORE_DETAILS'
-console.log(storeDetails({name: 'John', surname: 'Doe'}));
+console.log(storeDetails({ name: 'John', surname: 'Doe' }));
 // { type: 'INCREMENT', payload: {name: 'John', surname: 'Doe'} };
 ```
 
 ### createReducer
 
-This is the helper function that `robodux` uses to create a reducer.  This function maps action types
-to reducer functions.  It will return a reducer.
+This is the helper function that `robodux` uses to create a reducer. This
+function maps action types to reducer functions. It will return a reducer.
+
+```
+{
+  initialState: any, // the initial state for the reducer
+  reducers: object, // the action to reducer map
+  name: string, // optional, sends value to `toString`
+  useImmer: boolean, // default, true, determines whether or not to use immer
+}
+```
 
 ```js
 import { createReducer } from 'robodux';
 
 const counter = createReducer({
   initialState: 0,
-  actions: {
+  reducers: {
     INCREMENT: (state) => state + 1,
     DECREMENT: (state) => state - 1,
     MULTIPLY: (state, payload) => state * payload,
@@ -462,29 +494,29 @@ console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
 // -> 10
 ```
 
-### createActionMap (v4.3.0)
+### createActionMap (v5.0.0)
 
-This is a helper function to combine actions from multiple slices.  This is create
-when composing multiple slices into a module that will then be exported.
+This is a helper function to combine actions from multiple slices. This is
+create when composing multiple slices into a module that will then be exported.
 
 ```js
 import { createSlice, createActionMap } from 'robodux';
 
 const counter = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,
     decrement: (state) => state - 1,
   },
 });
 
 const loading = createSlice({
-  slice: 'loading',
+  name: 'loading',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload) => payload,
-  }
+  },
 });
 
 /*
@@ -506,36 +538,38 @@ const actions = createActionMap(counter, loading);
 export { actions };
 ```
 
-### createReducerMap (v4.3.0)
+### createReducerMap (v5.0.0)
 
-This is a helper function to combine reducers from multiple slices.  This is useful
-when composing multiple slices into a module that will then be exported.  This does *not* use `combineReducers` under the hood, it simply creates an object where the key is the slice name and the value is the reducer function.
+This is a helper function to combine reducers from multiple slices. This is
+useful when composing multiple slices into a module that will then be exported.
+This does _not_ use `combineReducers` under the hood, it simply creates an
+object where the key is the slice name and the value is the reducer function.
 
 ```js
 import { createSlice, createReducerMap } from 'robodux';
 
 const counter = createSlice({
-  slice: 'counter',
+  name: 'counter',
   initialState: 0,
-  actions: {
+  reducts: {
     increment: (state) => state + 1,
     decrement: (state) => state - 1,
   },
 });
 
 const loading = createSlice({
-  slice: 'loading',
+  name: 'loading',
   initialState: false,
-  actions: {
+  reducts: {
     loading: (state, payload) => payload,
-  }
+  },
 });
 
 /*
 This is the same thing as doing this:
 const reducers = {
-  [counter.slice]: counter.reducer,
-  [loading.slice]: loading.reducer,
+  [counter.name]: counter.reducer,
+  [loading.name]: loading.reducer,
 };
 */
 const reducers = createReducerMap(counter, loading);

@@ -16,8 +16,8 @@ interface Actions {
 describe('mapSlice', () => {
   describe('add', () => {
     it('should add items to map', () => {
-      const slice = 'test';
-      const { reducer, actions } = mapSlice<State, Actions>({ slice });
+      const name = 'test';
+      const { reducer, actions } = mapSlice<State, Actions>({ name });
       const test = {
         1: 'one',
         2: 'two',
@@ -30,8 +30,8 @@ describe('mapSlice', () => {
 
   describe('set', () => {
     it('should set items to map', () => {
-      const slice = 'test';
-      const { reducer, actions } = mapSlice<State, Actions, any>({ slice });
+      const name = 'test';
+      const { reducer, actions } = mapSlice<State, Actions, any>({ name });
       const test = {
         1: 'one',
         2: 'two',
@@ -44,8 +44,8 @@ describe('mapSlice', () => {
 
   describe('remove', () => {
     it('should remove items from map', () => {
-      const slice = 'test';
-      const { reducer, actions } = mapSlice<State, Actions, any>({ slice });
+      const name = 'test';
+      const { reducer, actions } = mapSlice<State, Actions, any>({ name });
       const state = { 1: 'one', 2: 'two', 3: 'three' };
       const actual = reducer(state, actions.removeTest(['1', '2']));
       expect(actual).toEqual({ 3: 'three' });
@@ -54,8 +54,8 @@ describe('mapSlice', () => {
 
   describe('reset', () => {
     it('should reset map', () => {
-      const slice = 'test';
-      const { reducer, actions } = mapSlice<State, Actions, any>({ slice });
+      const name = 'test';
+      const { reducer, actions } = mapSlice<State, Actions, any>({ name });
       const state = { 1: 'one', 2: 'two', 3: 'three' };
       const actual = reducer(state, actions.resetTest());
       expect(actual).toEqual({});
@@ -73,9 +73,9 @@ describe('mapSlice', () => {
           patchTest: PatchEntity<State>;
         }
 
-        const slice = 'test';
+        const name = 'test';
         const { reducer, actions } = mapSlice<State, PatchActions, any>({
-          slice,
+          name,
         });
         const state = {
           1: { name: 'one' },
@@ -105,9 +105,9 @@ describe('mapSlice', () => {
         patchTest: PatchEntity<State>;
       }
 
-      const slice = 'test';
+      const name = 'test';
       const { reducer, actions } = mapSlice<State, PatchActions, any>({
-        slice,
+        name,
       });
       const state = {
         1: 'one',
