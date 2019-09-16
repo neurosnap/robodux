@@ -42,6 +42,10 @@
     "*.{js}": [
       "prettier --write",
       "git add"
+    ],
+    "*.{md}": [
+      "prettier --config prettier.md.js --write",
+      "git add"
     ]
   }
 }
