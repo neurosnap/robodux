@@ -68,7 +68,7 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   useImmer = true,
 }: InputWithSlice<NoEmptyArray<SliceState>, Actions>) {
   if (!name) {
-    throw new Error(`${name as string} must not be blank`);
+    throw new Error(`createSlice name must not be blank`);
   }
 
   const actionKeys = Object.keys(reducts) as (keyof Actions)[];

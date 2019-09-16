@@ -57,7 +57,7 @@ describe('createSlice', () => {
     });
   });
 
-  describe('when adding extra actions', () => {
+  describe('when adding extra reducers', () => {
     it('should create action reducer pair without action type namespacing', () => {
       const { actions, reducer } = createSlice({
         reducts: {
@@ -84,5 +84,17 @@ describe('createSlice', () => {
         user: 'hi',
       });
     });
+  });
+
+  describe('when trying to pass a blank name', () => {
+    expect(() =>
+      createSlice({
+        name: '',
+        initialState: '',
+        reducts: {
+          add: (state) => state,
+        },
+      }),
+    ).toThrowError('createSlice name must not be blank');
   });
 });
