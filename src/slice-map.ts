@@ -33,8 +33,10 @@ export function patchMap<S = AnyState, A extends ActionsAny = any>() {
       }
 
       Object.keys(payload[id]).forEach((key) => {
-        if (state.hasOwnProperty(id)) {
-          (state as any)[id][key] = payload[id][key];
+        // getting weird issue with typing here
+        const s: any = state;
+        if (s.hasOwnProperty(id)) {
+          s[id][key] = payload[id][key];
         }
       });
     });
