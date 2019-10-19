@@ -1,5 +1,9 @@
 # CHANGES
 
+## 5.1.2 (10-18-2019
+
+- :bug: createApp would fail if object passed did not contain a `reducers` key
+
 ## v5.1.1 (10-18-2019)
 
 - :bug: Make `immer` and `redux` peer dependencies
