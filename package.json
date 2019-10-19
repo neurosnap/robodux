@@ -1,6 +1,6 @@
 {
   "name": "robodux",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
@@ -26,18 +26,17 @@
     "babel-core": "^6.0.0 || ^7.0.0-0",
     "babel-jest": "^23.0.0 || ^24.0.0",
     "husky": "^0.14.3",
+    "immer": "^4.0.1",
     "jest": "^23.5.0",
     "lint-staged": "^7.2.0",
     "prettier": "^1.18.2",
-    "redux": "^4.0.1",
+    "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "ts-jest": "^23.1.4",
     "typescript": "^3.6.3",
     "typings-checker": "^2.0.0"
   },
-  "dependencies": {
-    "immer": "^4.0.0"
-  },
+  "dependencies": {},
   "lint-staged": {
     "*.{js}": [
       "prettier --write",
@@ -47,5 +46,9 @@
       "prettier --config prettier.md.js --write",
       "git add"
     ]
+  },
+  "peerDependencies": {
+    "immer": "^4.0.0",
+    "redux": "^4.0.4"
   }
 }
