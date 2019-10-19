@@ -207,6 +207,28 @@ All of my apps are setup in a similar way. An app is a composition of modules
 and the UI. To read more about why apps should be set up this way then read my
 blog article: https://erock.io/scaling-js-codebase-multiple-platforms/
 
+After subscribing to this common interface, we can do some interesting things with
+automation.
+
+```js
+import { createStore } from 'redux';
+import { createApp } from 'robodux';
+
+import * as counter from './counter';
+
+const app = createApp([
+  counter,
+]);
+
+const store = createStore(app.reducer);
+store.getState();
+store.dispatch(...);
+```
+
+`createApp` is a simple helper function that combines all the reducers in each
+module and uses `combineReducers` from `redux`.  There is nothing special going on
+but it helps streamline combining all reducers into a single reducer.
+
 ## Types
 
 `robodux` accepts three generics: `SliceState`, `Actions`, `State`.
@@ -582,6 +604,11 @@ const reducers = createReducerMap(counter, loading);
 
 export { reducers };
 ```
+
+### createApp
+
+Given an array of modules with type `{ reducer: { [key: string]: Reducer } }`
+we will combine the reducers using `combineReducers` from redux.
 
 ### mapSlice
 

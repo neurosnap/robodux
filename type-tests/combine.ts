@@ -1,3 +1,4 @@
+import createApp from '../src/create-app';
 import createSlice from '../src/slice';
 import { createActionMap, createReducerMap } from '../src/combine';
 
@@ -24,3 +25,18 @@ actions;
 const reducers = createReducerMap(counterSlice, loadingSlice);
 // $ExpectType { counter: Reducer<number, Action<any>>; loading: Reducer<boolean, Action<any>>; }
 reducers;
+
+const mods = [
+  {
+    actions: counterSlice.actions,
+    reducers: { counter: counterSlice.reducer },
+  },
+  {
+    actions: loadingSlice.actions,
+    reducers: { loading: loadingSlice.reducer },
+  },
+];
+
+const app = createApp(mods);
+// $ExpectType { reducer: Reducer<{ [x: string]: ...; }, AnyAction>; }
+app;
