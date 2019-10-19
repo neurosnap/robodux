@@ -1,5 +1,9 @@
 # CHANGES
 
+## v5.1.1 (10-18-2019)
+
+- :bug: Make `immer` and `redux` peer dependencies
+
 ## v5.1.0 (10-06-2019)
 
 - :sparkles: initial `createApp` which will accept an array of modules and return a reducer
