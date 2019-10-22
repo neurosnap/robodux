@@ -16,12 +16,12 @@ export interface Slice<A = any, SS = any, S = SS, str = ''> {
     [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
       ? (payload?: any) => Action
       : A[key] extends never
-        ? () => Action
-        : (payload: A[key]) => Action<A[key]>
+      ? () => Action
+      : (payload: A[key]) => Action<A[key]>;
   };
 }
 
-interface InputWithSlice<SS = any, Ax = ActionsAny, S = any> {
+interface InputWithName<SS = any, Ax = ActionsAny, S = any> {
   initialState: SS;
   reducts: ActionsObjWithSlice<SS, Ax, S>;
   name: keyof S;
@@ -41,7 +41,7 @@ export default function createSlice<
   initialState,
   name,
   useImmer,
-}: InputWithSlice<NoEmptyArray<SliceState>, Actions, State>): Slice<
+}: InputWithName<NoEmptyArray<SliceState>, Actions, State>): Slice<
   Actions,
   NoEmptyArray<SliceState>,
   State,
@@ -53,7 +53,7 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   initialState,
   name,
   useImmer,
-}: InputWithSlice<NoEmptyArray<SliceState>, Actions>): Slice<
+}: InputWithName<NoEmptyArray<SliceState>, Actions>): Slice<
   Actions,
   NoEmptyArray<SliceState>,
   AnyState,
@@ -66,7 +66,7 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   name,
   extraReducers,
   useImmer = true,
-}: InputWithSlice<NoEmptyArray<SliceState>, Actions>) {
+}: InputWithName<NoEmptyArray<SliceState>, Actions>) {
   if (!name) {
     throw new Error(`createSlice name must not be blank`);
   }
@@ -94,8 +94,8 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
       [key in keyof Actions]: Object extends Actions[key]
         ? (payload?: any) => Action
         : Actions[key] extends never
-          ? () => Action
-          : (payload: Actions[key]) => Action<Actions[key]>
+        ? () => Action
+        : (payload: Actions[key]) => Action<Actions[key]>;
     }
   >(
     (map, action) => {

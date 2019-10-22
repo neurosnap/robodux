@@ -1,26 +1,27 @@
-import { combineReducers } from 'redux';
+import { combineReducers, ReducersMapObject, AnyAction } from 'redux';
 
-interface ReducerMap {
-  [key: string]: any;
-}
-
-export default function createApp(mds: { reducers?: ReducerMap }[]) {
-  const reducer = combineReducers(
-    mds.reduce<ReducerMap>((acc, mod) => {
-      if (!mod.reducers) {
-        return acc;
-      }
-
-      Object.keys(mod.reducers).forEach((key) => {
+export default function createApp<S = any>(
+  mds: { reducers?: ReducersMapObject<S, AnyAction> }[],
+) {
+  const reducer = combineReducers<S>(
+    mds.reduce(
+      (acc, mod) => {
         if (!mod.reducers) {
           return acc;
         }
 
-        acc[key] = mod.reducers[key];
-      });
+        Object.keys(mod.reducers).forEach((key) => {
+          if (!mod.reducers) {
+            return acc;
+          }
 
-      return acc;
-    }, {}),
+          acc[key as keyof S] = mod.reducers[key as keyof S];
+        });
+
+        return acc;
+      },
+      {} as ReducersMapObject<S, AnyAction>,
+    ),
   );
 
   return {

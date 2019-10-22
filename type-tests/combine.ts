@@ -37,6 +37,10 @@ const mods = [
   },
 ];
 
-const app = createApp(mods);
+interface LocalState {
+  loading: boolean;
+  counter: number;
+}
+const app = createApp<LocalState>(mods);
 // $ExpectType { reducer: Reducer<{ [x: string]: ...; }, AnyAction>; }
 app;

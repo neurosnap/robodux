@@ -1,5 +1,9 @@
 # CHANGES
 
+## 5.1.3 (10-22-2019)
+
+- :wrench: attempting to improve typing for `createApp`
+
 ## 5.1.2 (10-18-2019
 
 - :bug: createApp would fail if object passed did not contain a `reducers` key
