@@ -28,19 +28,17 @@ reducers;
 
 const mods = [
   {
-    actions: counterSlice.actions,
     reducers: { counter: counterSlice.reducer },
   },
   {
-    actions: loadingSlice.actions,
     reducers: { loading: loadingSlice.reducer },
   },
 ];
 
 interface LocalState {
-  loading: boolean;
-  counter: number;
+  loading?: boolean;
+  counter?: number;
 }
 const app = createApp<LocalState>(mods);
-// $ExpectType { reducer: Reducer<{ [x: string]: ...; }, AnyAction>; }
+// $ExpectType { reducer: Reducer<LocalState, AnyAction>; }
 app;

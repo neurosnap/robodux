@@ -9,39 +9,42 @@ export function setMap<S = AnyState>() {
 
 export function addMap<S = AnyState>() {
   return (state: S, payload: S): S => {
+    const newState = { ...state };
     Object.keys(payload).forEach((key) => {
-      state[key as keyof S] = payload[key as keyof S];
+      newState[key as keyof S] = payload[key as keyof S];
     });
-    return state;
+    return newState;
   };
 }
 
 export function removeMap<S = AnyState>() {
   return (state: S, payload: string[]): S => {
+    const newState = { ...state };
     payload.forEach((key) => {
-      delete state[key as keyof S];
+      delete newState[key as keyof S];
     });
-    return state;
+    return newState;
   };
 }
 
 export function patchMap<S = AnyState, A extends ActionsAny = any>() {
   return (state: S, payload: { [key: string]: Partial<A[keyof A]> }): S => {
+    const newState = { ...state };
     Object.keys(payload).forEach((id) => {
       if (typeof payload[id] !== 'object') {
-        return state;
+        return;
       }
 
       Object.keys(payload[id]).forEach((key) => {
         // getting weird issue with typing here
-        const s: any = state;
+        const s: any = newState;
         if (s.hasOwnProperty(id)) {
-          s[id][key] = payload[id][key];
+          s[id] = { ...s[id], [key]: payload[id][key] };
         }
       });
     });
 
-    return state;
+    return newState;
   };
 }
 

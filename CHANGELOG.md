@@ -1,5 +1,9 @@
 # CHANGES
 
+## 5.1.4 (10-29-2019)
+
+- :bug: `mapSlice` was mutating state object incorrectly
+
 ## 5.1.3 (10-22-2019)
 
 - :wrench: attempting to improve typing for `createApp`
