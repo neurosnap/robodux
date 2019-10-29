@@ -1,3 +1,5 @@
+import * as freeze from 'deep-freeze-strict';
+
 import loadingSlice from './slice-loading';
 
 interface State {
@@ -18,7 +20,12 @@ describe('loadingSlice', () => {
       }
       const name = 'loading';
       const { reducer, actions } = loadingSlice<OtherActions, State>({ name });
-      const state = { error: '', message: '', loading: false, success: false };
+      const state = freeze({
+        error: '',
+        message: '',
+        loading: false,
+        success: false,
+      });
       const actual = reducer(state, actions.loading());
 
       expect(actual).toEqual({
@@ -32,7 +39,12 @@ describe('loadingSlice', () => {
     it('should set the state to loading with a message', () => {
       const name = 'loading';
       const { reducer, actions } = loadingSlice<Actions, State>({ name });
-      const state = { error: '', message: '', loading: false, success: false };
+      const state = freeze({
+        error: '',
+        message: '',
+        loading: false,
+        success: false,
+      });
       const actual = reducer(state, actions.loading('hi there'));
 
       expect(actual).toEqual({
@@ -51,7 +63,12 @@ describe('loadingSlice', () => {
       }
       const name = 'loading';
       const { reducer, actions } = loadingSlice<OtherActions, State>({ name });
-      const state = { error: '', message: '', loading: true, success: false };
+      const state = freeze({
+        error: '',
+        message: '',
+        loading: true,
+        success: false,
+      });
       const actual = reducer(state, actions.loadingSuccess());
 
       expect(actual).toEqual({
@@ -65,7 +82,12 @@ describe('loadingSlice', () => {
     it('should set the state to loading with a message', () => {
       const name = 'loading';
       const { reducer, actions } = loadingSlice<Actions, State>({ name });
-      const state = { error: '', message: '', loading: true, success: false };
+      const state = freeze({
+        error: '',
+        message: '',
+        loading: true,
+        success: false,
+      });
       const actual = reducer(state, actions.loadingSuccess('wow'));
 
       expect(actual).toEqual({
@@ -80,7 +102,12 @@ describe('loadingSlice', () => {
   describe('error', () => {
     const name = 'loading';
     const { reducer, actions } = loadingSlice<Actions, State>({ name });
-    const state = { error: '', message: 'cool', loading: true, success: false };
+    const state = freeze({
+      error: '',
+      message: 'cool',
+      loading: true,
+      success: false,
+    });
     const actual = reducer(state, actions.loadingError('some error'));
 
     expect(actual).toEqual({
