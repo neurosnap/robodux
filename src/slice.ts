@@ -1,30 +1,13 @@
+import { Reducer } from 'redux';
+
 import createAction from './action';
-import createReducer, { NoEmptyArray } from './reducer';
-import {
-  Action,
-  Reducer,
-  ActionsObjWithSlice,
-  ActionsAny,
-  AnyState,
-  ReducerMap,
-} from './types';
+import createReducer from './reducer';
+import { Action, ActionsObjWithSlice, ActionsAny, ReducerMap } from './types';
 
-export interface Slice<A = any, SS = any, S = SS, str = ''> {
-  name: SS extends S ? '' : str;
-  reducer: Reducer<SS, Action>;
-  actions: {
-    [key in keyof A]: Object extends A[key] // ensures payload isn't inferred as {}
-      ? (payload?: any) => Action
-      : A[key] extends never
-      ? () => Action
-      : (payload: A[key]) => Action<A[key]>;
-  };
-}
-
-interface InputWithName<SS = any, Ax = ActionsAny, S = any> {
-  initialState: SS;
-  reducts: ActionsObjWithSlice<SS, Ax, S>;
-  name: keyof S;
+interface SliceOptions<SliceState = any, Ax = ActionsAny> {
+  initialState: SliceState;
+  reducts: ActionsObjWithSlice<SliceState, Ax>;
+  name: string;
   extraReducers?: ActionsAny;
   useImmer?: boolean;
 }
@@ -32,51 +15,34 @@ interface InputWithName<SS = any, Ax = ActionsAny, S = any> {
 const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
 
-export default function createSlice<
-  SliceState,
-  Actions extends ActionsAny,
-  State extends AnyState
->({
-  reducts,
-  initialState,
-  name,
-  useImmer,
-}: InputWithName<NoEmptyArray<SliceState>, Actions, State>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>,
-  State,
-  typeof name
->;
-
-export default function createSlice<SliceState, Actions extends ActionsAny>({
-  reducts,
-  initialState,
-  name,
-  useImmer,
-}: InputWithName<NoEmptyArray<SliceState>, Actions>): Slice<
-  Actions,
-  NoEmptyArray<SliceState>,
-  AnyState,
-  typeof name
->;
-
 export default function createSlice<SliceState, Actions extends ActionsAny>({
   reducts,
   initialState,
   name,
   extraReducers,
   useImmer = true,
-}: InputWithName<NoEmptyArray<SliceState>, Actions>) {
+}: SliceOptions<SliceState, Actions>): {
+  name: string;
+  reducer: Reducer<SliceState, Action>;
+  actions: {
+    [key in keyof Actions]: Object extends Actions[key] // ensures payload isn't inferred as {}
+      ? (payload?: any) => Action
+      : Actions[key] extends never
+      ? () => Action
+      : (payload: Actions[key]) => Action<Actions[key]>;
+  };
+  toString: () => string;
+} {
   if (!name) {
     throw new Error(`createSlice name must not be blank`);
   }
 
   const actionKeys = Object.keys(reducts) as (keyof Actions)[];
-  const createActionType = actionTypeBuilder(<string>name);
+  const createActionType = actionTypeBuilder(name as string);
 
   const reducerMap = actionKeys.reduce<ReducerMap<SliceState>>(
     (map, action) => {
-      (<any>map)[createActionType(<string>action)] = reducts[action];
+      (map as any)[createActionType(action as string)] = reducts[action];
       return map;
     },
     extraReducers || {},
@@ -85,13 +51,13 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
   const reducer = createReducer<SliceState>({
     initialState,
     reducers: reducerMap,
-    name: <string>name,
+    name,
     useImmer,
   });
 
   const actionMap = actionKeys.reduce<
     {
-      [key in keyof Actions]: Object extends Actions[key]
+      [key in keyof Actions]: Object extends Actions[key] // ensures payload isn't inferred as {}
         ? (payload?: any) => Action
         : Actions[key] extends never
         ? () => Action

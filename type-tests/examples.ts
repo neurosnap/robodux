@@ -1,6 +1,7 @@
-import robodux from '../src/slice';
 import { combineReducers, createStore, applyMiddleware, Dispatch } from 'redux';
 import thunk from 'redux-thunk';
+
+import robodux from '../src/slice';
 
 interface SliceState {
   test: string;
@@ -22,8 +23,9 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, reducer, name } = robodux<SliceState, Actions, IState>({
-  name: 'hi',
+const hi = 'hi';
+const { actions, reducer } = robodux<SliceState, Actions>({
+  name: hi,
   reducts: {
     set: (state, payload) => payload,
     reset: (state) => defaultState,
@@ -31,7 +33,9 @@ const { actions, reducer, name } = robodux<SliceState, Actions, IState>({
   initialState: defaultState,
 });
 
-const val = { hi: defaultState, auth: {} }[name];
+const val = { hi: defaultState, auth: {} }[hi];
+// $ExpectType { set: (payload: SliceState) => Action<SliceState>; reset: () => Action<any>; }
+actions;
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();
 const red = reducer;
@@ -42,7 +46,7 @@ interface ISliceState {
   idToken: string;
   userId: string;
   authenticating: boolean;
-  error: Error;
+  error: Error | null;
 }
 
 interface AuthActions {
@@ -59,7 +63,7 @@ const initialState: ISliceState = {
   error: null,
 };
 
-const auth = robodux<ISliceState, AuthActions, IState>({
+const auth = robodux<ISliceState, AuthActions>({
   name: 'auth', // slice is checked to ensure it is a key in IState
   reducts: {
     authFail: (state, payload) => {
@@ -67,8 +71,8 @@ const auth = robodux<ISliceState, AuthActions, IState>({
       state.authenticating = false;
     },
     authLogout: (state) => {
-      state.idToken = null;
-      state.userId = null;
+      state.idToken = 'asda';
+      state.userId = 'asxa';
     },
     authStart: (state) => {
       state.authenticating = true;
@@ -92,19 +96,21 @@ export const {
 const authWithoutInterface = robodux({
   name: 'auth',
   reducts: {
-    authFail2: (state, payload: Error) => {
+    authFail2: (state: ISliceState, payload: Error) => {
       state.error = payload;
       state.authenticating = false;
     },
-    authLogout2: (state, payload: never, _: IState) => {
-      // useless third arg can be used to type cast State
-      state.idToken = null;
-      state.userId = null;
+    authLogout2: (state: ISliceState, payload: never) => {
+      state.idToken = 'asd';
+      state.userId = 'dsa';
     },
-    authStart2: (state, payload: never) => {
+    authStart2: (state: ISliceState, payload: never) => {
       state.authenticating = true;
     },
-    authSuccess2: (state, payload: { idToken: string; userId: string }) => {
+    authSuccess2: (
+      state: ISliceState,
+      payload: { idToken: string; userId: string },
+    ) => {
       state.authenticating = false;
       state.idToken = payload.idToken;
       state.userId = payload.userId;
@@ -144,7 +150,7 @@ console.log(
   '\n',
 );
 
-const getAuth = (state) => state[authSlice];
+const getAuth = (state: any) => state[authSlice];
 
 console.log(
   '\n[authStart action dispatched]\n',

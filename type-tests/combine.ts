@@ -23,22 +23,20 @@ const actions = createActionMap(counterSlice, loadingSlice);
 // $ExpectType { inc: (payload?: any) => Action<any>; dec: (payload?: any) => Action<any>; loading: (payload: boolean) => Action<boolean>; }
 actions;
 const reducers = createReducerMap(counterSlice, loadingSlice);
-// $ExpectType { counter: Reducer<number, Action<any>>; loading: Reducer<boolean, Action<any>>; }
+// $ExpectType { [x: string]: Reducer<number, Action<any>> | Reducer<boolean, Action<any>>; }
 reducers;
 
-const mods = [
-  {
-    reducers: { counter: counterSlice.reducer },
-  },
-  {
-    reducers: { loading: loadingSlice.reducer },
-  },
-];
+const modA = {
+  reducers: { counter: counterSlice.reducer },
+};
+const modB = {
+  reducers: { loading: loadingSlice.reducer },
+};
 
 interface LocalState {
-  loading?: boolean;
-  counter?: number;
+  loading: boolean;
+  counter: number;
 }
-const app = createApp<LocalState>(mods);
+const app = createApp<LocalState>([modA, modB]);
 // $ExpectType { reducer: Reducer<LocalState, AnyAction>; }
 app;

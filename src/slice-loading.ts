@@ -1,5 +1,5 @@
 import createSlice from './slice';
-import { AnyState, ActionsAny } from './types';
+import { ActionsAny } from './types';
 
 export interface LoadingItemState {
   error: string;
@@ -15,48 +15,47 @@ export const defaultLoadingItem = () => ({
   success: false,
 });
 
-const error = (state: LoadingItemState, error: string): LoadingItemState => ({
-  error,
-  message: '',
-  loading: false,
-  success: false,
-});
+interface LoadingActions {
+  success: string | undefined;
+  error: string | undefined;
+  loading: string | undefined;
+  reset: never;
+}
 
-const success = (
-  state: LoadingItemState,
-  message?: string,
-): LoadingItemState => ({
-  error: '',
-  message: message || '',
-  loading: false,
-  success: true,
-});
-
-const loading = (
-  state: LoadingItemState,
-  message?: string,
-): LoadingItemState => ({
-  error: '',
-  message: message || '',
-  loading: true,
-  success: false,
-});
-
-export default function createLoadingSlice<
-  A extends ActionsAny = any,
-  S extends AnyState = AnyState
->({ name, extraReducers }: { name: keyof S; extraReducers?: ActionsAny }) {
-  const initialState = defaultLoadingItem();
-  return createSlice<LoadingItemState, A, S>({
+export default function loadingSlice({
+  name,
+  initialState = defaultLoadingItem(),
+  extraReducers,
+}: {
+  name: string;
+  initialState?: LoadingItemState;
+  extraReducers?: ActionsAny;
+}) {
+  return createSlice<LoadingItemState, LoadingActions>({
     name,
-    useImmer: false,
     initialState,
-    reducts: {
-      [`${name}Error`]: error,
-      [`${name}Success`]: success,
-      [name]: loading,
-      [`${name}Reset`]: (state: LoadingItemState) => initialState,
-    } as any,
     extraReducers,
+    useImmer: false,
+    reducts: {
+      success: (state: LoadingItemState, payload: string | undefined) => ({
+        error: '',
+        message: payload || '',
+        loading: false,
+        success: true,
+      }),
+      error: (state: LoadingItemState, payload: string | undefined) => ({
+        error: payload || '',
+        message: '',
+        loading: false,
+        success: false,
+      }),
+      loading: (state: LoadingItemState, payload: string | undefined) => ({
+        error: '',
+        message: payload || '',
+        loading: true,
+        success: false,
+      }),
+      reset: (state: LoadingItemState) => initialState,
+    },
   });
 }

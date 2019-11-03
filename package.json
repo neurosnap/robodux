@@ -16,28 +16,31 @@
     "test": "tsc && yarn tc && jest",
     "prepublish": "yarn build",
     "precommit": "lint-staged",
-    "prettier-js": "prettier --write {src}/*.ts",
+    "prettier-js": "prettier --write src/*.ts",
     "prettier-md": "prettier --config prettier.md.js --write *.md",
     "format": "yarn prettier-js && yarn prettier-md"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "immer": "^4.0.0",
+    "redux": "^4.0.4"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/node": "^12.7.5",
     "babel-core": "^6.0.0 || ^7.0.0-0",
     "babel-jest": "^23.0.0 || ^24.0.0",
+    "deep-freeze-strict": "^1.1.1",
     "husky": "^0.14.3",
     "immer": "^4.0.1",
     "jest": "^23.5.0",
     "lint-staged": "^7.2.0",
     "prettier": "^1.18.2",
-    "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
+    "redux": "^4.0.4",
     "ts-jest": "^23.1.4",
     "typescript": "^3.6.3",
     "typings-checker": "^2.0.0"
-  },
-  "dependencies": {
-    "deep-freeze-strict": "^1.1.1"
   },
   "lint-staged": {
     "*.{js}": [
@@ -48,9 +51,5 @@
       "prettier --config prettier.md.js --write",
       "git add"
     ]
-  },
-  "peerDependencies": {
-    "immer": "^4.0.0",
-    "redux": "^4.0.4"
   }
 }

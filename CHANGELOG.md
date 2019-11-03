@@ -18,7 +18,8 @@
 
 ## v5.1.0 (10-06-2019)
 
-- :sparkles: initial `createApp` which will accept an array of modules and return a reducer
+- :sparkles: initial `createApp` which will accept an array of modules and
+  return a reducer
 
 ## v5.0.0 (09-12-2019)
 

@@ -1,4 +1,5 @@
-import { Reducer, Action } from './types';
+import { Reducer } from 'redux';
+import { Action } from './types';
 
 type MergeIntersections<T> = T extends infer O
   ? { [K in keyof O]: O[K] }
