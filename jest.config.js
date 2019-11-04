@@ -6,7 +6,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   globals: {
     'ts-jest': {
-      skipBabel: true,
+      babelConfig: false,
     },
   },
 };

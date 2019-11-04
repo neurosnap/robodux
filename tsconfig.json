@@ -1,11 +1,8 @@
 {
-  "baseUrl": "types",
-  "typeRoots": ["types"],
   "compilerOptions": {
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "removeComments": true,
-    "preserveConstEnums": true,
     "sourceMap": true,
     "baseUrl": ".",
     "target": "es5",
@@ -13,12 +10,13 @@
     "outDir": "./dist",
     "strict": true,
     "moduleResolution": "node",
-    "lib": ["es2015", "es2017"],
-    "declaration": true
+    "lib": ["es2015", "dom", "es2017"],
+    "declaration": true,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",
-    "type_tests"
+    "type-tests"
   ],
   "include": [
     "./src/index.ts"
