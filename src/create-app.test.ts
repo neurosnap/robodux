@@ -15,10 +15,7 @@ describe('createApp', () => {
     interface State {
       you: string;
     }
-    interface Actions {
-      setTest: State;
-    }
-    const slice = assignSlice<State, Actions>({
+    const slice = assignSlice<State>({
       name: 'test',
       initialState: { you: 'me' },
     });
@@ -28,7 +25,7 @@ describe('createApp', () => {
     const actual = app.reducer;
     expect(
       actual(undefined, {
-        type: `${slice.actions.setTest}`,
+        type: `${slice.actions.set}`,
         payload: { test: { you: 'we' } },
       }),
     ).toEqual({ test: { test: { you: 'we' } } });

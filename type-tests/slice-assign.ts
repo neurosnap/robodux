@@ -2,23 +2,16 @@ import assignSlice from '../src/slice-assign';
 
 // testing no params
 const one = assignSlice({ name: 'SLICE', initialState: false });
-// $ExpectType { [x: string]: (payload?: any) => Action<any>; }
+// $ExpectType { set: (payload: boolean) => Action<boolean>; reset: () => Action<any>; }
 one.actions;
 // $ExpectType Reducer<boolean, Action<any>>
 one.reducer;
-// $ExpectType "SLICE"
+// $ExpectType string
 one.name;
 
 // testing with params
 type SliceState = boolean;
-interface Actions {
-  set: SliceState;
-  reset: never;
-}
-interface State {
-  slice: SliceState;
-}
-const two = assignSlice<SliceState, Actions, State>({
+const two = assignSlice<SliceState>({
   name: 'slice',
   initialState: false,
 });
@@ -26,5 +19,5 @@ const two = assignSlice<SliceState, Actions, State>({
 two.actions;
 // $ExpectType Reducer<boolean, Action<any>>
 two.reducer;
-// $ExpectType "slice"
+// $ExpectType string
 two.name;

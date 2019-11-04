@@ -1,26 +1,27 @@
 import createSlice from './slice';
-import { AnyState, ActionsAny } from './types';
-import { NoEmptyArray } from './reducer';
-import { cap } from './util';
+import { ActionsAny } from './types';
 
-interface Params<SS, S> {
-  initialState: NoEmptyArray<SS>;
-  name: keyof S;
-  extraReducers?: ActionsAny;
+interface AssignActions<SS> {
+  set: SS;
+  reset: never;
 }
 
-export default function assignSlice<
-  SS = any,
-  A extends ActionsAny = any,
-  S extends AnyState = AnyState
->({ name, initialState, extraReducers }: Params<SS, S>) {
-  return createSlice<SS, A, S>({
+export default function assignSlice<State = any>({
+  name,
+  initialState,
+  extraReducers,
+}: {
+  name: string;
+  initialState: State;
+  extraReducers?: ActionsAny;
+}) {
+  return createSlice<State, AssignActions<State>>({
     name,
     useImmer: false,
     initialState,
     reducts: {
-      [`set${cap(<string>name)}`]: (s: SS, p: SS) => p,
-      [`reset${cap(<string>name)}`]: () => initialState,
+      set: (s: State, p: State) => p,
+      reset: () => initialState,
     } as any,
     extraReducers,
   });

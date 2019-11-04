@@ -1,30 +1,22 @@
 import mapSlice from './slice-map';
-import { PatchEntity } from './types';
 import * as deepFreeze from 'deep-freeze-strict';
 
 interface State {
   [key: string]: string;
 }
 
-interface Actions {
-  addTest: State;
-  setTest: State;
-  removeTest: string[];
-  resetTest: never;
-  patchTest: PatchEntity<State>;
-}
-
 describe('mapSlice', () => {
   describe('add', () => {
     it('should add items to map', () => {
       const name = 'test';
-      const { reducer, actions } = mapSlice<State, Actions>({ name });
+      const { reducer, actions } = mapSlice<State>({ name });
       const test = {
         1: 'one',
         2: 'two',
       };
+      actions.reset;
       const state = deepFreeze({ 3: 'three' });
-      const actual = reducer(state, actions.addTest(test));
+      const actual = reducer(state, actions.add(test));
       expect(actual).toEqual({ ...state, ...test });
     });
   });
@@ -32,13 +24,13 @@ describe('mapSlice', () => {
   describe('set', () => {
     it('should set items to map', () => {
       const name = 'test';
-      const { reducer, actions } = mapSlice<State, Actions, any>({ name });
+      const { reducer, actions } = mapSlice({ name });
       const test = {
         1: 'one',
         2: 'two',
       };
       const state = deepFreeze({ 3: 'three' });
-      const actual = reducer(state, actions.setTest(test));
+      const actual = reducer(state, actions.set(test));
       expect(actual).toEqual(test);
     });
   });
@@ -46,9 +38,9 @@ describe('mapSlice', () => {
   describe('remove', () => {
     it('should remove items from map', () => {
       const name = 'test';
-      const { reducer, actions } = mapSlice<State, Actions, any>({ name });
+      const { reducer, actions } = mapSlice({ name });
       const state = deepFreeze({ 1: 'one', 2: 'two', 3: 'three' });
-      const actual = reducer(state, actions.removeTest(['1', '2']));
+      const actual = reducer(state, actions.remove(['1', '2']));
       expect(actual).toEqual({ 3: 'three' });
     });
   });
@@ -56,9 +48,9 @@ describe('mapSlice', () => {
   describe('reset', () => {
     it('should reset map', () => {
       const name = 'test';
-      const { reducer, actions } = mapSlice<State, Actions, any>({ name });
+      const { reducer, actions } = mapSlice({ name });
       const state = deepFreeze({ 1: 'one', 2: 'two', 3: 'three' });
-      const actual = reducer(state, actions.resetTest());
+      const actual = reducer(state, actions.reset());
       expect(actual).toEqual({});
     });
   });
@@ -70,12 +62,8 @@ describe('mapSlice', () => {
           [key: string]: { name: string };
         }
 
-        interface PatchActions {
-          patchTest: PatchEntity<State>;
-        }
-
         const name = 'test';
-        const { reducer, actions } = mapSlice<State, PatchActions, any>({
+        const { reducer, actions } = mapSlice<State>({
           name,
         });
         const state = deepFreeze({
@@ -83,10 +71,7 @@ describe('mapSlice', () => {
           2: { name: 'two' },
           3: { name: 'three' },
         });
-        const actual = reducer(
-          state,
-          actions.patchTest({ 2: { name: 'four' } }),
-        );
+        const actual = reducer(state, actions.patch({ 2: { name: 'four' } }));
         expect(actual).toEqual({
           1: { name: 'one' },
           2: { name: 'four' },
@@ -98,16 +83,8 @@ describe('mapSlice', () => {
 
   describe('when entity is *not* an object', () => {
     it('should update a prop', () => {
-      interface State {
-        [key: string]: string;
-      }
-
-      interface PatchActions {
-        patchTest: PatchEntity<State>;
-      }
-
       const name = 'test';
-      const { reducer, actions } = mapSlice<State, PatchActions, any>({
+      const { reducer, actions } = mapSlice<State>({
         name,
       });
       const state = deepFreeze({
@@ -115,7 +92,7 @@ describe('mapSlice', () => {
         2: 'two',
         3: 'three',
       });
-      const actual = reducer(state, actions.patchTest({ 2: 'cool' }));
+      const actual = reducer(state, actions.patch({ 2: 'cool' }));
       expect(actual).toEqual({ '1': 'one', '2': 'two', '3': 'three' });
     });
   });

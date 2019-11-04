@@ -1,7 +1,7 @@
-import { combineReducers, ReducersMapObject, AnyAction } from 'redux';
+import { combineReducers, ReducersMapObject, Reducer } from 'redux';
 
 export default function createApp<S = any>(
-  mds: { reducers?: ReducersMapObject<S, AnyAction> }[],
+  mds: { reducers: { [key: string]: Reducer } }[],
 ) {
   const reducer = combineReducers<S>(
     mds.reduce(
@@ -12,15 +12,18 @@ export default function createApp<S = any>(
 
         Object.keys(mod.reducers).forEach((key) => {
           if (!mod.reducers) {
-            return acc;
+            return;
           }
 
-          acc[key as keyof S] = mod.reducers[key as keyof S];
+          const reducer: Reducer | undefined = mod.reducers[key];
+          if (reducer) {
+            acc[key as keyof S] = reducer;
+          }
         });
 
         return acc;
       },
-      {} as ReducersMapObject<S, AnyAction>,
+      {} as ReducersMapObject<S>,
     ),
   );
 

@@ -15,11 +15,11 @@ reducers are allowed to mutate the state directly.
 
 ## Features
 
-- Automatically creates actions, reducer, and selector based on `slice`
-- Action types are prefixed with `slice`
+- Automatically creates actions and reducer based on `name`
+- Action types are prefixed with `name`
 - Reducers leverage `immer` which makes updating state easy
 - When stringifying action creators they return the action type
-- Helper functions for manually creating actions and reducers
+- Helper functions for manually creating actions, reducers, and other utilities
 - Reducers do no receive entire action object, only payload
 - Slice helpers to further reduce repetitive reducer types (map slice, assign
   slice, loading slice)
@@ -31,12 +31,17 @@ This library was heavily inspired by
 [redux-starter-kit](https://github.com/markerikson/redux-starter-kit). The
 reason why I decided to create a separate library was primarily for:
 
-- typescript support
-- creating reducers with `immer`
 - no external dependencies besides `immer`
-- create action helper
-- create reducer helper
 - slice helpers
+
+At this point in time, the primary benefit to use `robodux` over
+`redux-starter-kit` is to leverage slice helpers. RSK is also trying to be
+opinionated about how people should use it. The driving motivation for RSK is to
+be able to install it and nothing else to get redux setup with minimal
+boilerplate. It accomplishes this goal by installing `redux` and other
+dependencies and re-exports them. This is certainly welcome for many developers,
+however, `robodux` isn't trying to supersede `redux`.  Instead, the goal of
+`robodux` is to be an addition to `redux` in a non-intrusive manner.
 
 ## Usage
 
@@ -44,22 +49,13 @@ reason why I decided to create a separate library was primarily for:
 import robodux from 'robodux';
 import { createStore, combineReducers, Action } from 'redux';
 
-interface User {
-  name: string;
-}
-
-interface State {
-  user: User;
-  counter: number;
-}
-
 interface CounterActions {
   increment: never;  // <- indicates no payload expected
   decrement: never;
   multiply: number;  // <- indicates a payload of type number is required
 }
 
-const counter = robodux<number, CounterActions, State>({
+const counter = robodux<number, CounterActions>({
   name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
   initialState: 0,
   reducts: {
@@ -69,11 +65,15 @@ const counter = robodux<number, CounterActions, State>({
   },
 });
 
+interface User {
+  name: string;
+}
+
 interface UserActions {
   setUserName: string;
 }
 
-const user = robodux<User, UserActions, State>({
+const user = robodux<User, UserActions>({
   name: 'user', // slice is optional could be blank ''
   initialState: { name: '' },
   reducts: {
@@ -181,6 +181,10 @@ const counter = createSlice({
     decrement: (state) => state - 1,
   }
 });
+export const {
+  increment: incrementCounter,
+  decrement: decrementCounter,
+} = counter.actions;
 
 const counterLoader = createSlice({
   name: 'counterLoader',
@@ -188,27 +192,25 @@ const counterLoader = createSlice({
   reducts: {
     loading: (state, payload: boolean) => payload,
   };
-})
+});
+export const {
+  loading: loadingCounter,
+} = counterLoader.actions;
 
-const selectors = {
+export const selectors = {
   getCounter = (state) => state[counter.name],
   getCounterLoader = (state) => state[counterLoader.name],
 };
 
-const actions = createActionMap(counter, counterLoader);
-const reducers = createReducerMap(counter, counterLoader);
-
-// creating a consistent API is very important for maintainability
-// so all modules should export the same API
-export { selectors, actions, reducers };
+export const reducers = createReducerMap(counter, counterLoader);
 ```
 
 All of my apps are setup in a similar way. An app is a composition of modules
 and the UI. To read more about why apps should be set up this way then read my
 blog article: https://erock.io/scaling-js-codebase-multiple-platforms/
 
-After subscribing to this common interface, we can do some interesting things with
-automation.
+After subscribing to this common interface, we can do some interesting things
+with automation.
 
 ```js
 import { createStore } from 'redux';
@@ -226,8 +228,8 @@ store.dispatch(...);
 ```
 
 `createApp` is a simple helper function that combines all the reducers in each
-module and uses `combineReducers` from `redux`.  There is nothing special going on
-but it helps streamline combining all reducers into a single reducer.
+module and uses `combineReducers` from `redux`. There is nothing special going
+on but it helps streamline combining all reducers into a single reducer.
 
 ## Types
 
@@ -242,10 +244,6 @@ returned from `robodux`. Supply an interface where they keys are the action
 names and the values are the payload types, which should be `never` if the
 action takes no payload.
 
-`State` is the entire state shape for when a slice is used with `robodux`. This
-helps type the selectors we return which requires the entire state as the
-parameter and not simply the slice state.
-
 ```js
 import robodux from 'robodux';
 import { Action } from 'redux';
@@ -253,11 +251,6 @@ import { Action } from 'redux';
 interface SliceState {
   test: string;
   wow: number;
-}
-
-interface State {
-  hi: SliceState;
-  other: boolean;
 }
 
 interface Actions {
@@ -271,7 +264,7 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux<SliceState, Actions, State>({
+const { actions, selectors, reducer } = robodux<SliceState, Actions>({
   name: 'hi',
   initialState: defaultState,
   reducts: {
@@ -304,27 +297,15 @@ import { mapSlice, PatchEntity } from 'robodux';
 interface SliceState {
   [key: string]: { name: string, email: string };
 }
-interface State {
-  test: SliceState
-}
-
-// NOTE: you only need to type the actions you are going to use
-interface Actions {
-  addTest: State;
-  setTest: State;
-  removeTest: string[];
-  resetTest: never;
-  patchTest: PatchEntity<State>;
-}
 
 const name = 'test';
-const { reducer, actions } = mapSlice<SliceState, Actions, State>({ name });
+const { reducer, actions } = mapSlice<SliceState>({ name });
 const state = {
   3: { name: 'three', email: 'three@three.com' }
 };
 
 store.dispatch(
-  actions.addTest({
+  actions.add({
     1: { name: 'one', email: 'one@one.com' },
     2: { name: 'two', email: 'two@two.com' },
   })
@@ -336,7 +317,7 @@ store.dispatch(
 } */
 
 store.dispatch(
-  actions.setTest({
+  actions.set({
     4: { name: 'four', email: 'four@four.com' },
     5: { name: 'five', email: 'five@five.com' },
     6: { name: 'six': email: 'six@six.com' },
@@ -349,7 +330,7 @@ store.dispatch(
 } */
 
 store.dispatch(
-  actions.removeTest(['5', '6'])
+  actions.remove(['5', '6'])
 )
 /* {
   4: { name: 'four', email: 'four@four.com' },
@@ -357,7 +338,7 @@ store.dispatch(
 
 // only update a part of the entity
 store.dispatch(
-  actions.patchTest({
+  actions.patch({
     4: { name: 'five' }
   })
 )
@@ -366,7 +347,7 @@ store.dispatch(
 } */
 
 store.dispatch(
-  actions.resetTest()
+  actions.reset()
 )
 // {}
 ```
@@ -383,30 +364,21 @@ import { assignSlice } from 'robodux';
 
 type SliceState = string;
 
-interface Actions {
-  setTest: SliceState;
-  resetTest: never;
-}
-
-interface State {
-  test: SliceState;
-}
-
 const name = 'token';
-const { reducer, actions } = assignSlice<SliceState, Actions, State>({ name, initialState: '' });
+const { reducer, actions } = assignSlice<SliceState>({ name, initialState: '' });
 
 store.dispatch(
-  actions.setToken('some-token')
+  actions.set('some-token')
 );
 /* redux state: { token: 'some-token' } */
 
 store.dispatch(
-  actions.setToken('another-token')
+  actions.set('another-token')
 )
 /* redux state: { token: 'another-token' } */
 
 store.dispatch(
-  actions.resetTest()
+  actions.reset()
 )
 // redux state: { token: '' }
 ```
@@ -420,29 +392,19 @@ params: { name, extraReducers }
 ```js
 import { loadingSlice, LoadingItemState } from 'robodux';
 
-interface Actions {
-  loading: string;
-  loadingSuccess: string;
-  loadingError: string;
-}
-
-interface State {
-  loading: LoadingItemState;
-}
-
-const { actions, reducer } = loadingSlice<Actions, State>({ name: 'loading' });
+const { actions, reducer } = loadingSlice({ name: 'loading' });
 store.dispatch(
   actions.loading('something loading')
 )
 // redux state: { loading: { error: '', message: 'something loading', loading: true, success: false } }
 
 store.dispatch(
-  actions.loadingSuccess('great success')
+  actions.success('great success')
 )
 // redux state: { loading: { error: '', message: 'great success', loading: false, success: true } }
 
 store.dispatch(
-  actions.loadingError('something happened')
+  actions.error('something happened')
 )
 // redux state: { loading: { error: 'something happened', loading: false, success: false } }
 ```
@@ -607,8 +569,8 @@ export { reducers };
 
 ### createApp
 
-Given an array of modules with type `{ reducer: { [key: string]: Reducer } }`
-we will combine the reducers using `combineReducers` from redux.
+Given an array of modules with type `{ reducer: { [key: string]: Reducer } }` we
+will combine the reducers using `combineReducers` from redux.
 
 ### mapSlice
 
