@@ -1,5 +1,5 @@
 import mapSlice from './slice-map';
-import * as deepFreeze from 'deep-freeze-strict';
+import deepFreeze from 'deep-freeze-strict';
 
 interface State {
   [key: string]: string;

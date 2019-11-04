@@ -59,14 +59,14 @@ describe('createSlice', () => {
 
   describe('when adding extra reducers', () => {
     it('should create action reducer pair without action type namespacing', () => {
-      const { actions, reducer } = createSlice({
+      const { reducer } = createSlice({
         reducts: {
           setUserName: (state, payload: string) => {
             state.user = payload;
           },
         },
         extraReducers: {
-          another: (state, payload) => {
+          another: (state: any, payload: any) => {
             state.another = payload;
           },
         },

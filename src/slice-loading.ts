@@ -16,9 +16,9 @@ export const defaultLoadingItem = () => ({
 });
 
 interface LoadingActions {
-  success: string | undefined;
-  error: string | undefined;
-  loading: string | undefined;
+  success: string;
+  error: string;
+  loading: string;
   reset: never;
 }
 
@@ -37,19 +37,19 @@ export default function loadingSlice({
     extraReducers,
     useImmer: false,
     reducts: {
-      success: (state: LoadingItemState, payload: string | undefined) => ({
+      success: (state: LoadingItemState, payload) => ({
         error: '',
         message: payload || '',
         loading: false,
         success: true,
       }),
-      error: (state: LoadingItemState, payload: string | undefined) => ({
+      error: (state: LoadingItemState, payload) => ({
         error: payload || '',
         message: '',
         loading: false,
         success: false,
       }),
-      loading: (state: LoadingItemState, payload: string | undefined) => ({
+      loading: (state: LoadingItemState, payload) => ({
         error: '',
         message: payload || '',
         loading: true,

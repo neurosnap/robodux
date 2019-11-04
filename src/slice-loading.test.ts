@@ -1,4 +1,4 @@
-import * as freeze from 'deep-freeze-strict';
+import freeze from 'deep-freeze-strict';
 
 import loadingSlice from './slice-loading';
 
@@ -13,7 +13,7 @@ describe('loadingSlice', () => {
         loading: false,
         success: false,
       });
-      const actual = reducer(state, actions.loading());
+      const actual = reducer(state, actions.loading(''));
 
       expect(actual).toEqual({
         loading: true,
@@ -53,7 +53,7 @@ describe('loadingSlice', () => {
         loading: true,
         success: false,
       });
-      const actual = reducer(state, actions.success());
+      const actual = reducer(state, actions.success(''));
 
       expect(actual).toEqual({
         loading: false,
