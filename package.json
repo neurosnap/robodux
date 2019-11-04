@@ -1,6 +1,6 @@
 {
   "name": "robodux",
-  "version": "5.1.4",
+  "version": "6.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
@@ -36,8 +36,8 @@
     "jest": "^23.5.0",
     "lint-staged": "^7.2.0",
     "prettier": "^1.18.2",
-    "redux-thunk": "^2.3.0",
     "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
     "ts-jest": "^23.1.4",
     "typescript": "^3.6.3",
     "typings-checker": "^2.0.0"
