@@ -1,5 +1,9 @@
 # CHANGES
 
+## 6.0.0 (11-04-2019)
+
+- :wrench: Improved typings for a better developer experience
+
 ## 5.1.4 (10-29-2019)
 
 - :bug: `mapSlice` was mutating state object incorrectly
