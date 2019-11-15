@@ -1,6 +1,6 @@
-import { Action } from 'redux';
+import { Action as BaseAction } from 'redux';
 
-export interface Action<P = any> extends Action {
+export interface Action<P = any> extends BaseAction {
   readonly payload?: P;
 }
 
