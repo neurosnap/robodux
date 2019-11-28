@@ -55,7 +55,7 @@ export default function loadingSlice({
         loading: true,
         success: false,
       }),
-      reset: (state: LoadingItemState) => initialState,
+      reset: () => initialState,
     },
   });
 }
