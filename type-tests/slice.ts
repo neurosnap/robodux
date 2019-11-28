@@ -6,9 +6,9 @@ const addFour = createSlice<number, { add: number }>({
   reducts: { add: (state, p: number) => state + p },
   initialState: 0,
 });
-// $ExpectType { add: (payload: number) => Action<number>; }
+// $ExpectType { add: (payload: number) => Action<number, string>; }
 addFour.actions;
-// $ExpectType Reducer<number, Action<any>>
+// $ExpectType Reducer<number, Action<any, string>>
 addFour.reducer;
 // $ExpectType string
 addFour.name;
@@ -19,9 +19,9 @@ const addFive = createSlice({
   reducts: { add: (state, p: number) => state + p },
   initialState: 0,
 });
-// $ExpectType { add: (payload: number) => Action<number>; }
+// $ExpectType { add: (payload: number) => Action<number, string>; }
 addFive.actions;
-// $ExpectType Reducer<number, Action<any>>
+// $ExpectType Reducer<number, Action<any, string>>
 addFive.reducer;
 // $ExpectType string
 addFive.name;
@@ -33,9 +33,9 @@ const addEight = createSlice({
   reducts: { add: (state, p: number) => state + p },
   initialState: 0,
 });
-// $ExpectType { add: (payload: number) => Action<number>; }
+// $ExpectType { add: (payload: number) => Action<number, string>; }
 addEight.actions;
-// $ExpectType Reducer<number, Action<any>>
+// $ExpectType Reducer<number, Action<any, string>>
 addEight.reducer;
 // $ExpectType string
 addEight.name;

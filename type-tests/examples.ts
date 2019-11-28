@@ -34,7 +34,7 @@ const { actions, reducer } = robodux<SliceState, Actions>({
 });
 
 const val = { hi: defaultState, auth: {} }[hi];
-// $ExpectType { set: (payload: SliceState) => Action<SliceState>; reset: () => Action<any>; }
+// $ExpectType { set: (payload: SliceState) => Action<SliceState, string>; reset: () => Action<any, string>; }
 actions;
 actions.set({ test: 'ok', wow: 0 });
 actions.reset();

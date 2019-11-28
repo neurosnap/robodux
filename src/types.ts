@@ -5,7 +5,7 @@ export interface Action<P = any, T extends string = string>
   payload?: P;
 }
 
-export interface ActionWithPayload<P, T extends string = string>
+export interface ActionWithPayload<P = any, T extends string = string>
   extends BaseAction<T> {
   payload: P;
 }
