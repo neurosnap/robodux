@@ -2,7 +2,7 @@ import createAction from '../src/action';
 
 // testing no payload
 const test = createAction('SOMETHING');
-// $ExpectType { type: "SOMETHING"; payload: undefined; }
+// $ExpectType { type: string; payload: undefined; }
 test();
 // $ExpectError Expected 0 arguments, but got 1.
 test('payload');

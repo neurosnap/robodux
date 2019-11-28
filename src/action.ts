@@ -6,9 +6,7 @@ type CreatorNoPayload<T extends string = string> = () => {
   payload: undefined;
 };
 
-export default function creator<T extends string = string>(
-  type: T,
-): CreatorNoPayload<T>;
+export default function creator(type: string): CreatorNoPayload<string>;
 export default function creator<P, T extends string = string>(
   type: string,
 ): Creator<P, T>;
