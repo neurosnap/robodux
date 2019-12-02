@@ -20,10 +20,10 @@ const loadingSlice = createSlice({
 });
 
 const actions = createActionMap(counterSlice, loadingSlice);
-// $ExpectType { inc: (payload?: any) => Action<any>; dec: (payload?: any) => Action<any>; loading: (payload: boolean) => Action<boolean>; }
+// $ExpectType { inc: (payload?: any) => Action<any, string>; dec: (payload?: any) => Action<any, string>; loading: (payload: boolean) => Action<boolean, string>; }
 actions;
 const reducers = createReducerMap(counterSlice, loadingSlice);
-// $ExpectType { [x: string]: Reducer<number, Action<any>> | Reducer<boolean, Action<any>>; }
+// $ExpectType { [x: string]: Reducer<number, Action<any, string>> | Reducer<boolean, Action<any, string>>; }
 reducers;
 
 const modA = {

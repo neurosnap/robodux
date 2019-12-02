@@ -13,7 +13,7 @@ describe('loadingSlice', () => {
         loading: false,
         success: false,
       });
-      const actual = reducer(state, actions.loading(''));
+      const actual = reducer(state, actions.loading());
 
       expect(actual).toEqual({
         loading: true,
@@ -32,7 +32,7 @@ describe('loadingSlice', () => {
         loading: false,
         success: false,
       });
-      const actual = reducer(state, actions.loading('hi there'));
+      const actual = reducer(state, actions.loading({ message: 'hi there' }));
 
       expect(actual).toEqual({
         loading: true,
@@ -53,7 +53,7 @@ describe('loadingSlice', () => {
         loading: true,
         success: false,
       });
-      const actual = reducer(state, actions.success(''));
+      const actual = reducer(state, actions.success());
 
       expect(actual).toEqual({
         loading: false,
@@ -72,7 +72,7 @@ describe('loadingSlice', () => {
         loading: true,
         success: false,
       });
-      const actual = reducer(state, actions.success('wow'));
+      const actual = reducer(state, actions.success({ message: 'wow' }));
 
       expect(actual).toEqual({
         loading: false,
@@ -92,7 +92,7 @@ describe('loadingSlice', () => {
       loading: true,
       success: false,
     });
-    const actual = reducer(state, actions.error('some error'));
+    const actual = reducer(state, actions.error({ error: 'some error' }));
 
     expect(actual).toEqual({
       loading: false,

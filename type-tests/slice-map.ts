@@ -2,9 +2,9 @@ import mapSlice from '../src/slice-map';
 
 // testing no params
 const one = mapSlice({ name: 'SLICE' });
-// $ExpectType { add: (payload?: any) => Action<any>; set: (payload?: any) => Action<any>; remove: (payload: string[]) => Action<string[]>; patch: (payload: PatchEntity<AnyState>) => Action<PatchEntity<AnyState>>; reset: () => Action<...>; }
+// $ExpectType { add: (payload?: any) => Action<any, string>; set: (payload?: any) => Action<any, string>; remove: (payload: string[]) => Action<string[], string>; patch: (payload: PatchEntity<AnyState>) => Action<...>; reset: () => Action<...>; }
 one.actions;
-// $ExpectType Reducer<AnyState, Action<any>>
+// $ExpectType Reducer<AnyState, Action<any, string>>
 one.reducer;
 // $ExpectType string
 one.name;
@@ -18,9 +18,9 @@ interface SliceState {
 }
 
 const two = mapSlice<SliceState>({ name: 'slice' });
-// $ExpectType { add: (payload: SliceState) => Action<SliceState>; set: (payload: SliceState) => Action<SliceState>; remove: (payload: string[]) => Action<string[]>; patch: (payload: PatchEntity<SliceState>) => Action<...>; reset: () => Action<...>; }
+// $ExpectType { add: (payload: SliceState) => Action<SliceState, string>; set: (payload: SliceState) => Action<SliceState, string>; remove: (payload: string[]) => Action<string[], string>; patch: (payload: PatchEntity<...>) => Action<...>; reset: () => Action<...>; }
 two.actions;
-// $ExpectType Reducer<SliceState, Action<any>>
+// $ExpectType Reducer<SliceState, Action<any, string>>
 two.reducer;
 // $ExpectType string
 two.name;
