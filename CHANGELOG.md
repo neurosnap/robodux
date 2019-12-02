@@ -1,5 +1,10 @@
 # CHANGES
 
+## 7.0.0 (12-02-2019)
+
+- :wrench: Improved typings for `createAction`
+- :wrench: Allow custom data for `error` and `message` inside `loadingSlice`
+
 ## 6.0.0 (11-04-2019)
 
 - :wrench: Improved typings for a better developer experience
