@@ -7,5 +7,6 @@ export { default as createApp } from './create-app';
 export * from './slice-loading';
 export * from './types';
 export * from './combine';
-import robodux from './slice';
-export default robodux;
+import createSlice from './slice';
+export default createSlice;
+export { createSlice };
