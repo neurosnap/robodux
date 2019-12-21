@@ -49,17 +49,25 @@ boilerplate. It accomplishes this goal by installing `redux` and other
 dependencies and re-exports them. This is certainly welcome for many developers,
 however, `robodux` isn't trying to supersede `redux`. Instead, the goal of
 `robodux` is to be an addition to `redux` in a non-intrusive manner and to build
-scalable applications using a wealth of knowledge and experience.
-`redux-toolkit` still recommends `redux-thunk` for most applications, which
-based on our experience, is a poor choice for managing side-effects in a `redux`
-application.
+scalable applications by using a set of repeatable functions that store commonly
+used data structures in `redux`. `redux-toolkit` still recommends `redux-thunk`
+for most applications which is a poor choice for managing side-effects in a
+`redux` application and should only be used for very simple applications.
 
 Redux wants reducers to be the star of the application. This library
-de-emphasizes `redux` and heavily emphasizes `redux-saga`.
+de-emphasizes `redux` and heavily emphasizes side-effect libraries like
+`redux-saga`.
 
 ## Usage
 
 ## mapSlice
+
+If we think of the redux store as a database then a reducer can be thought of as
+a table. The most similar data structure to a table is a json object where the
+keys are ids and the values are json objects. We have created a slice helper
+that creates some very common actions that manage that table.
+
+params: { name, initialState, extraReducers }
 
 ```js
 import { mapSlice } from 'robodux';
@@ -125,7 +133,9 @@ store.dispatch(
 ### assignSlice (v2.1.0)
 
 These are common operations when dealing with a slice that simply needs to be
-set or reset
+set or reset. You can think of this slice helper as a basic setter. I regularly
+use this for things like setting a token in my app or if I'm prototyping and I
+just need something quick.
 
 params: { name, initialState, extraReducers }
 

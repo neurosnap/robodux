@@ -17,7 +17,7 @@
     "prepublish": "yarn build",
     "precommit": "lint-staged",
     "prettier-js": "prettier --write src/*.ts",
-    "prettier-md": "prettier --config prettier.md.js --write *.md",
+    "prettier-md": "prettier --config prettier.md.js --write *.md docs/*.md",
     "format": "yarn prettier-js && yarn prettier-md"
   },
   "dependencies": {},

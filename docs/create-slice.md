@@ -1,5 +1,21 @@
 # createSlice
 
+Think of a slice as a single reducer.
+
+```js
+const rootReducer = combineReducers({
+  token: (state, payload) => payload, // this is a slice
+  users: (state, payload) => payload, // this is a slice
+  userSelected: (state, payload) => payload, // this is a slice
+  comments: (state, payload) => payload, // this is a slice
+});
+// aside: you should always configure your store as flat as possible
+// think of the store as a database where the slice is a table
+```
+
+This function helps build a slice for your application. It will create action
+types, action creators, and reducers.
+
 ```js
 import { createSlice } from 'robodux';
 import { createStore, combineReducers, Action } from 'redux';
@@ -11,10 +27,10 @@ interface CounterActions {
 }
 
 const counter = createSlice<number, CounterActions>({
-  name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'countr/increment' }
+  name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'counter/increment' }
   initialState: 0,
   reducts: {
-    increment: (state) => state + 1,  // state is type cast as a number from the supplied slicestate type
+    increment: (state) => state + 1,  // state is type cast as a number from the supplied slice state type
     decrement: (state) => state - 1,
     multiply: (state, payload) => state * payload,  // payload here is type cast as number as from CounterActions
   },
@@ -91,9 +107,9 @@ const { actions, selectors, reducer } = robodux({
   },
 });
 
-actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
-actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
-actions.reset(); // typechecks to ensure action is called without params
+actions.setTest('ok'); // autocomplete and type checking for payload(string), type error if called without payload
+actions.setTest(0); // autocomplete and type checking for payload(number), type error if called without payload
+actions.reset(); // type checks to ensure action is called without params
 ```
 
 ## Types
@@ -139,9 +155,9 @@ const { actions, selectors, reducer } = createSlice<SliceState, Actions>({
   },
 });
 
-actions.setTest('ok'); // autocomplete and type checking for payload(string), typeerror if called without payload
-actions.setTest(0); // autocomplete and type checking for payload(number), typeerror if called without payload
-actions.reset(); // typechecks to ensure action is called without params
+actions.setTest('ok'); // autocomplete and type checking for payload(string), type error if called without payload
+actions.setTest(0); // autocomplete and type checking for payload(number), type error if called without payload
+actions.reset(); // type checks to ensure action is called without params
 ```
 
 ### extraReducers (v5.0)
