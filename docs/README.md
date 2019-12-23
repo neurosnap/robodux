@@ -1,7 +1,4 @@
----
-layout: default
-title: robodux
----
+# robodux
 
 [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
@@ -51,11 +48,6 @@ dispatch(
 ```
 
 See the [Using slice helpers](./basics/use-slice-helpers.md) to learn more.
-
-## Style guide
-
-`robodux` also provides a [style guide](style-guide.md) on how to build large
-scale applications using this library.
 
 ## Basic concepts
 
