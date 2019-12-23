@@ -1,5 +1,8 @@
 # robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
+- [Documentation](/docs/README.md)
+- [API reference](/docs/api.md)
+
 One of the biggest complaints developers have with redux is the amount of
 boilerplate and new concepts they have to learn to use it. By using the
 `robodux` pattern the amount of redux boilerplate is dramatically reduced. In
@@ -14,8 +17,8 @@ one line of code.
 - Reducers leverage [immer](https://github.com/mweststrate/immer) which makes
   updating state easy
 - When stringifying action creators they return the action type
-- Reducers do no receive entire action object, only payload
-- Helper functions `createAction`, `createReducer`, and `createSlice`
+- Reducers do not receive entire action object, only payload
+- Low level functions to build your own slices, actions, and reducers
 
 ## Core principles
 
@@ -42,17 +45,18 @@ decided to create a separate library was primarily for:
 - philosophical differences
 
 At this point in time, the primary benefit to use `robodux` over
-`redux-starter-kit` is to leverage slice helpers. RSK is also trying to be
-opinionated about how people should use it. The driving motivation for RSK is to
-be able to install it and nothing else to get redux setup with minimal
-boilerplate. It accomplishes this goal by installing `redux` and other
-dependencies and re-exports them. This is certainly welcome for many developers,
-however, `robodux` isn't trying to supersede `redux`. Instead, the goal of
-`robodux` is to be an addition to `redux` in a non-intrusive manner and to build
-scalable applications by using a set of repeatable functions that store commonly
-used data structures in `redux`. `redux-toolkit` still recommends `redux-thunk`
-for most applications which is a poor choice for managing side-effects in a
-`redux` application and should only be used for very simple applications.
+`redux-starter-kit` is to leverage slice helpers. `redux-toolkit` is also trying
+to be opinionated about how people should use it. The driving motivation for
+`redux-toolkit` is to be able to install it and nothing else to get redux setup
+with minimal boilerplate. It accomplishes this goal by installing `redux` and
+other dependencies and re-exports them. This is certainly welcome for many
+developers, however, `robodux` isn't trying to supersede `redux`. Instead, the
+goal of `robodux` is to be an addition to `redux` in a non-intrusive manner and
+to build scalable applications by using a set of repeatable functions that store
+commonly used data structures in `redux`. `redux-toolkit` still recommends
+`redux-thunk` for most applications which is a poor choice for managing
+side-effects in a `redux` application and should only be used for very simple
+applications.
 
 Redux wants reducers to be the star of the application. This library
 de-emphasizes `redux` and heavily emphasizes side-effect libraries like
