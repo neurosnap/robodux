@@ -1,7 +1,7 @@
 # robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
-- [Documentation](/docs/README.md)
-- [API reference](/docs/api.md)
+- [Documentation](https://neurosnap.github.io/robodux)
+- [API reference](https://neurosnap.github.io/robodux/api.html)
 
 One of the biggest complaints developers have with redux is the amount of
 boilerplate and new concepts they have to learn to use it. By using the

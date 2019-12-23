@@ -1,4 +1,4 @@
-## Table of Contents
+# robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
 - [Getting started](README.md#getting-started)
 - [Basic Concepts](./basics/README.md)
@@ -12,7 +12,7 @@
 - [Style guide](style-guide.md)
 - [FAQ](faq.md)
 
-# Getting started
+## Getting started
 
 ```bash
 yarn add robodux
@@ -59,5 +59,7 @@ dispatch(
 
 See the [Using slice helpers](./basics/use-slice-helpers.md) to learn more.
 
-`robodux` also tries to provide a [style guide](style-guide.md) on how to
+## Style guide
+
+`robodux` also provides a [style guide](style-guide.md) on how to
 build large scale applications using this library.
