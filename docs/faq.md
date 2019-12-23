@@ -1,4 +1,4 @@
-# Frequently asked questions
+# FAQ
 
 ## Why not `redux-toolkit`?
 

@@ -1,11 +1,5 @@
 [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
-## References
-
-- [API](api.md)
-- [Style guide](style-guide.md)
-- [FAQ](faq.md)
-
 ## Getting started
 
 ```bash

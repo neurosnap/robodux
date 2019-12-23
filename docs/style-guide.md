@@ -1,4 +1,3 @@
-
 # Style guide
 
 TODO

@@ -1,3 +1,5 @@
+# API
+
 ## mapSlice
 
 params: { name, initialState, extraReducers }
