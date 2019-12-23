@@ -1,4 +1,8 @@
-# API
+---
+layout: default
+title: API
+nav_order: 2
+---
 
 ## mapSlice
 
