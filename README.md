@@ -32,4 +32,3 @@ remove as much business logic as possible from reducers and instead centralize
 them inside of our side-effect handlers.
 
 Please see [style-guide](https://github.com/neurosnap/robodux) for more details.
-

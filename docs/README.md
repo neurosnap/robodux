@@ -57,8 +57,8 @@ See the [Using slice helpers](./basics/use-slice-helpers.md) to learn more.
 
 ## Style guide
 
-`robodux` also provides a [style guide](style-guide.md) on how to
-build large scale applications using this library.
+`robodux` also provides a [style guide](style-guide.md) on how to build large
+scale applications using this library.
 
 ## Basic concepts
 
@@ -176,14 +176,17 @@ store.dispatch(actions.error('something happened'));
 // redux state: { loading: { error: 'something happened', loading: false, success: false } }
 ```
 
-*NOTE*: We do **not** use `immer` for any slice helpers.  Since they are highly reusable pieces of code, we are comfortable properly handling reducer logic without the performance overhead of `immer`.
+_NOTE_: We do **not** use `immer` for any slice helpers. Since they are highly
+reusable pieces of code, we are comfortable properly handling reducer logic
+without the performance overhead of `immer`.
 
 ### Typescript
 
-Properly typing redux state is very valuable to a developer.  That's why we
-spend a lot of time trying to get the types as good as possible for this library.
+Properly typing redux state is very valuable to a developer. That's why we spend
+a lot of time trying to get the types as good as possible for this library.
 
-For anyone using this library we are committed to improving the types and welcome any contributions on that front.
+For anyone using this library we are committed to improving the types and
+welcome any contributions on that front.
 
 ### Extra reducers
 
@@ -216,7 +219,9 @@ store.getState();
 
 Think of a slice as a single reducer.
 
-*NOTE*: By default, this library uses [immer](https://github.com/immerjs/immer) for its reducers.  I highly recommend anyone using this library to understand how it works and its performance ramifications.
+_NOTE_: By default, this library uses [immer](https://github.com/immerjs/immer)
+for its reducers. I highly recommend anyone using this library to understand how
+it works and its performance ramifications.
 
 ```js
 const rootReducer = combineReducers({
@@ -298,8 +303,8 @@ console.log(state[counter.name]);
 
 #### without explicit types
 
-`createSlice` can be used without supplying interfaces, it will instead infer the
-types for you
+`createSlice` can be used without supplying interfaces, it will instead infer
+the types for you
 
 ```js
 import { createSlice } from 'robodux';
@@ -337,9 +342,9 @@ returned from `robodux`. Supply an interface where they keys are the action
 names and the values are the payload types, which should be `never` if the
 action takes no payload.
 
-`SliceState` is the state shape of the particular slice created with `createSlice`.
-If there is no slice passed to the state, then this will assume that this is the
-entire state shape.
+`SliceState` is the state shape of the particular slice created with
+`createSlice`. If there is no slice passed to the state, then this will assume
+that this is the entire state shape.
 
 ```js
 import { createSlice } from 'robodux';
