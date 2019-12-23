@@ -1,9 +1,3 @@
----
-layout: default
-title: robodux
-nav_order: 1
----
-
 [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
 ## References

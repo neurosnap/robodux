@@ -1,9 +1,3 @@
----
-layout: default
-title: API
-nav_order: 2
----
-
 ## mapSlice
 
 params: { name, initialState, extraReducers }
