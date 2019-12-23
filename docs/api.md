@@ -1,6 +1,18 @@
-## API
+# API
 
-### createSlice
+## mapSlice
+
+params: { name, initialState, extraReducers }
+
+## assignSlice
+
+params: { name, initialState, extraReducers }
+
+## loadingSlice
+
+params: { name, extraReducers }
+
+## createSlice
 
 This is the default export for robodux and will automatically create actions,
 reducer, and selectors for you.

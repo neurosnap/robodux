@@ -1,6 +1,8 @@
-# createSlice
+# How to use createSlice
 
 Think of a slice as a single reducer.
+
+*NOTE*: By default, this library uses [immer](https://github.com/immerjs/immer) for its reducers.  I highly recommend anyone using this library to understand how it works and its performance ramifications.
 
 ```js
 const rootReducer = combineReducers({
@@ -29,7 +31,7 @@ interface CounterActions {
 const counter = createSlice<number, CounterActions>({
   name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'counter/increment' }
   initialState: 0,
-  reducts: {
+  reducts: { // reducts = reducer + actions (stupid, I know)
     increment: (state) => state + 1,  // state is type cast as a number from the supplied slice state type
     decrement: (state) => state - 1,
     multiply: (state, payload) => state * payload,  // payload here is type cast as number as from CounterActions
@@ -78,13 +80,15 @@ console.log(state[counter.name]);
 // -> 6
 ```
 
-### without explicit types
+# Types
 
-Robodux can be used without supplying interfaces, it will instead infer the
+## without explicit types
+
+`createSlice` can be used without supplying interfaces, it will instead infer the
 types for you
 
 ```js
-import robodux from 'robodux';
+import { createSlice } from 'robodux';
 import { Action } from 'redux';
 
 const defaultState = {
@@ -92,7 +96,7 @@ const defaultState = {
   wow: 0,
 };
 
-const { actions, selectors, reducer } = robodux({
+const { actions, selectors, reducer } = createSlice({
   name: 'hi',
   initialState: defaultState,
   reducts: {
@@ -112,16 +116,14 @@ actions.setTest(0); // autocomplete and type checking for payload(number), type 
 actions.reset(); // type checks to ensure action is called without params
 ```
 
-## Types
-
-`robodux` accepts two generics: `Actions` and `SliceState`.
+`createSlice` accepts two generics: `Actions` and `SliceState`.
 
 `Actions` helps improve auto-complete and typing for the `actions` object
 returned from `robodux`. Supply an interface where they keys are the action
 names and the values are the payload types, which should be `never` if the
 action takes no payload.
 
-`SliceState` is the state shape of the particular slice created with `robodux`.
+`SliceState` is the state shape of the particular slice created with `createSlice`.
 If there is no slice passed to the state, then this will assume that this is the
 entire state shape.
 
@@ -158,27 +160,4 @@ const { actions, selectors, reducer } = createSlice<SliceState, Actions>({
 actions.setTest('ok'); // autocomplete and type checking for payload(string), type error if called without payload
 actions.setTest(0); // autocomplete and type checking for payload(number), type error if called without payload
 actions.reset(); // type checks to ensure action is called without params
-```
-
-### extraReducers (v5.0)
-
-By default `createSlice` will prefix any action type with the name of the slice.
-However, sometimes it is necessary to allow external action types to effect the
-reducer.
-
-```js
-const user = createSlice<User, UserActions>({
-  name: 'user',
-  initialState: { name: '' },
-  reducts: {
-    setUserName: (state, payload) => {
-      state.name = payload; // mutate the state all you want with immer
-    },
-  },
-  extraReducers: {
-    setAddress: (state, payload) => {
-      state.address = payload;
-    }
-  }
-})
 ```
