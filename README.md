@@ -2,6 +2,7 @@
 
 - [Documentation](https://neurosnap.github.io/robodux)
 - [API reference](https://neurosnap.github.io/robodux/api.html)
+- [Style guide](https://erock.io/redux-saga-style-guide)
 
 One of the biggest complaints developers have with redux is the amount of
 boilerplate and new concepts they have to learn to use it. By using the
@@ -22,13 +23,9 @@ one line of code.
 
 ## Core principles
 
-While many of the utilities built in this library mimic that of
-[redux-toolkit](https://github.com/redux/redux-toolkit) the philosophy behind
-how someone should use them are different.
-
 The overriding principle is that effects (like sagas) should be the central
 processing unit for all business logic in a react/redux application. We should
 remove as much business logic as possible from reducers and instead centralize
 them inside of our side-effect handlers.
 
-Please see [style-guide](https://github.com/neurosnap/robodux) for more details.
+Please see [style-guide](https://erock.io/redux-saga-style-guide) for more details.

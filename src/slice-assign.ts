@@ -1,5 +1,12 @@
-import createSlice from './slice';
-import { ActionsAny } from './types';
+import createSlice from './create-slice';
+import { SliceHelperRequired } from './types';
+
+export function assignReducers<State>(initialState: State) {
+  return {
+    set: (s: State, p: State) => p,
+    reset: () => initialState,
+  };
+}
 
 interface AssignActions<SS> {
   set: SS;
@@ -10,19 +17,12 @@ export default function assignSlice<State = any>({
   name,
   initialState,
   extraReducers,
-}: {
-  name: string;
-  initialState: State;
-  extraReducers?: ActionsAny;
-}) {
+}: SliceHelperRequired<State>) {
   return createSlice<State, AssignActions<State>>({
     name,
     useImmer: false,
     initialState,
-    reducts: {
-      set: (s: State, p: State) => p,
-      reset: () => initialState,
-    } as any,
+    reducts: assignReducers(initialState),
     extraReducers,
   });
 }

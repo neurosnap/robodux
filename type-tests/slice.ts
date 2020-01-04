@@ -1,4 +1,4 @@
-import createSlice from '../src/slice';
+import createSlice from '../src/create-slice';
 
 // testing InputWithName and 2 params
 const addFour = createSlice<number, { add: number }>({

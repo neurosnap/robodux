@@ -1,7 +1,7 @@
 import { combineReducers, createStore, applyMiddleware, Dispatch } from 'redux';
 import thunk from 'redux-thunk';
 
-import robodux from '../src/slice';
+import createSlice from '../src/create-slice';
 
 interface SliceState {
   test: string;
@@ -24,7 +24,7 @@ const defaultState = {
 };
 
 const hi = 'hi';
-const { actions, reducer } = robodux<SliceState, Actions>({
+const { actions, reducer } = createSlice<SliceState, Actions>({
   name: hi,
   reducts: {
     set: (state, payload) => payload,
@@ -63,7 +63,7 @@ const initialState: ISliceState = {
   error: null,
 };
 
-const auth = robodux<ISliceState, AuthActions>({
+const auth = createSlice<ISliceState, AuthActions>({
   name: 'auth', // slice is checked to ensure it is a key in IState
   reducts: {
     authFail: (state, payload) => {
@@ -93,7 +93,7 @@ export const {
   actions: { authFail, authStart, authSuccess, authLogout },
 } = auth;
 
-const authWithoutInterface = robodux({
+const authWithoutInterface = createSlice({
   name: 'auth',
   reducts: {
     authFail2: (state: ISliceState, payload: Error) => {

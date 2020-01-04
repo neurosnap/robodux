@@ -1,6 +1,39 @@
-import createSlice from './slice';
-import { ActionsAny, Action } from './types';
+import createSlice from './create-slice';
+import { Action, SliceHelper } from './types';
 import { Reducer } from 'redux';
+
+export function loadingReducers<M, E>(initialState: LoadingItemState<M, E>) {
+  return {
+    success: (
+      state: LoadingItemState<any, any>,
+      payload: LoadingPayload<M, E> = {},
+    ) => ({
+      error: payload.error || initialState.error,
+      message: payload.message || initialState.message,
+      loading: false,
+      success: true,
+    }),
+    error: (
+      state: LoadingItemState<any, any>,
+      payload: LoadingPayload<M, E> = {},
+    ) => ({
+      error: payload.error || initialState.error,
+      message: payload.message || initialState.message,
+      loading: false,
+      success: false,
+    }),
+    loading: (
+      state: LoadingItemState<any, any>,
+      payload: LoadingPayload<M, E> = {},
+    ) => ({
+      error: payload.error || initialState.error,
+      message: payload.message || initialState.message,
+      loading: true,
+      success: false,
+    }),
+    reset: () => initialState,
+  };
+}
 
 export interface LoadingItemState<M = string, E = string> {
   message: M;
@@ -18,10 +51,15 @@ export function defaultLoadingItem(): LoadingItemState<string, string> {
   };
 }
 
+export type LoadingPayload<M = string, E = string> = Partial<{
+  error: E;
+  message: M;
+}>;
+
 interface LoadingActions<M = string, E = string> {
-  loading: Partial<{ error: E; message: M }>;
-  success: Partial<{ error: E; message: M }>;
-  error: Partial<{ error: E; message: M }>;
+  loading: LoadingPayload<M, E>;
+  success: LoadingPayload<M, E>;
+  error: LoadingPayload<M, E>;
   reset: never;
 }
 
@@ -29,11 +67,7 @@ export default function loadingSlice({
   name,
   initialState,
   extraReducers,
-}: {
-  name: string;
-  initialState?: LoadingItemState<string, string>;
-  extraReducers?: ActionsAny;
-}): {
+}: SliceHelper<LoadingItemState<string, string>>): {
   name: string;
   reducer: Reducer<LoadingItemState<string, string>, Action>;
   actions: {
@@ -52,11 +86,7 @@ export default function loadingSlice<M, E>({
   name,
   initialState,
   extraReducers,
-}: {
-  name: string;
-  initialState: LoadingItemState<M, E>;
-  extraReducers?: ActionsAny;
-}): {
+}: SliceHelper<LoadingItemState<M, E>>): {
   name: string;
   reducer: Reducer<LoadingItemState<M, E>, Action>;
   actions: {
@@ -72,36 +102,12 @@ export default function loadingSlice({
   name,
   initialState = defaultLoadingItem(),
   extraReducers,
-}: {
-  name: string;
-  initialState?: LoadingItemState<any, any>;
-  extraReducers?: ActionsAny;
-}) {
+}: SliceHelper<LoadingItemState<any, any>>) {
   return createSlice<LoadingItemState<any, any>, LoadingActions<any, any>>({
     name,
     initialState,
     extraReducers,
     useImmer: false,
-    reducts: {
-      success: (state: LoadingItemState<any, any>, payload = {}) => ({
-        error: payload.error || initialState.error,
-        message: payload.message || initialState.message,
-        loading: false,
-        success: true,
-      }),
-      error: (state: LoadingItemState<any, any>, payload = {}) => ({
-        error: payload.error || initialState.error,
-        message: payload.message || initialState.message,
-        loading: false,
-        success: false,
-      }),
-      loading: (state: LoadingItemState<any, any>, payload = {}) => ({
-        error: payload.error || initialState.error,
-        message: payload.message || initialState.message,
-        loading: true,
-        success: false,
-      }),
-      reset: () => initialState,
-    },
+    reducts: loadingReducers(initialState),
   });
 }

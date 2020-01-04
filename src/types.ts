@@ -34,3 +34,15 @@ export interface ReducerMap<SliceState, A = Action> {
 export interface PatchEntity<T> {
   [key: string]: Partial<T[keyof T]>;
 }
+
+export interface SliceHelper<State> {
+  name: string;
+  initialState?: State;
+  extraReducers?: ActionsAny;
+}
+
+export interface SliceHelperRequired<State> {
+  name: string;
+  initialState: State;
+  extraReducers?: ActionsAny;
+}

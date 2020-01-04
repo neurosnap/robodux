@@ -1,4 +1,4 @@
-import createSlice from './slice';
+import createSlice from './create-slice';
 
 describe('createSlice', () => {
   describe('when passing slice', () => {

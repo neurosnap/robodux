@@ -1,5 +1,5 @@
 import createApp from '../src/create-app';
-import createSlice from '../src/slice';
+import createSlice from '../src/create-slice';
 import { createActionMap, createReducerMap } from '../src/combine';
 
 const counterSlice = createSlice({

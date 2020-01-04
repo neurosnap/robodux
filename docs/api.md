@@ -34,7 +34,7 @@ will return the action type. This allows developers to not have to worry about
 passing around action types, instead they simply pass around action creators for
 reducers, sagas, etc.
 
-```js
+```ts
 import { createAction } from 'robodux';
 
 const increment = createAction('INCREMENT');
@@ -63,7 +63,7 @@ function maps action types to reducer functions. It will return a reducer.
 }
 ```
 
-```js
+```ts
 import { createReducer } from 'robodux';
 
 const counter = createReducer({
@@ -84,7 +84,7 @@ console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
 This is a helper function to combine actions from multiple slices. This is
 create when composing multiple slices into a module that will then be exported.
 
-```js
+```ts
 import { createSlice, createActionMap } from 'robodux';
 
 const counter = createSlice({
@@ -130,7 +130,7 @@ useful when composing multiple slices into a module that will then be exported.
 This does _not_ use `combineReducers` under the hood, it simply creates an
 object where the key is the slice name and the value is the reducer function.
 
-```js
+```ts
 import { createSlice, createReducerMap } from 'robodux';
 
 const counter = createSlice({

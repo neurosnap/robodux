@@ -1,5 +1,49 @@
-import createSlice from './slice';
-import { AnyState, ActionsAny, PatchEntity } from './types';
+import createSlice from './create-slice';
+import { AnyState, PatchEntity, SliceHelper } from './types';
+
+export function mapReducers<State extends AnyState>(
+  initialState = {} as State,
+) {
+  return {
+    add: (state: State, payload: State) => {
+      const newState = { ...state };
+      Object.keys(payload).forEach((key) => {
+        newState[key as keyof State] = payload[key];
+      });
+      return newState;
+    },
+    set: (state: State, payload: State) => payload,
+    remove: (state: State, payload: string[]) => {
+      const newState = { ...state };
+      payload.forEach((key) => {
+        delete newState[key];
+      });
+      return newState;
+    },
+    reset: (state: State) => initialState,
+    patch: (
+      state: State,
+      payload: { [key: string]: Partial<State[keyof State]> },
+    ): State => {
+      const newState = { ...state };
+      Object.keys(payload).forEach((id) => {
+        if (typeof payload[id] !== 'object') {
+          return;
+        }
+
+        Object.keys(payload[id]).forEach((key) => {
+          // getting weird issue with typing here
+          const s: any = newState;
+          if (s.hasOwnProperty(id)) {
+            s[id] = { ...s[id], [key]: (payload[id] as any)[key] };
+          }
+        });
+      });
+
+      return newState;
+    },
+  };
+}
 
 interface MapActions<S> {
   add: S;
@@ -13,54 +57,12 @@ export default function mapSlice<State extends AnyState>({
   name,
   extraReducers,
   initialState = {} as State,
-}: {
-  name: string;
-  extraReducers?: ActionsAny;
-  initialState?: State;
-}) {
+}: SliceHelper<State>) {
   return createSlice<State, MapActions<State>>({
     name,
     initialState,
     extraReducers,
     useImmer: false,
-    reducts: {
-      add: (state: State, payload: State) => {
-        const newState = { ...state };
-        Object.keys(payload).forEach((key) => {
-          newState[key as keyof State] = payload[key];
-        });
-        return newState;
-      },
-      set: (state: State, payload: State) => payload,
-      remove: (state: State, payload: string[]) => {
-        const newState = { ...state };
-        payload.forEach((key) => {
-          delete newState[key];
-        });
-        return newState;
-      },
-      reset: (state: State) => initialState,
-      patch: (
-        state: State,
-        payload: { [key: string]: Partial<State[keyof State]> },
-      ): State => {
-        const newState = { ...state };
-        Object.keys(payload).forEach((id) => {
-          if (typeof payload[id] !== 'object') {
-            return;
-          }
-
-          Object.keys(payload[id]).forEach((key) => {
-            // getting weird issue with typing here
-            const s: any = newState;
-            if (s.hasOwnProperty(id)) {
-              s[id] = { ...s[id], [key]: (payload[id] as any)[key] };
-            }
-          });
-        });
-
-        return newState;
-      },
-    },
+    reducts: mapReducers(initialState),
   });
 }
