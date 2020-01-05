@@ -26,7 +26,7 @@ reducer, and selectors for you.
 }
 ```
 
-### createAction
+## createAction
 
 This is the helper function that `robodux` uses to create an action. It is also
 useful to use when not using robodux because when stringifying the function it
@@ -49,7 +49,7 @@ console.log(storeDetails({ name: 'John', surname: 'Doe' }));
 // { type: 'INCREMENT', payload: {name: 'John', surname: 'Doe'} };
 ```
 
-### createReducer
+## createReducer
 
 This is the helper function that `robodux` uses to create a reducer. This
 function maps action types to reducer functions. It will return a reducer.
@@ -79,7 +79,7 @@ console.log(counter(2, { type: 'MULTIPLY': payload: 5 }));
 // -> 10
 ```
 
-### createActionMap (v5.0.0)
+## createActionMap (v5.0.0)
 
 This is a helper function to combine actions from multiple slices. This is
 create when composing multiple slices into a module that will then be exported.
@@ -123,7 +123,7 @@ const actions = createActionMap(counter, loading);
 export { actions };
 ```
 
-### createReducerMap (v5.0.0)
+## createReducerMap (v5.0.0)
 
 This is a helper function to combine reducers from multiple slices. This is
 useful when composing multiple slices into a module that will then be exported.
@@ -168,7 +168,23 @@ const reducers = createReducerMap(counter, loading);
 export { reducers };
 ```
 
-### createApp
+## createApp
 
 Given an array of modules with type `{ reducer: { [key: string]: Reducer } }` we
 will combine the reducers using `combineReducers` from redux.
+
+## Common reducers
+
+All the following functions are primarily for creating new slice helpers by reusing the reducers we have built.
+
+### mapReducers
+
+These are the reducers used for `mapSlice`.
+
+### assignReducers
+
+These are the reducers used for `assignSlice`.
+
+### loadingReducers
+
+These are the reducers used for `loadingReducers`.

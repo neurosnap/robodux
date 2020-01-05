@@ -45,8 +45,6 @@ dispatch(
 );
 ```
 
-See the [Using slice helpers](./basics/use-slice-helpers.md) to learn more.
-
 ## Basic concepts
 
 ### How to use slice helpers
