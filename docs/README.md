@@ -22,7 +22,7 @@ reducers using a simple set of lower-level functions. There's no magic here,
 it's more of how we think about our state that has made it dramatically simple
 to automate repetitive tasks in redux.
 
-```js
+```ts
 import { mapSlice } from 'robodux';
 
 // setup reducer state
@@ -58,7 +58,7 @@ that creates some very common actions that manage that table.
 
 #### mapSlice
 
-```js
+```ts
 import { mapSlice } from 'robodux';
 
 interface SliceState {
@@ -126,7 +126,7 @@ set or reset. You can think of this slice helper as a basic setter. I regularly
 use this for things like setting a token in my app or if I'm prototyping and I
 just need something quick.
 
-```js
+```ts
 import { assignSlice } from 'robodux';
 
 type SliceState = string;
@@ -181,7 +181,7 @@ By default `createSlice` will prefix any action type with the name of the slice.
 However, sometimes it is necessary to allow external action types to effect the
 reducer.
 
-```js
+```ts
 const user = createSlice<User, UserActions>({
   name: 'user',
   initialState: { name: '', address: '' },
@@ -210,7 +210,7 @@ _NOTE_: By default, this library uses [immer](https://github.com/immerjs/immer)
 for its reducers. I highly recommend anyone using this library to understand how
 it works and its performance ramifications.
 
-```js
+```ts
 const rootReducer = combineReducers({
   token: (state, payload) => payload, // this is a slice
   users: (state, payload) => payload, // this is a slice
@@ -224,7 +224,7 @@ const rootReducer = combineReducers({
 This function helps build a slice for your application. It will create action
 types, action creators, and reducers.
 
-```js
+```ts
 import { createSlice } from 'robodux';
 import { createStore, combineReducers, Action } from 'redux';
 
@@ -293,7 +293,7 @@ console.log(state[counter.name]);
 `createSlice` can be used without supplying interfaces, it will instead infer
 the types for you
 
-```js
+```ts
 import { createSlice } from 'robodux';
 import { Action } from 'redux';
 
@@ -333,7 +333,7 @@ action takes no payload.
 `createSlice`. If there is no slice passed to the state, then this will assume
 that this is the entire state shape.
 
-```js
+```ts
 import { createSlice } from 'robodux';
 import { Action } from 'redux';
 
@@ -372,4 +372,67 @@ actions.reset(); // type checks to ensure action is called without params
 
 ### Building a slice helper
 
-TODO
+Let's say we want to store a data structure that is a hash map where the key
+is the `id` and the value is a list of ids.  We want to add some extra operations
+to this functionality to be able to remove ids from a single list and merge two lists together.
+
+```ts
+import { mapReducers, SliceHelper, createSlice } from 'robodux';
+
+// specify actions like any other usage of `createSlice`
+interface ListMapSlice<S> {
+  add: S;
+  set: S;
+  remove: string[];
+  removeItems: string[];
+  reset: never;
+  merge: S;
+}
+
+export default function listMapSlice<
+  State extends { [name: string]: string[] }
+>({
+  name,
+  initialState = {} as State,
+  extraReducers,
+}: SliceHelper<State>) {
+  // here we are reusing reducers created for mapSlice
+  const { add, set, remove, reset } = mapReducers(initialState);
+
+  return createSlice<State, ListMapSlice<State>>({
+    name,
+    initialState,
+    extraReducers,
+    // we don't need immer for these reducers
+    useImmer: false,
+    reducts: {
+      add,
+      set,
+      remove,
+      reset,
+      // we would like to be able to remove elements from a list inside a map
+      removeItems: (state: State, payload: string[]) => {
+        const newState = { ...state };
+        Object.keys(newState).forEach((key: keyof State) => {
+          const list = [...newState[key]];
+          (newState as any)[key] = list.filter(
+            (item) => !payload.includes(item),
+          );
+        });
+        return newState;
+      },
+      // we would like to merge two lists together inside a map
+      merge: (state: State, payload: State) => {
+        const newState = { ...state };
+        Object.keys(payload).forEach((key) => {
+          const k: keyof State = key;
+          const curState = newState[k] || [];
+          const rmDupes = new Set([...curState, ...payload[key]]);
+          (newState as any)[k] = [...rmDupes];
+        });
+        return newState;
+      },
+    },
+  });
+}
+```
