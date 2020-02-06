@@ -3,4 +3,3 @@ search_enabled: false
 aux_links:
   "github":
     - "//github.com/neurosnap/robodux"
-color_scheme: "dark"
