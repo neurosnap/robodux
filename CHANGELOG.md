@@ -3,7 +3,7 @@
 ## 7.0.1 (01-05-2020)
 
 - :sparkles: Created new API for reusing our slice helper reducers:
-`mapReducers`, `assignReducers`, and `loadingReducers`
+  `mapReducers`, `assignReducers`, and `loadingReducers`
 
 ## 7.0.0 (12-02-2019)
 

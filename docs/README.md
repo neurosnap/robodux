@@ -6,7 +6,9 @@
 yarn add robodux
 ```
 
-If you don't already have `redux` and `immer` installed, you'll need to install those as well as they're peer dependencies.
+If you don't already have `redux` and `immer` installed, you'll need to install
+those as well as they're peer dependencies.
+
 ```bash
 yarn add redux immer
 ```
@@ -196,9 +198,9 @@ const user = createSlice<User, UserActions>({
   extraReducers: {
     setAddress: (state, payload) => {
       state.address = payload;
-    }
-  }
-})
+    },
+  },
+});
 
 store.dispatch({ type: 'setAddress', payload: '1337 tsukemen rd' });
 store.getState();
@@ -232,18 +234,19 @@ import { createSlice } from 'robodux';
 import { createStore, combineReducers, Action } from 'redux';
 
 interface CounterActions {
-  increment: never;  // <- indicates no payload expected
+  increment: never; // <- indicates no payload expected
   decrement: never;
-  multiply: number;  // <- indicates a payload of type number is required
+  multiply: number; // <- indicates a payload of type number is required
 }
 
 const counter = createSlice<number, CounterActions>({
   name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'counter/increment' }
   initialState: 0,
-  reducts: { // reducts = reducer + actions (stupid, I know)
-    increment: (state) => state + 1,  // state is type cast as a number from the supplied slice state type
+  reducts: {
+    // reducts = reducer + actions (stupid, I know)
+    increment: (state) => state + 1, // state is type cast as a number from the supplied slice state type
     decrement: (state) => state - 1,
-    multiply: (state, payload) => state * payload,  // payload here is type cast as number as from CounterActions
+    multiply: (state, payload) => state * payload, // payload here is type cast as number as from CounterActions
   },
 });
 
@@ -262,8 +265,8 @@ const user = createSlice<UserActions, User>({
     setUserName: (state, payload) => {
       state.name = payload; // mutate the state all you want with immer
     },
-  }
-})
+  },
+});
 
 const reducer = combineReducers({
   counter: counter.reducer,
@@ -360,8 +363,12 @@ const { actions, selectors, reducer } = createSlice<SliceState, Actions>({
   name: 'hi',
   initialState: defaultState,
   reducts: {
-    setTest: (state, payload) => { state.test = payload }, // payload is type string from Actions
-    setWow: (state, payload) => {state.wow = payload }, // payload is type number from Actions
+    setTest: (state, payload) => {
+      state.test = payload;
+    }, // payload is type string from Actions
+    setWow: (state, payload) => {
+      state.wow = payload;
+    }, // payload is type number from Actions
     reset: (state) => defaultState,
   },
 });
@@ -375,9 +382,10 @@ actions.reset(); // type checks to ensure action is called without params
 
 ### Building a slice helper
 
-Let's say we want to store a data structure that is a hash map where the key
-is the `id` and the value is a list of ids.  We want to add some extra operations
-to this functionality to be able to remove ids from a single list and merge two lists together.
+Let's say we want to store a data structure that is a hash map where the key is
+the `id` and the value is a list of ids. We want to add some extra operations to
+this functionality to be able to remove ids from a single list and merge two
+lists together.
 
 ```ts
 import { mapReducers, SliceHelper, createSlice } from 'robodux';
@@ -394,11 +402,7 @@ interface ListMapSlice<S> {
 
 export default function listMapSlice<
   State extends { [name: string]: string[] }
->({
-  name,
-  initialState = {} as State,
-  extraReducers,
-}: SliceHelper<State>) {
+>({ name, initialState = {} as State, extraReducers }: SliceHelper<State>) {
   // here we are reusing reducers created for mapSlice
   const { add, set, remove, reset } = mapReducers(initialState);
 

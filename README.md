@@ -28,4 +28,5 @@ processing unit for all business logic in a react/redux application. We should
 remove as much business logic as possible from reducers and instead centralize
 them inside of our side-effect handlers.
 
-Please see [style-guide](https://erock.io/redux-saga-style-guide) for more details.
+Please see [style-guide](https://erock.io/redux-saga-style-guide) for more
+details.
