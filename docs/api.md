@@ -12,6 +12,55 @@ params: { name, initialState, extraReducers }
 
 params: { name, extraReducers }
 
+## loadingMapSlice
+
+This creates a map or loading slices.  This is great if you want many loaders.
+
+params: { name, extraReducers }
+
+```ts
+import { loadingMapSlice } from 'robodux';
+
+const name = 'loader';
+const loader = loadingMapSlice({ name });
+
+export const {
+  loading: setLoaderStart,
+  error: setLoaderError,
+  success: setLoaderSuccess,
+  resetById: resetLoaderById,
+  resetAll: resetAllLoaders,
+} = loader.actions;
+
+store.disptch(setLoaderStart({ id: 'users' }));
+/*
+{
+  loader: {
+    users: {
+      loading: true,
+      success: false,
+      error: '',
+      message: '',
+    }
+  }
+}
+*/
+
+store.dispatch(setLoaderSuccess({ id: 'users', message: 'you did it!' }));
+/*
+{
+  loader: {
+    users: {
+      loading: false,
+      success: true,
+      error: '',
+      message: 'you did it!',
+    }
+  }
+}
+*/
+```
+
 ## createSlice
 
 This is the default export for robodux and will automatically create actions,
@@ -175,7 +224,8 @@ will combine the reducers using `combineReducers` from redux.
 
 ## Common reducers
 
-All the following functions are primarily for creating new slice helpers by reusing the reducers we have built.
+All the following functions are primarily for creating new slice helpers by
+reusing the reducers we have built.
 
 ### mapReducers
 
