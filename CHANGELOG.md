@@ -1,8 +1,12 @@
 # CHANGES
 
+## 8.0.1 (02-15-2020)
+
+- :sparkles: New loading slice `loadingMapSlice` which is the same as `loadingSlice` only it can spawn unique loaders
+
 ## 8.0.0 (02-15-2020)
 
-- :wrench: Breaking changes to `loadingSlice` and `loadingMapSlice`
+- :wrench: Breaking changes to `loadingSlice`
   - `error` from string -> boolean
   - `timestamp` property which is a unix timestamp updated on every loader update
 
