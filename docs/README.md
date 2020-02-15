@@ -159,13 +159,14 @@ import { loadingSlice, LoadingItemState } from 'robodux';
 
 const { actions, reducer } = loadingSlice({ name: 'loading' });
 store.dispatch(actions.loading('something loading'));
-// redux state: { loading: { error: '', message: 'something loading', loading: true, success: false } }
+// timestamps as unix timestamps
+// redux state: { loading: { error: false, message: 'something loading', loading: true, success: false, timestamp: 0 } }
 
 store.dispatch(actions.success('great success'));
-// redux state: { loading: { error: '', message: 'great success', loading: false, success: true } }
+// redux state: { loading: { error: false, message: 'great success', loading: false, success: true, timestamp: 0  } }
 
 store.dispatch(actions.error('something happened'));
-// redux state: { loading: { error: 'something happened', loading: false, success: false } }
+// redux state: { loading: { error: 'something happened', loading: false, success: false, timestamp: 0 } }
 ```
 
 _NOTE_: We do **not** use `immer` for any slice helpers. Since they are highly

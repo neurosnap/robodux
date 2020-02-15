@@ -39,8 +39,9 @@ store.disptch(setLoaderStart({ id: 'users' }));
     users: {
       loading: true,
       success: false,
-      error: '',
+      error: false,
       message: '',
+      timestamp: {unix}
     }
   }
 }
@@ -53,8 +54,9 @@ store.dispatch(setLoaderSuccess({ id: 'users', message: 'you did it!' }));
     users: {
       loading: false,
       success: true,
-      error: '',
+      error: false,
       message: 'you did it!',
+      timestamp: {unix}
     }
   }
 }
