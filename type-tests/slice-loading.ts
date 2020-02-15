@@ -24,7 +24,7 @@ withPayload.actions.error({ message: 'hi' });
 // $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
 withPayload.reducer;
 
-const two = loadingSlice<string>({
+const two = loadingSlice<string | Error>({
   name: 'SLICE',
   initialState: {
     message: '',
@@ -35,7 +35,7 @@ const two = loadingSlice<string>({
   },
 });
 two.actions;
-two.actions.error({ message: 'ok' });
+two.actions.error({ message: new Error('wow') });
 two.actions.loading({ message: 'loading' });
 // $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
 two.reducer;

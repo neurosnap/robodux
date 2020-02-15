@@ -1,5 +1,11 @@
 # CHANGES
 
+## 8.0.0 (02-15-2020)
+
+- :wrench: Breaking changes to `loadingSlice` and `loadingMapSlice`
+  - `error` from string -> boolean
+  - `timestamp` property which is a unix timestamp updated on every loader update
+
 ## 7.0.1 (01-05-2020)
 
 - :sparkles: Created new API for reusing our slice helper reducers:
