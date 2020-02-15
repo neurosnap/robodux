@@ -10,7 +10,17 @@ const buildLoader = (overrides: Partial<State> = {}) =>
     ...overrides,
   });
 
+const actualDate = Date.now;
+
 describe('loaderMapSlice', () => {
+  beforeEach(() => {
+    Date.now = () => 123;
+  });
+
+  afterEach(() => {
+    Date.now = actualDate;
+  });
+
   it('handles loading without a channel', () => {
     const { reducer, actions } = buildLoader();
 
@@ -18,8 +28,9 @@ describe('loaderMapSlice', () => {
       default: {
         loading: true,
         success: false,
-        error: '',
+        error: false,
         message: '',
+        timestamp: 123,
       },
     });
   });
@@ -31,8 +42,9 @@ describe('loaderMapSlice', () => {
       default: {
         loading: false,
         success: true,
-        error: '',
+        error: false,
         message: '',
+        timestamp: 123,
       },
     });
   });
@@ -41,16 +53,14 @@ describe('loaderMapSlice', () => {
     const { reducer, actions } = buildLoader();
 
     expect(
-      reducer(
-        {},
-        actions.error({ id: 'default', error: 'foo', message: 'foobar' }),
-      ),
+      reducer({}, actions.error({ id: 'default', message: 'foobar' })),
     ).toEqual({
       default: {
         loading: false,
         success: false,
-        error: 'foo',
+        error: true,
         message: 'foobar',
+        timestamp: 123,
       },
     });
   });
@@ -64,8 +74,9 @@ describe('loaderMapSlice', () => {
           default: {
             loading: true,
             success: true,
-            error: 'an error that will be cleared',
+            error: true,
             message: 'a message that will be cleared',
+            timestamp: 0,
           },
         },
         actions.resetById('default'),
@@ -84,8 +95,9 @@ describe('loaderMapSlice', () => {
           default: {
             loading: true,
             success: true,
-            error: 'an error that will be cleared',
+            error: true,
             message: 'a message that will be cleared',
+            timestamp: 0,
           },
         },
         actions.resetAll(),

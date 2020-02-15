@@ -8,28 +8,28 @@ import {
   defaultLoadingItem,
 } from './slice-loading';
 
-interface State<M, E> {
-  [key: string]: LoadingItemState<M, E>;
+interface State<M> {
+  [key: string]: LoadingItemState<M>;
 }
 
-export type LoadingMapPayload<M, E> = LoadingPayload<M, E> & { id: string };
+export type LoadingMapPayload<M> = LoadingPayload<M> & { id: string };
 
-function reducerCreator<M, E>(
+function reducerCreator<M>(
   reducer: (
-    s: LoadingItemState<M, E>,
-    p: LoadingPayload<M, E>,
-  ) => LoadingItemState<M, E>,
+    s: LoadingItemState<M>,
+    p: LoadingPayload<M>,
+  ) => LoadingItemState<M>,
 ) {
-  return (state: State<M, E>, payload: LoadingMapPayload<M, E>) => ({
+  return (state: State<M>, payload: LoadingMapPayload<M>) => ({
     ...state,
     [payload.id]: reducer(state[payload.id], payload),
   });
 }
 
-interface LoadingMapActions<M = string, E = string> {
-  loading: LoadingMapPayload<M, E>;
-  success: LoadingMapPayload<M, E>;
-  error: LoadingMapPayload<M, E>;
+interface LoadingMapActions<M = string> {
+  loading: LoadingMapPayload<M>;
+  success: LoadingMapPayload<M>;
+  error: LoadingMapPayload<M>;
   remove: string[];
   resetById: string;
   resetAll: never;
@@ -39,20 +39,20 @@ export default function loadingSliceMap({
   name,
   initialState = {},
   extraReducers,
-}: SliceHelper<State<string, string>>) {
-  const loading = loadingReducers<string, string>(defaultLoadingItem());
+}: SliceHelper<State<string>>) {
+  const loading = loadingReducers<string>(defaultLoadingItem());
   const map = mapReducers(initialState);
 
-  return createSlice<State<string, string>, LoadingMapActions<string, string>>({
+  return createSlice<State<string>, LoadingMapActions<string>>({
     name,
     initialState,
     extraReducers,
     useImmer: false,
     reducts: {
-      loading: reducerCreator<string, string>(loading.loading),
-      success: reducerCreator<string, string>(loading.success),
-      error: reducerCreator<string, string>(loading.error),
-      resetById: (state: State<string, string>, id: string) => ({
+      loading: reducerCreator<string>(loading.loading),
+      success: reducerCreator<string>(loading.success),
+      error: reducerCreator<string>(loading.error),
+      resetById: (state: State<string>, id: string) => ({
         ...state,
         [id]: loading.reset(),
       }),
