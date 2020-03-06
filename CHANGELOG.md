@@ -1,5 +1,9 @@
 # CHANGES
 
+## 8.2.0 (03-06-2020)
+
+- :wrench: improved timestamps for loading slice
+
 ## 8.1.0 (02-15-2020)
 
 - :sparkles: New loading slice `loadingMapSlice` which is the same as `loadingSlice` only it can spawn unique loaders
