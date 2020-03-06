@@ -14,14 +14,19 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
       message: payload.message || initialState.message,
       loading: false,
       success: true,
-      timestamp: payload.timestamp || ts(),
+      lastRun: state && state.lastRun ? state.lastRun : initialState.lastRun,
+      lastSuccess: payload.timestamp || ts(),
     }),
     error: (state: LoadingItemState<any>, payload: LoadingPayload<M> = {}) => ({
       error: true,
       message: payload.message || initialState.message,
       loading: false,
       success: false,
-      timestamp: payload.timestamp || ts(),
+      lastRun: state && state.lastRun ? state.lastRun : initialState.lastRun,
+      lastSuccess:
+        state && state.lastSuccess
+          ? state.lastSuccess
+          : initialState.lastSuccess,
     }),
     loading: (
       state: LoadingItemState<any>,
@@ -31,7 +36,11 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
       message: payload.message || initialState.message,
       loading: true,
       success: false,
-      timestamp: payload.timestamp || ts(),
+      lastRun: payload.timestamp || ts(),
+      lastSuccess:
+        state && state.lastSuccess
+          ? state.lastSuccess
+          : initialState.lastSuccess,
     }),
     reset: () => initialState,
   };
@@ -42,7 +51,8 @@ export interface LoadingItemState<M = string> {
   error: boolean;
   loading: boolean;
   success: boolean;
-  timestamp: number;
+  lastRun: number;
+  lastSuccess: number;
 }
 
 export function defaultLoadingItem(): LoadingItemState<string> {
@@ -51,7 +61,8 @@ export function defaultLoadingItem(): LoadingItemState<string> {
     message: '',
     loading: false,
     success: false,
-    timestamp: ts(),
+    lastRun: 0,
+    lastSuccess: 0,
   };
 }
 

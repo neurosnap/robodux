@@ -31,11 +31,12 @@ const two = loadingSlice<string | Error>({
     error: false,
     success: false,
     loading: false,
-    timestamp: 0,
+    lastRun: 0,
+    lastSuccess: 0,
   },
 });
 two.actions;
 two.actions.error({ message: new Error('wow') });
 two.actions.loading({ message: 'loading' });
-// $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
+// $ExpectType Reducer<LoadingItemState<string | Error>, Action<any, string>>
 two.reducer;
