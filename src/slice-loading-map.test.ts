@@ -30,7 +30,8 @@ describe('loaderMapSlice', () => {
         success: false,
         error: false,
         message: '',
-        timestamp: 123,
+        lastRun: 123,
+        lastSuccess: 0,
       },
     });
   });
@@ -44,7 +45,8 @@ describe('loaderMapSlice', () => {
         success: true,
         error: false,
         message: '',
-        timestamp: 123,
+        lastRun: 0,
+        lastSuccess: 123,
       },
     });
   });
@@ -60,7 +62,8 @@ describe('loaderMapSlice', () => {
         success: false,
         error: true,
         message: 'foobar',
-        timestamp: 123,
+        lastRun: 0,
+        lastSuccess: 0,
       },
     });
   });
@@ -76,7 +79,8 @@ describe('loaderMapSlice', () => {
             success: true,
             error: true,
             message: 'a message that will be cleared',
-            timestamp: 0,
+            lastRun: 0,
+            lastSuccess: 0,
           },
         },
         actions.resetById('default'),
@@ -97,7 +101,8 @@ describe('loaderMapSlice', () => {
             success: true,
             error: true,
             message: 'a message that will be cleared',
-            timestamp: 0,
+            lastRun: 0,
+            lastSuccess: 0,
           },
         },
         actions.resetAll(),

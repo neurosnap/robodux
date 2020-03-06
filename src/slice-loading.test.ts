@@ -12,7 +12,8 @@ describe('loadingSlice', () => {
         message: '',
         loading: false,
         success: false,
-        timestamp: 0,
+        lastRun: 0,
+        lastSuccess: 0,
       });
       const actual = reducer(state, actions.loading({ timestamp: 1 }));
 
@@ -21,7 +22,8 @@ describe('loadingSlice', () => {
         error: false,
         message: '',
         success: false,
-        timestamp: 1,
+        lastRun: 1,
+        lastSuccess: 0,
       });
     });
 
@@ -33,7 +35,8 @@ describe('loadingSlice', () => {
         message: '',
         loading: false,
         success: false,
-        timestamp: 0,
+        lastRun: 0,
+        lastSuccess: 0,
       });
       const actual = reducer(
         state,
@@ -45,7 +48,35 @@ describe('loadingSlice', () => {
         error: false,
         message: 'hi there',
         success: false,
-        timestamp: 2,
+        lastRun: 2,
+        lastSuccess: 0,
+      });
+    });
+
+    it('should set the state to loading with timestamp', () => {
+      const name = 'loading';
+      const { reducer, actions } = loadingSlice({ name });
+      const state = freeze({
+        error: false,
+        message: '',
+        loading: true,
+        success: false,
+        lastRun: 0,
+        lastSuccess: 0,
+      });
+
+      const actualNow = Date.now;
+      Date.now = () => 123;
+      const actual = reducer(state, actions.loading());
+      Date.now = actualNow;
+
+      expect(actual).toEqual({
+        loading: true,
+        error: false,
+        message: '',
+        success: false,
+        lastSuccess: 0,
+        lastRun: 123,
       });
     });
   });
@@ -59,7 +90,8 @@ describe('loadingSlice', () => {
         message: '',
         loading: true,
         success: false,
-        timestamp: 0,
+        lastRun: 0,
+        lastSuccess: 0,
       });
       const actual = reducer(state, actions.success({ timestamp: 5 }));
 
@@ -68,7 +100,8 @@ describe('loadingSlice', () => {
         error: false,
         message: '',
         success: true,
-        timestamp: 5,
+        lastSuccess: 5,
+        lastRun: 0,
       });
     });
 
@@ -80,7 +113,8 @@ describe('loadingSlice', () => {
         message: '',
         loading: true,
         success: false,
-        timestamp: 0,
+        lastRun: 0,
+        lastSuccess: 0,
       });
       const actual = reducer(
         state,
@@ -92,7 +126,8 @@ describe('loadingSlice', () => {
         error: false,
         message: 'wow',
         success: true,
-        timestamp: 2,
+        lastSuccess: 2,
+        lastRun: 0,
       });
     });
 
@@ -104,7 +139,8 @@ describe('loadingSlice', () => {
         message: '',
         loading: true,
         success: false,
-        timestamp: 0,
+        lastRun: 0,
+        lastSuccess: 0,
       });
 
       const actualNow = Date.now;
@@ -117,7 +153,8 @@ describe('loadingSlice', () => {
         error: false,
         message: '',
         success: true,
-        timestamp: 123,
+        lastSuccess: 123,
+        lastRun: 0,
       });
     });
   });
@@ -130,19 +167,18 @@ describe('loadingSlice', () => {
       message: 'cool',
       loading: true,
       success: false,
-      timestamp: 0,
+      lastRun: 0,
+      lastSuccess: 0,
     });
-    const actual = reducer(
-      state,
-      actions.error({ message: 'something', timestamp: 3 }),
-    );
+    const actual = reducer(state, actions.error({ message: 'something' }));
 
     expect(actual).toEqual({
       loading: false,
       message: 'something',
       error: true,
       success: false,
-      timestamp: 3,
+      lastRun: 0,
+      lastSuccess: 0,
     });
   });
 });
