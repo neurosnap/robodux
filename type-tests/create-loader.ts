@@ -1,6 +1,6 @@
-import loadingSlice from '../src/slice-loading';
+import createLoader from '../src/create-loader';
 
-const one = loadingSlice({ name: 'SLICE' });
+const one = createLoader({ name: 'SLICE' });
 // $ExpectType { loading: (payload?: Partial<{ message: string; timestamp: number; }> | undefined) => Action<Partial<{ message: string; timestamp: number; }>, string>; success: (payload?: Partial<{ message: string; timestamp: number; }> | undefined) => Action<...>; error: (payload?: Partial<...> | undefined) => Action<...>; reset:...
 one.actions;
 // $ExpectType (payload?: Partial<{ message: string; timestamp: number; }> | undefined) => Action<Partial<{ message: string; timestamp: number; }>, string>
@@ -15,7 +15,7 @@ one.actions.error();
 // $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
 one.reducer;
 
-const withPayload = loadingSlice({ name: 'SLICE' });
+const withPayload = createLoader({ name: 'SLICE' });
 // $ExpectType { loading: (payload?: Partial<{ message: string; timestamp: number; }> | undefined) => Action<Partial<{ message: string; timestamp: number; }>, string>; success: (payload?: Partial<{ message: string; timestamp: number; }> | undefined) => Action<...>; error: (payload?: Partial<...> | undefined) => Action<...>; reset:...
 withPayload.actions;
 withPayload.actions.loading({ message: 'hi' });
@@ -24,7 +24,7 @@ withPayload.actions.error({ message: 'hi' });
 // $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
 withPayload.reducer;
 
-const two = loadingSlice<string | Error>({
+const two = createLoader<string | Error>({
   name: 'SLICE',
   initialState: {
     message: '',

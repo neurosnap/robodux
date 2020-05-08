@@ -14,7 +14,7 @@ The anatomy of a package:
 // this package is called `people`.  It manages all the people being added to our
 // system.
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { mapSlice, createReducerMap, createAction } from 'robodux';
+import { createTable, createReducerMap, createAction } from 'robodux';
 import { createSelector } from 'reselect';
 
 // These are global types.  Packages should not export the reducer state types
@@ -27,7 +27,7 @@ import {
   apiSuccess,
   ErrorResponse,
 } from '@app/fetch';
-// generic loader reducer slice `loadingSlice`
+// generic loader reducer slice `createLoader`
 import { setLoaderStart, setLoaderError, setLoaderSuccess } from '@app/loader';
 
 // creating an entity with sane defaults is very useful when you want your app
@@ -47,10 +47,10 @@ export const defaultPerson = (p: Partial<Person> = {}): Person => {
 };
 
 // Here we are creating a reducer and its corresponding actions
-// a mapSlice is a slice helper for create a db table like structure:
+// a createTable is a slice helper for create a db table like structure:
 // the key is the entity id and the value is the object
 const name = 'people';
-const people = mapSlice<PeopleMap>({ name });
+const people = createTable<PeopleMap>({ name });
 
 // These are the actions for manage the data inside the people reducer.
 // add -> add entities to db table

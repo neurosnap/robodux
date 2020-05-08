@@ -1,12 +1,12 @@
 import freeze from 'deep-freeze-strict';
 
-import loadingSlice from './slice-loading';
+import createLoader from './create-loader';
 
-describe('loadingSlice', () => {
+describe('createLoader', () => {
   describe('loading', () => {
     it('should set the state to loading', () => {
       const name = 'loading';
-      const { reducer, actions } = loadingSlice({ name });
+      const { reducer, actions } = createLoader({ name });
       const state = freeze({
         error: false,
         message: '',
@@ -29,7 +29,7 @@ describe('loadingSlice', () => {
 
     it('should set the state to loading with a message', () => {
       const name = 'loading';
-      const { reducer, actions } = loadingSlice({ name });
+      const { reducer, actions } = createLoader({ name });
       const state = freeze({
         error: false,
         message: '',
@@ -55,7 +55,7 @@ describe('loadingSlice', () => {
 
     it('should set the state to loading with timestamp', () => {
       const name = 'loading';
-      const { reducer, actions } = loadingSlice({ name });
+      const { reducer, actions } = createLoader({ name });
       const state = freeze({
         error: false,
         message: '',
@@ -84,7 +84,7 @@ describe('loadingSlice', () => {
   describe('success', () => {
     it('should set the state to success', () => {
       const name = 'loading';
-      const { reducer, actions } = loadingSlice({ name });
+      const { reducer, actions } = createLoader({ name });
       const state = freeze({
         error: false,
         message: '',
@@ -107,7 +107,7 @@ describe('loadingSlice', () => {
 
     it('should set the state to loading with a message', () => {
       const name = 'loading';
-      const { reducer, actions } = loadingSlice({ name });
+      const { reducer, actions } = createLoader({ name });
       const state = freeze({
         error: false,
         message: '',
@@ -133,7 +133,7 @@ describe('loadingSlice', () => {
 
     it('should set the state to success with timestamp', () => {
       const name = 'loading';
-      const { reducer, actions } = loadingSlice({ name });
+      const { reducer, actions } = createLoader({ name });
       const state = freeze({
         error: false,
         message: '',
@@ -161,7 +161,7 @@ describe('loadingSlice', () => {
 
   describe('error', () => {
     const name = 'loading';
-    const { reducer, actions } = loadingSlice({ name });
+    const { reducer, actions } = createLoader({ name });
     const state = freeze({
       error: false,
       message: 'cool',

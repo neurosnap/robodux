@@ -1,10 +1,10 @@
 import createApp from './create-app';
-import assignSlice from './slice-assign';
+import createAssign from './create-assign';
 import { createReducerMap } from './combine';
 
 describe('createApp', () => {
   it('should return a function', () => {
-    const slice = assignSlice({ name: 'test', initialState: false });
+    const slice = createAssign({ name: 'test', initialState: false });
     const reducers = createReducerMap(slice);
     const mod = { reducers };
     const actual = createApp([mod]);
@@ -15,7 +15,7 @@ describe('createApp', () => {
     interface State {
       you: string;
     }
-    const slice = assignSlice<State>({
+    const slice = createAssign<State>({
       name: 'test',
       initialState: { you: 'me' },
     });

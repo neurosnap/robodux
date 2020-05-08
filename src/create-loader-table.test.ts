@@ -1,18 +1,18 @@
-import loaderMapSlice from './slice-loading-map';
-import { defaultLoadingItem, LoadingItemState } from './slice-loading';
+import createLoaderTable from './create-loader-table';
+import { defaultLoadingItem, LoadingItemState } from './create-loader';
 
 interface State {
   [key: string]: LoadingItemState;
 }
 const buildLoader = (overrides: Partial<State> = {}) =>
-  loaderMapSlice({
+  createLoaderTable({
     name: 'foo',
     ...overrides,
   });
 
 const actualDate = Date.now;
 
-describe('loaderMapSlice', () => {
+describe('createLoaderTable', () => {
   beforeEach(() => {
     Date.now = () => 123;
   });

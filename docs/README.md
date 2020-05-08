@@ -30,19 +30,19 @@ it's more of how we think about our state that has made it dramatically simple
 to automate repetitive tasks in redux.
 
 ```ts
-import { mapSlice } from 'robodux';
+import { createTable } from 'robodux';
 
 // setup reducer state
 interface Comment = {
   message: string;
   timestamp: number;
 }
-// `mapSlice` deals with a hashmap structure
+// `createTable` deals with a hashmap structure
 // normally this means the key should be an id and the value is the entity
 interface CommentState = { [key: string]: Comment };
 
 // create reducer and actions
-const { actions, reducer } = mapSlice<CommentState>({ name: 'counter' });
+const { actions, reducer } = createTable<CommentState>({ name: 'counter' });
 
 // dispatch some actions to manage the reducer state
 dispatch(
@@ -61,17 +61,17 @@ a table. The most similar data structure to a table is a json object where the
 keys are ids and the values are json objects. We have created a slice helper
 that creates some very common actions that manage that table.
 
-#### mapSlice
+####createTable
 
 ```ts
-import { mapSlice } from 'robodux';
+import { createTable } from 'robodux';
 
 interface SliceState {
   [key: string]: { name: string, email: string };
 }
 
 const name = 'test';
-const { reducer, actions } = mapSlice<SliceState>({ name });
+const { reducer, actions } = createTable<SliceState>({ name });
 const state = {
   3: { name: 'three', email: 'three@three.com' }
 };
@@ -124,7 +124,7 @@ store.dispatch(
 // {}
 ```
 
-#### assignSlice
+#### createAssign
 
 These are common operations when dealing with a slice that simply needs to be
 set or reset. You can think of this slice helper as a basic setter. I regularly
@@ -132,13 +132,13 @@ use this for things like setting a token in my app or if I'm prototyping and I
 just need something quick.
 
 ```ts
-import { assignSlice } from 'robodux';
+import { createAssign } from 'robodux';
 
 type SliceState = string;
 
 const name = 'token';
 const { reducer, actions } =
-  assignSlice < SliceState > { name, initialState: '' };
+  createAssign < SliceState > { name, initialState: '' };
 
 store.dispatch(actions.set('some-token'));
 /* redux state: { token: 'some-token' } */
@@ -150,14 +150,14 @@ store.dispatch(actions.reset());
 // redux state: { token: '' }
 ```
 
-#### loadingSlice
+#### createLoader
 
 Helper slice that will handle loading data
 
 ```js
-import { loadingSlice, LoadingItemState } from 'robodux';
+import { createLoader, LoadingItemState } from 'robodux';
 
-const { actions, reducer } = loadingSlice({ name: 'loading' });
+const { actions, reducer } = createLoader({ name: 'loading' });
 store.dispatch(actions.loading('something loading'));
 // timestamps as unix timestamps
 // redux state: { loading: { error: false, message: 'something loading', loading: true, success: false, timestamp: 0 } }
@@ -392,7 +392,7 @@ lists together.
 import { mapReducers, SliceHelper, createSlice } from 'robodux';
 
 // specify actions like any other usage of `createSlice`
-interface ListMapSlice<S> {
+interface ListcreateTable<S> {
   add: S;
   set: S;
   remove: string[];
@@ -401,13 +401,13 @@ interface ListMapSlice<S> {
   merge: S;
 }
 
-export default function listMapSlice<
+export default function listcreateTable<
   State extends { [name: string]: string[] }
 >({ name, initialState = {} as State, extraReducers }: SliceHelper<State>) {
-  // here we are reusing reducers created for mapSlice
+  // here we are reusing reducers created forcreateTable
   const { add, set, remove, reset } = mapReducers(initialState);
 
-  return createSlice<State, ListMapSlice<State>>({
+  return createSlice<State, ListcreateTable<State>>({
     name,
     initialState,
     extraReducers,

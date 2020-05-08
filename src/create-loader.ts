@@ -78,7 +78,7 @@ interface LoadingActions<M = string> {
   reset: never;
 }
 
-export default function loadingSlice({
+export default function createLoader({
   name,
   initialState,
   extraReducers,
@@ -96,7 +96,7 @@ export default function loadingSlice({
   };
   toString: () => string;
 };
-export default function loadingSlice<M>({
+export default function createLoader<M>({
   name,
   initialState,
   extraReducers,
@@ -110,7 +110,7 @@ export default function loadingSlice<M>({
   };
   toString: () => string;
 };
-export default function loadingSlice({
+export default function createLoader({
   name,
   initialState = defaultLoadingItem(),
   extraReducers,

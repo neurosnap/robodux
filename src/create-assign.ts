@@ -13,7 +13,7 @@ interface AssignActions<SS> {
   reset: never;
 }
 
-export default function assignSlice<State = any>({
+export default function createAssign<State = any>({
   name,
   initialState,
   extraReducers,

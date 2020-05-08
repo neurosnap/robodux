@@ -1,7 +1,7 @@
-import mapSlice from '../src/slice-map';
+import createTable from '../src/create-table';
 
 // testing no params
-const one = mapSlice({ name: 'SLICE' });
+const one = createTable({ name: 'SLICE' });
 // $ExpectType { add: (payload?: any) => Action<any, string>; set: (payload?: any) => Action<any, string>; remove: (payload: string[]) => Action<string[], string>; patch: (payload: PatchEntity<AnyState>) => Action<...>; reset: () => Action<...>; }
 one.actions;
 // $ExpectType Reducer<AnyState, Action<any, string>>
@@ -17,7 +17,7 @@ interface SliceState {
   [key: string]: Obj;
 }
 
-const two = mapSlice<SliceState>({ name: 'slice' });
+const two = createTable<SliceState>({ name: 'slice' });
 // $ExpectType { add: (payload: SliceState) => Action<SliceState, string>; set: (payload: SliceState) => Action<SliceState, string>; remove: (payload: string[]) => Action<string[], string>; patch: (payload: PatchEntity<...>) => Action<...>; reset: () => Action<...>; }
 two.actions;
 // $ExpectType Reducer<SliceState, Action<any, string>>

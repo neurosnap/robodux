@@ -1,12 +1,12 @@
 import createSlice from './create-slice';
 import { SliceHelper } from './types';
-import { mapReducers } from './slice-map';
+import { tableReducers } from './create-table';
 import {
   LoadingItemState,
   LoadingPayload,
   loadingReducers,
   defaultLoadingItem,
-} from './slice-loading';
+} from './create-loader';
 
 interface State<M> {
   [key: string]: LoadingItemState<M>;
@@ -35,13 +35,13 @@ interface LoadingMapActions<M = string> {
   resetAll: never;
 }
 
-export default function loadingSliceMap({
+export default function createLoaderTable({
   name,
   initialState = {},
   extraReducers,
 }: SliceHelper<State<string>>) {
   const loading = loadingReducers<string>(defaultLoadingItem());
-  const map = mapReducers(initialState);
+  const map = tableReducers(initialState);
 
   return createSlice<State<string>, LoadingMapActions<string>>({
     name,

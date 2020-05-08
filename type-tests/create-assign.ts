@@ -1,7 +1,7 @@
-import assignSlice from '../src/slice-assign';
+import createAssign from '../src/create-assign';
 
 // testing no params
-const one = assignSlice({ name: 'SLICE', initialState: false });
+const one = createAssign({ name: 'SLICE', initialState: false });
 // $ExpectType { set: (payload: boolean) => Action<boolean, string>; reset: () => Action<any, string>; }
 one.actions;
 // $ExpectType Reducer<boolean, Action<any, string>>
@@ -11,7 +11,7 @@ one.name;
 
 // testing with params
 type SliceState = boolean;
-const two = assignSlice<SliceState>({
+const two = createAssign<SliceState>({
   name: 'slice',
   initialState: false,
 });

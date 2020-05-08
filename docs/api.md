@@ -1,28 +1,28 @@
 # API
 
-## mapSlice
+## createTable (alias: mapSlice)
 
 params: { name, initialState, extraReducers }
 
-## assignSlice
+## createAssign (alias: assignSlice)
 
 params: { name, initialState, extraReducers }
 
-## loadingSlice
+## createLoader (alias: loadingSlice)
 
 params: { name, extraReducers }
 
-## loadingMapSlice
+## createLoaderTable (alias: loadingMapSlice)
 
 This creates a map or loading slices.  This is great if you want many loaders.
 
 params: { name, extraReducers }
 
 ```ts
-import { loadingMapSlice } from 'robodux';
+import { createLoaderTable } from 'robodux';
 
 const name = 'loader';
-const loader = loadingMapSlice({ name });
+const loader = createLoaderTable({ name });
 
 export const {
   loading: setLoaderStart,
@@ -229,14 +229,14 @@ will combine the reducers using `combineReducers` from redux.
 All the following functions are primarily for creating new slice helpers by
 reusing the reducers we have built.
 
-### mapReducers
+### tableReducers
 
-These are the reducers used for `mapSlice`.
+These are the reducers used for `createTable`.
 
 ### assignReducers
 
-These are the reducers used for `assignSlice`.
+These are the reducers used for `createAssign`.
 
 ### loadingReducers
 
-These are the reducers used for `loadingReducers`.
+These are the reducers used for `createLoader`.

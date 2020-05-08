@@ -1,4 +1,4 @@
-import createAction from '../src/action';
+import createAction from '../src/create-action';
 
 // testing no payload
 const test = createAction('SOMETHING');
