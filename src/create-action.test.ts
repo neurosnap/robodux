@@ -1,4 +1,4 @@
-import createAction from './action';
+import createAction from './create-action';
 
 describe('createAction', () => {
   it('should create an action', () => {

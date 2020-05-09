@@ -1,11 +1,11 @@
-import { mapReducers } from '../src/slice-map';
+import { tableReducers } from '../src/create-table';
 
 interface State {
   [key: string]: number;
 }
 
 const state = {};
-const reducers = mapReducers<State>();
+const reducers = tableReducers<State>();
 // $ExpectType (state: State, payload: State) => State
 reducers.add;
 // $ExpectError Type 'string' is not assignable to type 'number'.

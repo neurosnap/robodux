@@ -1,7 +1,7 @@
 import createSlice from './create-slice';
 import { AnyState, PatchEntity, SliceHelper } from './types';
 
-export function mapReducers<State extends AnyState>(
+export function tableReducers<State extends AnyState>(
   initialState = {} as State,
 ) {
   return {
@@ -53,16 +53,18 @@ interface MapActions<S> {
   reset: never;
 }
 
-export default function mapSlice<State extends AnyState>({
+export default function createTable<State extends AnyState>({
   name,
   extraReducers,
   initialState = {} as State,
 }: SliceHelper<State>) {
-  return createSlice<State, MapActions<State>>({
+  const slice = createSlice<State, MapActions<State>>({
     name,
     initialState,
     extraReducers,
     useImmer: false,
-    reducts: mapReducers(initialState),
+    reducts: tableReducers(initialState),
   });
+
+  return slice;
 }
