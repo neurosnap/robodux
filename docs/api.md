@@ -138,7 +138,9 @@ console.log(increment);
 // -> 'INCREMENT'
 console.log(increment(2));
 // { type: 'INCREMENT', payload: 2 };
-const storeDetails = createAction<{ name: string; surname: string }>('STORE_DETAILS');
+const storeDetails = createAction<{ name: string; surname: string }>(
+  'STORE_DETAILS',
+);
 console.log(storeDetails);
 // -> 'STORE_DETAILS'
 console.log(storeDetails({ name: 'John', surname: 'Doe' }));
@@ -273,7 +275,9 @@ export { reducers };
 Given an array of modules with type `{ reducer: { [key: string]: Reducer } }` we
 will combine the reducers using `combineReducers` from redux.
 
-When registering all the packages you've created, it's important to combine all the reducers to build a root reducer.  `createApp` is a little helper that knows the structure of a package and understands how to combine all reducers.
+When registering all the packages you've created, it's important to combine all
+the reducers to build a root reducer. `createApp` is a little helper that knows
+the structure of a package and understands how to combine all reducers.
 
 ```ts
 import sagaCreator from 'redux-saga-creator';
@@ -304,13 +308,18 @@ reusing the reducers we have built.
 These are the reducers used for `createTable`.
 
 ```ts
-function tableReducers<State extends AnyState>(initialState?: State): {
+function tableReducers<State extends AnyState>(
+  initialState?: State,
+): {
   add: (state: State, payload: State) => State;
   set: (state: State, payload: State) => State;
   remove: (state: State, payload: string[]) => State;
   reset: (state: State) => State;
-  patch: (state: State, payload: { [key: string]: Partial<State[keyof State]> }) => State;
-}
+  patch: (
+    state: State,
+    payload: { [key: string]: Partial<State[keyof State]> },
+  ) => State;
+};
 ```
 
 ### assignReducers
@@ -318,10 +327,12 @@ function tableReducers<State extends AnyState>(initialState?: State): {
 These are the reducers used for `createAssign`.
 
 ```ts
-function assignReducers<State>(initialState: State): {
+function assignReducers<State>(
+  initialState: State,
+): {
   set: (s: State, p: State) => State;
   reset: () => State;
-}
+};
 ```
 
 ### loadingReducers

@@ -14,7 +14,7 @@ one line of code.
 
 - A reusable pattern to build actions and reducers
 - Slice helpers that create action types, action creators, and a reducer for
-  common data structures (map, list, assign, and loading)
+  common data structures (createTable, createAssign, and createLoader)
 - Reducers leverage [immer](https://github.com/mweststrate/immer) which makes
   updating state easy
 - When stringifying action creators they return the action type
