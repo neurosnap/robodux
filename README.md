@@ -21,12 +21,38 @@ one line of code.
 - Reducers do not receive entire action object, only payload
 - Low level functions to build your own slices, actions, and reducers
 
+## What's included
+
+- createTable: Thinking of reducers as database tables, this function builds
+  actions and a reducer pair that builds simple and repeatable operations for
+  that table.
+- createAssign: A catch-all data structure that makes it easy to set or reset
+  the reducer.
+- createLoader: A flexible data structure that makes it easy to apply loading
+  states to certain operations.
+- createLoaderTable: Store as many independent loaders in this reducer which are
+  all accessible by an `id`.
+- createAction: A very simple way to build type-safe actions.
+- createReducer: Build reducers using an object instead of a switch-case.
+- createSlice: Build action types, action creators, and reducer pairs with one
+  simple function.
+- createActionMap: given multiple slices created via `createSlice`, combine them
+  to get a flat object of actions.
+- createReducerMap: given multiple slices created via `createSlice`, combine
+  them to get a flat object of reducers (to pass to `combineReducers`).
+- createApp: given multiple packages that contain multiple slices, combine them
+  to get a flat object of reducers (to pass to `combineReducers`).
+
 ## Core principles
 
 The overriding principle is that effects (like sagas) should be the central
 processing unit for all business logic in a react/redux application. We should
 remove as much business logic as possible from reducers and instead centralize
 them inside of our side-effect handlers.
+
+The other primary principle is to think of redux as a database and reducers as
+tables. This simplifies the action/reducer logic and makes it possible to build
+reuseable components which dramatically reducers boilerplate.
 
 Please see [style-guide](https://erock.io/redux-saga-style-guide) for more
 details.
