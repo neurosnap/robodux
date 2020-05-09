@@ -1,5 +1,13 @@
 # CHANGES
 
+## 9.0.0 (05-09-2020)
+
+- :wrench: Changed the name of slice helpers to better illustrate intent
+  - mapSlice -> createTable
+  - assignSlice -> createSlice
+  - loadingSlice -> createLoader
+  - loadingMapSlice -> createLoaderTable
+
 ## 8.2.0 (03-06-2020)
 
 - :wrench: improved timestamps for loading slice
