@@ -21,7 +21,7 @@ think of your redux store as a database.
 Reducers are database tables (or indexes) and operating on those tables should
 have a consistent API for managing them.
 
-`robodux` has created three slice helpers that cover ~90% of the logic and data
+`robodux` has a few slice helpers that cover ~90% of the logic and data
 structures needed to build and scale your state.
 
 These are one-line functions that create action types, action creators, and
@@ -30,26 +30,36 @@ it's more of how we think about our state that has made it dramatically simple
 to automate repetitive tasks in redux.
 
 ```ts
-import { createTable } from 'robodux';
+import { combineReducers, createStore } from 'redux';
+import { createTable, createReducerMap } from 'robodux';
 
 // setup reducer state
-interface Comment = {
+interface Comment {
   message: string;
   timestamp: number;
 }
 // `createTable` deals with a hashmap structure
 // normally this means the key should be an id and the value is the entity
-interface CommentState = { [key: string]: Comment };
+interface CommentState {
+  [key: string]: Comment;
+}
 
 // create reducer and actions
-const { actions, reducer } = createTable<CommentState>({ name: 'counter' });
+const comments = createTable<CommentState>({ name: 'comments' });
 
-// dispatch some actions to manage the reducer state
+// converts multiple slices into an object of reducers to be used with combineReducers
+// { comments: (state, action) => state }
+const reducers = createReducerMap(comments);
+const rootReducer = combineReducers(reducers);
+const store = createStore(rootReducer);
+
+// dispatch action to add a record to our table
 dispatch(
-  actions.addComment({
-    1: { message: 'you awake?', timestamp: 1577117359 }
-  })
+  actions.add({
+    1: { message: 'you awake?', timestamp: 1577117359 },
+  }),
 );
+// state: { comments: { 1: { message: 'you awake?', timestamp: 1577117359 } } }
 ```
 
 ## Basic concepts
@@ -61,7 +71,7 @@ a table. The most similar data structure to a table is a json object where the
 keys are ids and the values are json objects. We have created a slice helper
 that creates some very common actions that manage that table.
 
-####createTable
+#### createTable
 
 ```ts
 import { createTable } from 'robodux';
@@ -137,8 +147,10 @@ import { createAssign } from 'robodux';
 type SliceState = string;
 
 const name = 'token';
-const { reducer, actions } =
-  createAssign < SliceState > { name, initialState: '' };
+const { reducer, actions } = createAssign<SliceState>({
+  name,
+  initialState: '',
+});
 
 store.dispatch(actions.set('some-token'));
 /* redux state: { token: 'some-token' } */
@@ -231,7 +243,7 @@ This function helps build a slice for your application. It will create action
 types, action creators, and reducers.
 
 ```ts
-import { createSlice } from 'robodux';
+import { createSlice, createReducerMap } from 'robodux';
 import { createStore, combineReducers, Action } from 'redux';
 
 interface CounterActions {
@@ -269,11 +281,8 @@ const user = createSlice<UserActions, User>({
   },
 });
 
-const reducer = combineReducers({
-  counter: counter.reducer,
-  user: user.reducer,
-});
-
+const reducers = createReducerMap(user, counter);
+const reducer = combineReducers(reducers);
 const store = createStore(reducer);
 
 store.dispatch(counter.actions.increment());
@@ -392,7 +401,7 @@ lists together.
 import { mapReducers, SliceHelper, createSlice } from 'robodux';
 
 // specify actions like any other usage of `createSlice`
-interface ListcreateTable<S> {
+interface ListCreateTable<S> {
   add: S;
   set: S;
   remove: string[];
@@ -401,13 +410,13 @@ interface ListcreateTable<S> {
   merge: S;
 }
 
-export default function listcreateTable<
+export default function createListTable<
   State extends { [name: string]: string[] }
 >({ name, initialState = {} as State, extraReducers }: SliceHelper<State>) {
-  // here we are reusing reducers created forcreateTable
+  // here we are reusing reducers created for createTable
   const { add, set, remove, reset } = mapReducers(initialState);
 
-  return createSlice<State, ListcreateTable<State>>({
+  return createSlice<State, createListTable<State>>({
     name,
     initialState,
     extraReducers,

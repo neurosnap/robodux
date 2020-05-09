@@ -59,7 +59,7 @@ describe('createTable', () => {
     describe('when entity is an object', () => {
       it('should update a prop', () => {
         interface State {
-          [key: string]: { name: string };
+          [key: string]: { name: string; email?: string };
         }
 
         const name = 'test';
@@ -71,10 +71,13 @@ describe('createTable', () => {
           2: { name: 'two' },
           3: { name: 'three' },
         });
-        const actual = reducer(state, actions.patch({ 2: { name: 'four' } }));
+        const actual = reducer(
+          state,
+          actions.patch({ 2: { email: 'two@wild.com' } }),
+        );
         expect(actual).toEqual({
           1: { name: 'one' },
-          2: { name: 'four' },
+          2: { name: 'two', email: 'two@wild.com' },
           3: { name: 'three' },
         });
       });

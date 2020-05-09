@@ -6,7 +6,7 @@
 
 This is [ducks](https://github.com/erikras/ducks-modular-redux) on steroids.
 [robodux](https://github.com/neurosnap/robodux) is a library I wrote that works
-extremely well with `redux-saga` and this style-guide.
+extremely well with `redux-saga` and the style-guide I referenced above.
 
 The anatomy of a package:
 

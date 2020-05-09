@@ -4,19 +4,62 @@
 
 params: { name, initialState, extraReducers }
 
+```ts
+interface SliceHelper<State> {
+  name: string;
+  initialState?: State;
+  extraReducers?: ActionsAny;
+}
+```
+
 ## createAssign (alias: assignSlice)
 
 params: { name, initialState, extraReducers }
+
+```ts
+interface SliceHelper<State> {
+  name: string;
+  initialState?: State;
+  extraReducers?: ActionsAny;
+}
+```
 
 ## createLoader (alias: loadingSlice)
 
 params: { name, extraReducers }
 
+```ts
+interface Props {
+  name: string;
+  extraReducers?: ActionsAny;
+}
+```
+
+The data structure for a loader looks like this:
+
+```ts
+interface LoadingItemState<M = string> {
+  message: M;
+  error: boolean;
+  loading: boolean;
+  success: boolean;
+  lastRun: number;
+  lastSuccess: number;
+}
+```
+
 ## createLoaderTable (alias: loadingMapSlice)
 
-This creates a map or loading slices.  This is great if you want many loaders.
+This creates a map or loading slices. This is great if you want many loaders.
 
 params: { name, extraReducers }
+
+```ts
+interface Props {
+  name: string;
+  extraReducers?: ActionsAny;
+}
+```
 
 ```ts
 import { createLoaderTable } from 'robodux';
@@ -68,12 +111,13 @@ store.dispatch(setLoaderSuccess({ id: 'users', message: 'you did it!' }));
 This is the default export for robodux and will automatically create actions,
 reducer, and selectors for you.
 
-```
-{
-  name: string, // required
-  useImmer: boolean, // default, true, determines whether or not to use immer
-  initialState: any, // the initial state for the reducer
-  reducts: object, // the action to reducer map
+```ts
+interface SliceOptions<SliceState = any, Ax = ActionsAny> {
+  initialState: SliceState;
+  reducts: ActionsObjWithSlice<SliceState, Ax>;
+  name: string;
+  extraReducers?: ActionsAny;
+  useImmer?: boolean;
 }
 ```
 
@@ -88,16 +132,21 @@ reducers, sagas, etc.
 ```ts
 import { createAction } from 'robodux';
 
-const increment = createAction('INCREMENT');
+// by adding a type to `createAction` we force the action to have a payload when dispatching
+const increment = createAction<number>('INCREMENT');
 console.log(increment);
 // -> 'INCREMENT'
 console.log(increment(2));
 // { type: 'INCREMENT', payload: 2 };
-const storeDetails = createAction('STORE_DETAILS');
+const storeDetails = createAction<{ name: string; surname: string }>('STORE_DETAILS');
 console.log(storeDetails);
 // -> 'STORE_DETAILS'
 console.log(storeDetails({ name: 'John', surname: 'Doe' }));
 // { type: 'INCREMENT', payload: {name: 'John', surname: 'Doe'} };
+
+// when no type is passed to `createAction` then a payload is not required
+const fetchData = createAction('FETCH_DATA');
+fetchData();
 ```
 
 ## createReducer
@@ -105,13 +154,13 @@ console.log(storeDetails({ name: 'John', surname: 'Doe' }));
 This is the helper function that `robodux` uses to create a reducer. This
 function maps action types to reducer functions. It will return a reducer.
 
-```
-{
-  initialState: any, // the initial state for the reducer
-  reducers: object, // the action to reducer map
-  name: string, // optional, sends value to `toString`
-  useImmer: boolean, // default, true, determines whether or not to use immer
-}
+```ts
+type CreateReducer<State = any> = {
+  initialState: State;
+  reducers: ReducerMap<State, any>;
+  name?: string;
+  useImmer?: boolean;
+};
 ```
 
 ```ts
@@ -224,6 +273,27 @@ export { reducers };
 Given an array of modules with type `{ reducer: { [key: string]: Reducer } }` we
 will combine the reducers using `combineReducers` from redux.
 
+When registering all the packages you've created, it's important to combine all the reducers to build a root reducer.  `createApp` is a little helper that knows the structure of a package and understands how to combine all reducers.
+
+```ts
+import sagaCreator from 'redux-saga-creator';
+
+import * as users from './users';
+import * as comments from './comments';
+
+const corePackages = [users, comments];
+const packages = createApp<State>(corePackages);
+const rootReducer = packages.reducer;
+
+const sagas = corePackages.reduce((acc, pkg) => {
+  if (!pkg.sagas) return acc;
+  return { ...acc, ...pkg.sagas };
+}, {});
+const rootSaga = sagaCreator(sagas, (err: Error) => {
+  console.error(err);
+});
+```
+
 ## Common reducers
 
 All the following functions are primarily for creating new slice helpers by
@@ -233,9 +303,26 @@ reusing the reducers we have built.
 
 These are the reducers used for `createTable`.
 
+```ts
+function tableReducers<State extends AnyState>(initialState?: State): {
+  add: (state: State, payload: State) => State;
+  set: (state: State, payload: State) => State;
+  remove: (state: State, payload: string[]) => State;
+  reset: (state: State) => State;
+  patch: (state: State, payload: { [key: string]: Partial<State[keyof State]> }) => State;
+}
+```
+
 ### assignReducers
 
 These are the reducers used for `createAssign`.
+
+```ts
+function assignReducers<State>(initialState: State): {
+  set: (s: State, p: State) => State;
+  reset: () => State;
+}
+```
 
 ### loadingReducers
 
