@@ -1,7 +1,6 @@
 # robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
-- [Documentation](https://neurosnap.github.io/robodux)
-- [API reference](https://neurosnap.github.io/robodux/api.html)
+- [Documentation](https://robodux.erock.io)
 - [Style guide](https://erock.io/redux-saga-style-guide)
 
 One of the biggest complaints developers have with redux is the amount of
