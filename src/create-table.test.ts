@@ -14,7 +14,6 @@ describe('createTable', () => {
         1: 'one',
         2: 'two',
       };
-      actions.reset;
       const state = deepFreeze({ 3: 'three' });
       const actual = reducer(state, actions.add(test));
       expect(actual).toEqual({ ...state, ...test });
