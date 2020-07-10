@@ -1,5 +1,9 @@
 # CHANGES
 
+## 9.1.0 (07-10-2020)
+
+- :sparkles: `createList` slice helper to manage lists in redux state
+
 ## 9.0.0 (05-09-2020)
 
 - :wrench: Changed the name of slice helpers to better illustrate intent

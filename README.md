@@ -27,6 +27,7 @@ one line of code.
   that table.
 - `createAssign`: A catch-all data structure that makes it easy to set or reset
   the reducer.
+- `createList`: Store an array of items in a slice
 - `createLoader`: A flexible data structure that makes it easy to apply loading
   states to certain operations.
 - `createLoaderTable`: Store as many independent loaders in this reducer which are
