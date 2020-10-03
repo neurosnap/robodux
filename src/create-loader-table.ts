@@ -1,6 +1,6 @@
 import createSlice from './create-slice';
 import { SliceHelper } from './types';
-import { tableReducers } from './create-table';
+import { mapReducers } from './create-map';
 import {
   LoadingItemState,
   LoadingPayload,
@@ -41,14 +41,14 @@ export default function createLoaderTable({
   extraReducers,
 }: SliceHelper<State<string>>) {
   const loading = loadingReducers<string>(defaultLoadingItem());
-  const map = tableReducers(initialState);
+  const map = mapReducers(initialState);
 
   return createSlice<State<string>, LoadingMapActions<string>>({
     name,
     initialState,
     extraReducers,
     useImmer: false,
-    reducts: {
+    reducers: {
       loading: reducerCreator<string>(loading.loading),
       success: reducerCreator<string>(loading.success),
       error: reducerCreator<string>(loading.error),

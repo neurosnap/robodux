@@ -120,6 +120,6 @@ export default function createLoader({
     initialState,
     extraReducers,
     useImmer: false,
-    reducts: loadingReducers(initialState),
+    reducers: loadingReducers(initialState),
   });
 }

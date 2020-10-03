@@ -1,16 +1,16 @@
-import { tableReducers } from '../src/create-table';
+import { mapReducers } from '../src/create-map';
 
 interface State {
   [key: string]: number;
 }
 
 const state = {};
-const reducers = tableReducers<State>();
+const reducers = mapReducers<State>();
 // $ExpectType (state: State, payload: State) => State
 reducers.add;
 // $ExpectError Type 'string' is not assignable to type 'number'.
 reducers.add(state, { 1: 'test' });
-// $ExpectType (state: State, payload: { [key: string]: number; }) => State
+// $ExpectType (state: State, payload: PatchEntity<State>) => State
 reducers.patch;
 // $ExpectType (state: State, payload: string[]) => State
 reducers.remove;

@@ -1,12 +1,12 @@
 import { Reducer } from 'redux';
 
 import createAction from './create-action';
-import createReducer from './create-reducer';
+import createReducer, { createReducerPlain } from './create-reducer';
 import { Action, ActionsObjWithSlice, ActionsAny, ReducerMap } from './types';
 
 interface SliceOptions<SliceState = any, Ax = ActionsAny> {
   initialState: SliceState;
-  reducts: ActionsObjWithSlice<SliceState, Ax>;
+  reducers: ActionsObjWithSlice<SliceState, Ax>;
   name: string;
   extraReducers?: ActionsAny;
   useImmer?: boolean;
@@ -16,9 +16,9 @@ const actionTypeBuilder = (slice: string) => (action: string) =>
   slice ? `${slice}/${action}` : action;
 
 export default function createSlice<SliceState, Actions extends ActionsAny>({
-  reducts,
-  initialState,
   name,
+  initialState,
+  reducers,
   extraReducers,
   useImmer = true,
 }: SliceOptions<SliceState, Actions>): {
@@ -37,23 +37,21 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
     throw new Error(`createSlice name must not be blank`);
   }
 
-  const actionKeys = Object.keys(reducts) as (keyof Actions)[];
+  const actionKeys = Object.keys(reducers) as (keyof Actions)[];
   const createActionType = actionTypeBuilder(name as string);
 
   const reducerMap = actionKeys.reduce<ReducerMap<SliceState>>(
     (map, action) => {
-      (map as any)[createActionType(action as string)] = reducts[action];
+      const scopedAction = createActionType(action as string);
+      (map as any)[scopedAction] = reducers[action];
       return map;
     },
     extraReducers || {},
   );
 
-  const reducer = createReducer<SliceState>({
-    initialState,
-    reducers: reducerMap,
-    name,
-    useImmer,
-  });
+  const reducer = useImmer
+    ? createReducer<SliceState>(initialState, reducerMap)
+    : createReducerPlain<SliceState>(initialState, reducerMap);
 
   const actionMap = actionKeys.reduce<
     {

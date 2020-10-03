@@ -35,7 +35,7 @@ export default function createList<State extends any[]>({
     initialState,
     extraReducers,
     useImmer: false,
-    reducts: listReducers(initialState),
+    reducers: listReducers(initialState),
   });
 
   return slice;

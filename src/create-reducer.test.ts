@@ -17,12 +17,9 @@ describe('createReducer', () => {
       todo.completed = !todo.completed;
     }
 
-    const todosReducer = createReducer({
-      initialState: [],
-      reducers: {
-        ADD_TODO: addTodo,
-        TOGGLE_TODO: toggleTodo,
-      },
+    const todosReducer = createReducer([], {
+      ADD_TODO: addTodo,
+      TOGGLE_TODO: toggleTodo,
     });
 
     behavesLikeReducer(todosReducer);
@@ -46,12 +43,9 @@ describe('createReducer', () => {
       });
     }
 
-    const todosReducer = createReducer({
-      initialState: [],
-      reducers: {
-        ADD_TODO: addTodo,
-        TOGGLE_TODO: toggleTodo,
-      },
+    const todosReducer = createReducer([], {
+      ADD_TODO: addTodo,
+      TOGGLE_TODO: toggleTodo,
     });
 
     behavesLikeReducer(todosReducer);

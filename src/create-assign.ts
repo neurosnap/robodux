@@ -22,7 +22,7 @@ export default function createAssign<State = any>({
     name,
     useImmer: false,
     initialState,
-    reducts: assignReducers(initialState),
+    reducers: assignReducers(initialState),
     extraReducers,
   });
 }

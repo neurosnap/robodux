@@ -27,6 +27,12 @@ export interface AnyState {
   [name: string]: any;
 }
 
+export interface MapEntity<E> {
+  [key: string]: E | undefined;
+}
+
+export const excludesFalse = <T>(n?: T): n is T => Boolean(n);
+
 export interface ReducerMap<SliceState, A = Action> {
   [Action: string]: ActionReducer<SliceState, A>;
 }
@@ -45,4 +51,12 @@ export interface SliceHelperRequired<State> {
   name: string;
   initialState: State;
   extraReducers?: ActionsAny;
+}
+
+export interface PropId {
+  id: string;
+}
+
+export interface PropIds {
+  ids: string[];
 }
