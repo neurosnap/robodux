@@ -1,5 +1,19 @@
 # CHANGES
 
+## 10.0.0 (10-08-2020)
+
+- :heavy_plus_sign: added `reselect` as a peer dependency
+- :boom: renamed `createTable` -> `createMap`
+- :sparkles: new `createTable` API with extended functionality to `createMap`
+  - new function `getSelectors` which will build a bunch of useful selectors
+    automatically: selectTable, selectTableAsList, selectById, selectByIds which
+    are properly memoized
+- :sparkles: new function `mustSelectEntity` which will enforce that the return
+  type of `*ById` (find, select) _must_ return the table entity instead of
+  possibly returning undefined
+- :sparkles: `createMap` and `createTable` have a new action called `merge`
+  which will merge objects and arrays one layer deep
+
 ## 9.1.0 (07-10-2020)
 
 - :sparkles: `createList` slice helper to manage lists in redux state
@@ -71,8 +85,8 @@
   helpers
 - :boom: renamed `slice` to `name` for `createSlice`, `createReducers` and all
   slice helpers
-- :boom: renamed `actions` to `reducers` for `createSlice` to signal that it is a
-  mapping between action names and reducers: `reducer` + `action` = `reduct`
+- :boom: renamed `actions` to `reducers` for `createSlice` to signal that it is
+  a mapping between action names and reducers: `reducer` + `action` = `reduct`
 - :sparkles: `createActionMap` helper function to combine actions from multiple
   slices
 - :sparkles: `createReducerMap` helper function to combine reducers from
