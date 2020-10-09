@@ -7,17 +7,14 @@ import { Reducer } from 'redux';
 export type CreateReducer<State = any> = {
   initialState: State;
   reducers: ReducerMap<State, any>;
-  name?: string;
   useImmer?: boolean;
 };
 
-export default function createReducer<State = any>({
-  initialState,
-  reducers,
-  name = '',
-  useImmer = true,
-}: CreateReducer<State>): Reducer<State, Action<any>> {
-  const reducerPlain = (state = initialState, action: Action<any>) => {
+export function createReducerPlain<State = any>(
+  initialState: State,
+  reducers: ReducerMap<State>,
+): Reducer<State, Action<any>> {
+  const reducer = (state = initialState, action: Action<any>) => {
     const caseReducer = reducers[action.type];
     if (!caseReducer) {
       return state;
@@ -25,7 +22,14 @@ export default function createReducer<State = any>({
     return caseReducer(state, action.payload) as State;
   };
 
-  const reducerImmer = (state = initialState, action: Action<any>) => {
+  return reducer;
+}
+
+export default function createReducer<State = any>(
+  initialState: State,
+  reducers: ReducerMap<State>,
+): Reducer<State, Action<any>> {
+  const reducer = (state = initialState, action: Action<any>) => {
     return createNextState<State>(state, (draft) => {
       const caseReducer = reducers[action.type];
       if (!caseReducer) {
@@ -35,7 +39,5 @@ export default function createReducer<State = any>({
     });
   };
 
-  const reducer = useImmer ? reducerImmer : reducerPlain;
-  reducer.toString = () => name;
   return reducer;
 }

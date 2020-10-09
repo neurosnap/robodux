@@ -3,7 +3,7 @@ import createSlice from './create-slice';
 describe('createSlice', () => {
   describe('when passing slice', () => {
     const { actions, reducer } = createSlice({
-      reducts: {
+      reducers: {
         increment: (state) => state + 1,
         multiply: (state, payload: number) => state * payload,
       },
@@ -41,7 +41,7 @@ describe('createSlice', () => {
 
   describe('when mutating state object', () => {
     const { actions, reducer } = createSlice({
-      reducts: {
+      reducers: {
         setUserName: (state, payload: string) => {
           state.user = payload;
         },
@@ -60,7 +60,7 @@ describe('createSlice', () => {
   describe('when adding extra reducers', () => {
     it('should create action reducer pair without action type namespacing', () => {
       const { reducer } = createSlice({
-        reducts: {
+        reducers: {
           setUserName: (state, payload: string) => {
             state.user = payload;
           },
@@ -91,7 +91,7 @@ describe('createSlice', () => {
       createSlice({
         name: '',
         initialState: '',
-        reducts: {
+        reducers: {
           add: (state) => state,
         },
       }),

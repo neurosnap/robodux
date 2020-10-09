@@ -26,7 +26,7 @@ const defaultState = {
 const hi = 'hi';
 const { actions, reducer } = createSlice<SliceState, Actions>({
   name: hi,
-  reducts: {
+  reducers: {
     set: (state, payload) => payload,
     reset: (state) => defaultState,
   },
@@ -65,7 +65,7 @@ const initialState: ISliceState = {
 
 const auth = createSlice<ISliceState, AuthActions>({
   name: 'auth', // slice is checked to ensure it is a key in IState
-  reducts: {
+  reducers: {
     authFail: (state, payload) => {
       state.error = payload;
       state.authenticating = false;
@@ -95,7 +95,7 @@ export const {
 
 const authWithoutInterface = createSlice({
   name: 'auth',
-  reducts: {
+  reducers: {
     authFail2: (state: ISliceState, payload: Error) => {
       state.error = payload;
       state.authenticating = false;

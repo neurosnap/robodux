@@ -5,7 +5,7 @@ import { createActionMap, createReducerMap } from '../src/combine';
 const counterSlice = createSlice({
   name: 'counter',
   initialState: 0,
-  reducts: {
+  reducers: {
     inc: (state) => state + 1,
     dec: (state) => state - 1,
   },
@@ -14,7 +14,7 @@ const counterSlice = createSlice({
 const createLoader = createSlice({
   name: 'loading',
   initialState: false,
-  reducts: {
+  reducers: {
     loading: (state, payload: boolean) => payload,
   },
 });

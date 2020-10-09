@@ -71,7 +71,7 @@
   helpers
 - :boom: renamed `slice` to `name` for `createSlice`, `createReducers` and all
   slice helpers
-- :boom: renamed `actions` to `reducts` for `createSlice` to signal that it is a
+- :boom: renamed `actions` to `reducers` for `createSlice` to signal that it is a
   mapping between action names and reducers: `reducer` + `action` = `reduct`
 - :sparkles: `createActionMap` helper function to combine actions from multiple
   slices
