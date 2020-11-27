@@ -22,9 +22,9 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "immer": "^4.0.0",
-    "redux": "^4.0.4",
-    "reselect": "^4.0.0"
+    "immer": ">=4.0.0",
+    "redux": ">=4.0.4",
+    "reselect": ">=4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
