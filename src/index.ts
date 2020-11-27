@@ -14,7 +14,7 @@ export { default as createApp } from './create-app';
 import createTable from './create-table';
 import createMap from './create-map';
 import createLoader from './create-loader';
-import createLoaderTable from './create-table';
+import createLoaderTable from './create-loader-table';
 import createAssign from './create-assign';
 export {
   createSlice,

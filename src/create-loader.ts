@@ -55,7 +55,9 @@ export interface LoadingItemState<M = string> {
   lastSuccess: number;
 }
 
-export function defaultLoadingItem(): LoadingItemState<string> {
+export function defaultLoadingItem(
+  li: Partial<LoadingItemState> = {},
+): LoadingItemState<string> {
   return {
     error: false,
     message: '',
@@ -63,6 +65,7 @@ export function defaultLoadingItem(): LoadingItemState<string> {
     success: false,
     lastRun: 0,
     lastSuccess: 0,
+    ...li,
   };
 }
 
