@@ -12,6 +12,7 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
     ) => ({
       error: false,
       message: payload.message || initialState.message,
+      meta: payload.meta || {},
       loading: false,
       success: true,
       lastRun: state && state.lastRun ? state.lastRun : initialState.lastRun,
@@ -20,6 +21,7 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
     error: (state: LoadingItemState<any>, payload: LoadingPayload<M> = {}) => ({
       error: true,
       message: payload.message || initialState.message,
+      meta: payload.meta || {},
       loading: false,
       success: false,
       lastRun: state && state.lastRun ? state.lastRun : initialState.lastRun,
@@ -34,6 +36,7 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
     ) => ({
       error: false,
       message: payload.message || initialState.message,
+      meta: payload.meta || {},
       loading: true,
       success: false,
       lastRun: payload.timestamp || ts(),
@@ -53,6 +56,7 @@ export interface LoadingItemState<M = string> {
   success: boolean;
   lastRun: number;
   lastSuccess: number;
+  meta: { [key: string]: any };
 }
 
 export function defaultLoadingItem(
@@ -65,6 +69,7 @@ export function defaultLoadingItem(
     success: false,
     lastRun: 0,
     lastSuccess: 0,
+    meta: {},
     ...li,
   };
 }
@@ -72,6 +77,7 @@ export function defaultLoadingItem(
 export type LoadingPayload<M = string> = Partial<{
   message: M;
   timestamp: number;
+  meta: { [key: string]: any };
 }>;
 
 interface LoadingActions<M = string> {

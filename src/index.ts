@@ -16,6 +16,7 @@ import createMap from './create-map';
 import createLoader from './create-loader';
 import createLoaderTable from './create-loader-table';
 import createAssign from './create-assign';
+import createListTable from './create-list-table';
 export {
   createSlice,
   createTable,
@@ -23,6 +24,7 @@ export {
   createLoader,
   createLoaderTable,
   createAssign,
+  createListTable,
 };
 
 // All of these variable names are DEPRECATED
