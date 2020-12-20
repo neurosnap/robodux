@@ -1,5 +1,9 @@
 # CHANGES
 
+## 10.1.0 (12-20-2020)
+
+- :sparkles: `createListTable` which makes it easier to have a table of lists
+- :wrench: added `meta` object to `createLoader` state so we can pass arbitrary data through our loaders
 ## 10.0.0 (10-08-2020)
 
 - :heavy_plus_sign: added `reselect` as a peer dependency
