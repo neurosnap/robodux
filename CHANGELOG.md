@@ -1,5 +1,9 @@
 # CHANGES
 
+## 10.1.1 (2-22-2020)
+
+- :wrench: improved typings for `mustSelectEntity`
+
 ## 10.1.0 (12-20-2020)
 
 - :sparkles: `createListTable` which makes it easier to have a table of lists

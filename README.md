@@ -1,4 +1,4 @@
-# robodux [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
+# robodux
 
 - [Documentation](https://robodux.erock.io)
 - [Style guide](https://erock.io/redux-saga-style-guide)
