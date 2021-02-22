@@ -16,7 +16,7 @@ testTwo(true);
 
 // testing payload object
 const testThree = createAction<{ error: string }>('SOMETHING');
-// $ExpectError Type 'true' is not assignable to type 'string'.
+// $ExpectError Type 'boolean' is not assignable to type 'string'.
 testThree({ error: true });
 // $ExpectType ActionWithPayload<{ error: string; }, string>
 testThree({ error: 'nice' });

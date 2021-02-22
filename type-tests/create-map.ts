@@ -18,7 +18,7 @@ interface SliceState {
 }
 
 const two = createMap<SliceState>({ name: 'slice' });
-// $ExpectType { add: (payload: SliceState) => Action<SliceState, string>; set: (payload: SliceState) => Action<SliceState, string>; remove: (payload: string[]) => Action<string[], string>; patch: (payload: PatchEntity<...>) => Action<...>; reset: () => Action<...>; }
+// $ExpectType { add: (payload: SliceState) => Action<SliceState, string>; set: (payload: SliceState) => Action<SliceState, string>; remove: (payload: string[]) => Action<...>; patch: (payload: PatchEntity<...>) => Action<...>; reset: () => Action<...>; }
 two.actions;
 // $ExpectType Reducer<SliceState, Action<any, string>>
 two.reducer;

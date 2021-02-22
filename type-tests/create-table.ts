@@ -3,7 +3,7 @@ import { MapEntity } from '../src/types';
 
 // testing no params
 const one = createTable({ name: 'SLICE' });
-// $ExpectType { add: (payload: MapEntity<AnyState>) => Action<MapEntity<AnyState>, string>; set: (payload: MapEntity<AnyState>) => Action<MapEntity<AnyState>, string>; remove: (payload: string[]) => Action<...>; patch: (payload: PatchEntity<...>) => Action<...>; merge: (payload: PatchEntity<...>) => Action<...>; reset: () => Acti...
+// $ExpectType { add: (payload: MapEntity<AnyState>) => Action<MapEntity<AnyState>, string>; set: (payload: MapEntity<AnyState>) => Action<...>; remove: (payload: string[]) => Action<...>; patch: (payload: PatchEntity<...>) => Action<...>; merge: (payload: PatchEntity<...>) => Action<...>; reset: () => Action<...>; }
 one.actions;
 // $ExpectType Reducer<MapEntity<AnyState>, Action<any, string>>
 one.reducer;
@@ -11,9 +11,9 @@ one.reducer;
 one.name;
 
 // testing with params
-interface Obj { 
-  id: string; 
-  text: string; 
+interface Obj {
+  id: string;
+  text: string;
 }
 
 interface State {
@@ -21,7 +21,7 @@ interface State {
 }
 
 const state = {
-  obj: {}
+  obj: {},
 };
 
 const two = createTable<Obj>({ name: 'slice' });
@@ -41,7 +41,12 @@ two.actions.patch;
 two.reducer;
 // $ExpectType string
 two.name;
-const { selectById, selectByIds, selectTableAsList, selectTable } = two.getSelectors((s: State) => s.obj);
+const {
+  selectById,
+  selectByIds,
+  selectTableAsList,
+  selectTable,
+} = two.getSelectors((s: State) => s.obj);
 // $ExpectType Obj | undefined
 selectById(state, { id: '1' });
 // $ExpectType Obj[]
@@ -55,8 +60,8 @@ const defaultObj = (): Obj => {
   return {
     id: '',
     text: '',
-  }
-}
+  };
+};
 
 const three = createTable<Obj>({ name: 'obj' });
 const selectors = three.getSelectors((s: State) => s.obj);
@@ -64,10 +69,11 @@ const createEntitySelector = mustSelectEntity(defaultObj);
 const selectObjById = createEntitySelector(selectors.selectById);
 // $ExpectType Obj
 selectObjById(state, { id: '1' });
+// $ExpectType any
 const findObjById = createEntitySelector(selectors.findById);
 // $ExpectType Obj
 findObjById(state.obj, { id: '1' });
-
+// $ExpectType any
 const selectObj2ById = mustSelectEntity(defaultObj())(selectors.selectById);
 // $ExpectType Obj
 selectObj2ById(state, { id: '1' });

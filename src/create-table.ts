@@ -51,20 +51,22 @@ export function tableSelectors<Entity extends AnyState = AnyState, S = any>(
   };
 }
 
-export function mustSelectEntity<Entity extends AnyState = AnyState, S = any>(
+export function mustSelectEntity<Entity extends AnyState = AnyState>(
   defaultEntity: Entity | (() => Entity),
 ) {
   const isFn = typeof defaultEntity === 'function';
-  return (selectById: (s: S, p: PropId) => Entity | undefined) => (
-    state: S,
-    { id }: PropId,
-  ): Entity => {
-    if (isFn) {
-      const entity = defaultEntity as () => Entity;
-      return selectById(state, { id }) || entity();
-    }
 
-    return selectById(state, { id }) || (defaultEntity as Entity);
+  return function selectEntity<S = any>(
+    selectById: (s: S, p: PropId) => Entity | undefined,
+  ) {
+    return (state: S, { id }: PropId): Entity => {
+      if (isFn) {
+        const entity = defaultEntity as () => Entity;
+        return selectById(state, { id }) || entity();
+      }
+
+      return selectById(state, { id }) || (defaultEntity as Entity);
+    };
   };
 }
 
