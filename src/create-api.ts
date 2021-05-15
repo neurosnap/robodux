@@ -61,10 +61,11 @@ export function createApi<
     use: (fn: Middleware<Ctx>) => {
       middleware.push(fn);
     },
-    create: (req: A, fn?: Middleware<Ctx>) =>
-      action({
+    create: (req: A, fn?: Middleware<Ctx>) => {
+      return action({
         ...req,
         middleware: fn ? [fn, ...middleware] : [...middleware],
-      }),
+      });
+    },
   };
 }
