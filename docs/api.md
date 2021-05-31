@@ -176,6 +176,20 @@ store.dispatch(actions.error('something happened'));
 ## createLoaderTable
 
 ```ts
+interface LoadingItemState<M = string> {
+  message: M;
+  error: boolean;
+  loading: boolean;
+  success: boolean;
+  lastRun: number;
+  lastSuccess: number;
+  meta: { [key: string]: any };
+}
+
+interface State<M> {
+  [key: string]: LoadingItemState<M>;
+}
+
 type LoadingMapPayload<M> = LoadingPayload<M> & { id: string };
 
 interface LoadingMapActions<M = string> {
@@ -187,10 +201,19 @@ interface LoadingMapActions<M = string> {
   resetAll: never;
 }
 
+interface LoaderTableSelectors<M = string, S = any> {
+  findById: (d: State<M>, { id }: PropId) => LoadingItemState<M>;
+  findByIds: (d: State<M>, { ids }: PropIds) => LoadingItemState<M>[];
+  selectTable: (s: S) => State<M>;
+  selectById: (s: S, p: PropId) => LoadingItemState<M>;
+  selectByIds: (s: S, p: { ids: string[] }) => LoadingItemState<M>[];
+}
+
 interface CreateLoaderTableReturn<M> {
   name: string;
   actions: LoadingMapActions<M>;
   reducer: Reducer;
+  getSelectors: <S>(state: S) => LoaderTableSelectors<M, S>;
 }
 ```
 

@@ -1,5 +1,10 @@
 # CHANGES
 
+## 10.1.2 (05-31-2021)
+
+- :sparkles: `createLoaderTable` now returns `getSelectors` function that makes
+  it easier to get loaders out of the slice
+
 ## 10.1.1 (2-22-2020)
 
 - :wrench: improved typings for `mustSelectEntity`
