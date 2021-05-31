@@ -14,20 +14,15 @@ one line of code.
 
 ## Features
 
-- A reusable pattern to build actions and reducers
-- Slice helpers that create action types, action creators, and a reducer for
-  common data structures (e.g. createTable, createMap, createAssign, and
-  createLoader)
-- Reducers leverage [immer](https://github.com/mweststrate/immer) which makes
-  updating state easy
-- When stringifying action creators they return the action type
-- Reducers do not receive entire action object, only payload
-- Low level functions to build your own slices, actions, and reducers
+- Create actions, reducer, and selectors for common data structures
+- Automates the boring parts of redux
+- Dramatically reduce redux boilerplate
+- Works well with [saga-query](https://github.com/neurosnap/saga-query)
 
 ## What's included
 
 - [createTable](./docs/basic-concepts.md#createtable): Thinking of reducers as database tables, this function builds
-  actions and a reducer pair that builds simple and repeatable operations for
+  actions, reducer, and selectors that builds simple and repeatable operations for
   that table.
 - [createAssign](./docs/basic-concepts.md#createassign): A catch-all data structure that makes it easy to set or reset
   the reducer.
