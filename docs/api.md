@@ -1,5 +1,16 @@
 # API
 
+- [createTable](#createtable)
+- [createAssign](#createassign)
+- [createList](#createlist)
+- [createListTable](#createlisttable)
+- [createLoader](#createloader)
+- [createLoaderTable](#createloadertable)
+- [createMap](#createmap)
+- [createReducerMap](#createreducermap)
+- [createApp](#createapp)
+- [createSlice](#createslice)
+
 ## Interface for all slice helpers
 
 ```ts
