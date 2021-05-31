@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
 
 - [Documentation](./docs/index.md)
+- [Example repo](https://github.com/neurosnap/listifi)
 - [Style guide](https://erock.io/2020/01/01/redux-saga-style-guide.html)
 
 One of the biggest complaints developers have with redux is the amount of
@@ -124,8 +125,8 @@ store.dispatch(
 
 const state = store.getState();
 const selectors = comments.getSelectors((state) => state[comments.name]);
-const data = selectors.selectTable(state);
 
+const commentMap = selectors.selectTable(state);
 const commentList = selectors.selectTableAsList(state);
 const commentOne = selectors.selectById(state, { id: '1' });
 const foundComments = selectors.selectByIds(state, { ids: ['1', '3'] });
