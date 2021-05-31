@@ -114,4 +114,50 @@ describe('createLoaderTable', () => {
       ),
     ).toEqual({});
   });
+
+  describe('getSelectors', () => {
+    it('should select the entire table', () => {
+      const { getSelectors } = buildLoader();
+      const selectors = getSelectors((state: State) => state);
+      const users = defaultLoadingItem({ success: true });
+      const token = defaultLoadingItem({ message: 'wow' });
+      expect(
+        selectors.selectTable({
+          users,
+          token,
+        }),
+      ).toEqual({ users, token });
+    });
+
+    it('should select a single loader', () => {
+      const { getSelectors } = buildLoader();
+      const selectors = getSelectors((state: State) => state);
+      const users = defaultLoadingItem({ success: true });
+      const token = defaultLoadingItem({ message: 'wow' });
+      const result = selectors.selectById(
+        {
+          users,
+          token,
+        },
+        { id: 'users' },
+      );
+      expect(result).toEqual(users);
+    });
+
+    it('should select multiple loaders', () => {
+      const { getSelectors } = buildLoader();
+      const selectors = getSelectors((state: State) => state);
+      const users = defaultLoadingItem({ success: true });
+      const token = defaultLoadingItem({ message: 'wow' });
+      expect(
+        selectors.selectByIds(
+          {
+            users,
+            token,
+          },
+          { ids: ['users', 'token'] },
+        ),
+      ).toEqual([users, token]);
+    });
+  });
 });

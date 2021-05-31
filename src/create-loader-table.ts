@@ -1,5 +1,7 @@
+import { createSelector } from 'reselect';
+
 import createSlice from './create-slice';
-import { SliceHelper } from './types';
+import { SliceHelper, PropId, PropIds, excludesFalse } from './types';
 import { mapReducers } from './create-map';
 import {
   LoadingItemState,
@@ -26,6 +28,37 @@ function reducerCreator<M>(
   });
 }
 
+export interface LoaderTableSelectors<M = string, S = any> {
+  findById: (d: State<M>, { id }: PropId) => LoadingItemState<M>;
+  findByIds: (d: State<M>, { ids }: PropIds) => LoadingItemState<M>[];
+  selectTable: (s: S) => State<M>;
+  selectById: (s: S, p: PropId) => LoadingItemState<M>;
+  selectByIds: (s: S, p: { ids: string[] }) => LoadingItemState<M>[];
+}
+
+export function loaderTableSelectors<M = string, S = any>(
+  selectTable: (s: S) => State<M>,
+): LoaderTableSelectors<M, S> {
+  const findById = (data: State<M>, { id }: PropId) => data[id];
+  const findByIds = (data: State<M>, { ids }: PropIds): LoadingItemState<M>[] =>
+    ids.map((id) => data[id]).filter(excludesFalse);
+  const selectById = (state: S, { id }: PropId): LoadingItemState<M> => {
+    const data = selectTable(state);
+    return findById(data, { id });
+  };
+  return {
+    findById,
+    findByIds,
+    selectTable,
+    selectById,
+    selectByIds: createSelector(
+      selectTable,
+      (s: S, p: PropIds) => p,
+      findByIds,
+    ),
+  };
+}
+
 interface LoadingMapActions<M = string> {
   loading: LoadingMapPayload<M>;
   success: LoadingMapPayload<M>;
@@ -43,7 +76,7 @@ export default function createLoaderTable({
   const loading = loadingReducers<string>(defaultLoadingItem());
   const map = mapReducers(initialState);
 
-  return createSlice<State<string>, LoadingMapActions<string>>({
+  const slice = createSlice<State<string>, LoadingMapActions<string>>({
     name,
     initialState,
     extraReducers,
@@ -60,4 +93,10 @@ export default function createLoaderTable({
       resetAll: map.reset,
     },
   });
+
+  return {
+    ...slice,
+    getSelectors: <S>(stateFn: (s: S) => State<string>) =>
+      loaderTableSelectors(stateFn),
+  };
 }
