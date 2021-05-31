@@ -1,6 +1,6 @@
 # CHANGES
 
-## 10.1.2 (05-31-2021)
+## 10.1.3 (05-31-2021)
 
 - :sparkles: `createLoaderTable` now returns `getSelectors` function that makes
   it easier to get loaders out of the slice
