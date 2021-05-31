@@ -19,7 +19,7 @@ export function listReducers<State extends any[]>(
   };
 }
 
-interface MapActions<S> {
+interface ListActions<S> {
   add: S;
   remove: number[];
   reset: never;
@@ -30,7 +30,7 @@ export default function createList<State extends any[]>({
   extraReducers,
   initialState = ([] as unknown) as State,
 }: SliceHelper<State>) {
-  const slice = createSlice<State, MapActions<State>>({
+  const slice = createSlice<State, ListActions<State>>({
     name,
     initialState,
     extraReducers,

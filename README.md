@@ -25,28 +25,17 @@ one line of code.
 
 ## What's included
 
-- `createTable`: Thinking of reducers as database tables, this function builds
+- [createTable](./docs/basic-concepts.md#createtable): Thinking of reducers as database tables, this function builds
   actions and a reducer pair that builds simple and repeatable operations for
   that table.
-- `createMap`: A normal object data structure, less strict than `createTable` but
-  most of the same functionality
-- `createAssign`: A catch-all data structure that makes it easy to set or reset
+- [createAssign](./docs/basic-concepts.md#createassign): A catch-all data structure that makes it easy to set or reset
   the reducer.
-- `createList`: Store an array of items in a slice
-- `createLoader`: A flexible data structure that makes it easy to apply loading
-  states to certain operations.
-- `createLoaderTable`: Store as many independent loaders in this reducer which
+- [createList](./docs/basic-concepts.md#createlist): Store an array of items in a slice
+- [createLoaderTable](./docs/basic-concepts#createloadertable): Store as many independent loaders in this reducer which
   are all accessible by an `id`.
-- `createSlice`: Core function that the above slice helpers leverage. Build
+- [createSlice](./docs/api.md#createslice): Core function that the above slice helpers leverage. Build
   action types, action creators, and reducer pairs with one simple function.
-- `createAction`: A very simple way to build type-safe actions.
-- `createReducer`: Build reducers using an object instead of a switch-case.
-- `createActionMap`: given multiple slices created via `createSlice`, combine
-  them to get a flat object of actions.
-- `createReducerMap`: given multiple slices created via `createSlice`, combine
-  them to get a flat object of reducers (to pass to `combineReducers`).
-- `createApp`: given multiple packages that contain multiple slices, combine
-  them to get a flat object of reducers (to pass to `combineReducers`).
+- [and more!](./docs/api.md)
 
 ## Core principles
 

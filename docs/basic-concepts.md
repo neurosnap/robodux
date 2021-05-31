@@ -1,16 +1,12 @@
 # Basic Concepts
 
 - [createTable](#createtable)
-- [createMap](#createmap)
-- [createList](#createlist)
 - [createAssign](#createassign)
-- [createLoader](#createloader)
+- [createList](#createlist)
 - [createLoaderTable](#createloadertable)
 - [createReducerMap](#createreducermap)
 - [createApp](#createapp)
 - [extraReducers](#extrareducers)
-- [How to use createSlice](#how-to-use-createslice)
-- [Typescript Types](#typescript-types)
 
 ## How to use slice helpers
 
@@ -23,7 +19,14 @@ _NOTE_: We do **not** use `immer` for any slice helpers. Since they are highly
 reusable pieces of code, we are comfortable properly handling reducer logic
 without the performance overhead of `immer`
 
-### createTable
+## createTable
+
+This is probably the most useful slice helper provided by `robodux`.  It
+creates a redux slice that acts like a database table.  The key is the id of
+the record and the value is the record itself.  You are responsible for
+setting the object up as `robodux` has no way to know what the record id is.
+We could have created a function that you provide that tells us what the `id`
+is but we made the design decision to keep this API interface simple. 
 
 ```ts
 import { createTable } from 'robodux';
@@ -117,26 +120,33 @@ const userSix = selectors.selectById(state, { id: '6' });
 const usersById = selectors.selectByIds(state, { ids: ['1', '6'] });
 ```
 
-### createMap
+## createAssign
 
-This has the same actions as `createTable` but doesn't have to adhere to the 
-value being a json object.
+These are common operations when dealing with a slice that simply needs to be
+set or reset. You can think of this slice helper as a basic setter. I regularly
+use this for simple types like strings or if I'm prototyping and I
+just need something quick.
 
 ```ts
-import { createMap } from 'robodux';
+import { createAssign } from 'robodux';
 
-const { reducer, actions } = createMap<{ [key: string]: string }>({ name: 'text' });
-store.dispatch(actions.add({ 1: 'some text' }));
-/*
-{
-  text: {
-    1: 'some text'
-  }
-}
-*/
+const name = 'token';
+const { reducer, actions } = createAssign<string>({
+  name,
+  initialState: '',
+});
+
+store.dispatch(actions.set('some-token'));
+/* redux state: { token: 'some-token' } */
+
+store.dispatch(actions.set('another-token'));
+/* redux state: { token: 'another-token' } */
+
+store.dispatch(actions.reset());
+// redux state: { token: '' }
 ```
 
-### createList
+## createList
 
 This is an array data structure where it's easy to manage a simple array.
 
@@ -173,77 +183,7 @@ store.dispatch(actions.reset());
 */
 ```
 
-### createAssign
-
-These are common operations when dealing with a slice that simply needs to be
-set or reset. You can think of this slice helper as a basic setter. I regularly
-use this for simple types like strings or if I'm prototyping and I
-just need something quick.
-
-```ts
-import { createAssign } from 'robodux';
-
-const name = 'token';
-const { reducer, actions } = createAssign<string>({
-  name,
-  initialState: '',
-});
-
-store.dispatch(actions.set('some-token'));
-/* redux state: { token: 'some-token' } */
-
-store.dispatch(actions.set('another-token'));
-/* redux state: { token: 'another-token' } */
-
-store.dispatch(actions.reset());
-// redux state: { token: '' }
-```
-
-### createLoader
-
-Helper slice that will handle loading data.  The main idea here is that we want 
-to decouple data from UI and since loaders are primarily used to display loaders 
-in the UI, they should be separated.
-
-This has a unique benefit to where we can create loaders for any data as well 
-as any combination of fetches.
-
-`createLoader` creates a global loader that can be used as a single loader.
-
-```ts
-import { createLoader, LoadingItemState } from 'robodux';
-
-const { actions, reducer } = createLoader({ name: 'loading' });
-store.dispatch(actions.loading('something loading'));
-// timestamps as unix timestamps
-/*
-{
-  loading: {
-    error: false, message: 'something loading', loading: true, success: false, lastRun: 111111111, lastSuccess: 0
-  }
-}
-*/
-
-store.dispatch(actions.success('great success'));
-/*
-{
-  loading: {
-    error: false, message: 'great success', loading: false, success: true, lastRun: 111111111, lastSuccess: 22222222
-  }
-}
-*/
-
-store.dispatch(actions.error('something happened'));
-/*
-{
-  loading: {
-    error: 'something happened', loading: false, success: false, lastRun: 111111111, lastSuccess: 22222222
-  }
-}
-*/
-```
-
-### createLoaderTable
+## createLoaderTable
 
 This is a table of loaders so we can build an infinite number of loaders for our app keyed by the id.
 
@@ -301,17 +241,61 @@ store.dispatch(actions.loading({ id: 'posts' }));
 
 ## createReducerMap
 
-TODO
+This is a very useful function that will convert a list of slices into an
+object of reducers where the key is the name of the slice and the value is the
+reducer itself.  This allows us to compose slices together and prepare it for
+`combineReducers`.
+
+```ts
+import { combineReducers } from 'redux';
+import { createTable, createAssign, createReducerMap } from 'robodux';
+
+const users = createTable({ name: 'users' });
+const threads = createTable({ name: 'threads' });
+const comments = createTable({ name: 'comments' });
+const token = createAssign({ name: 'token', initialState: '' });
+
+const reducers = createReducerMap(users, threads, comments, token);
+/*
+{
+  users: Reducer,
+  threads: Reducer,
+  comments: Reducer,
+  token: Reducer,
+}
+*/
+const roorReducer = combineReducers(reducers);
+```
 
 ## createApp
 
-TODO
+If we are [following the `robodux` modular
+pattern](https://erock.io/2020/01/01/redux-saga-style-guide.html#the-robodux-pattern)
+then when we are building our slices they live within their own modules.  Each
+module exports a variable `reducers` which contains all the reducers created
+within the module.  When we want to build our root reducer, we need a way to
+combine all the module reducers into one reducer.  `createApp` helps combine
+all the reducers from all modules into a single reducer.
 
-## Extra reducers
+```ts
+import { createStore } from 'redux';
+import { createApp } from 'robodux';
+
+import * as users from '@app/users';
+import * as threads from '@app/threads';
+import * as comments from '@app/comments';
+import * as token from '@app/token';
+
+const { reducer } = createApp([users, threads, comments, tokens]);
+const store = createStore(reducer);
+```
+
+## extraReducers
 
 By default `createSlice` will prefix any action type with the name of the slice.
 However, sometimes it is necessary to allow external action types to effect the
-reducer.
+reducer.  All slice helpers also accept `extraReducers` which will be passed
+through to `createSlice`.
 
 ```ts
 const user = createSlice<User, UserActions>({
@@ -335,171 +319,3 @@ store.getState();
 ```
 
 All of our slice helpers also accept `extraReducers`.
-
-## How to use createSlice
-
-Think of a slice as a single reducer.
-
-_NOTE_: By default, this library uses [immer](https://github.com/immerjs/immer)
-for its reducers. I highly recommend anyone using this library to understand how
-it works and its performance ramifications.
-
-```ts
-const rootReducer = combineReducers({
-  token: (state, payload) => payload, // this is a slice
-  users: (state, payload) => payload, // this is a slice
-  userSelected: (state, payload) => payload, // this is a slice
-  comments: (state, payload) => payload, // this is a slice
-});
-// aside: you should always configure your store as flat as possible
-// think of the store as a database where the slice is a table
-```
-
-This function helps build a slice for your application. It will create action
-types, action creators, and reducers.
-
-```ts
-import { createSlice, createReducerMap } from 'robodux';
-import { createStore, combineReducers, Action } from 'redux';
-
-interface CounterActions {
-  increment: never; // <- indicates no payload expected
-  decrement: never;
-  multiply: number; // <- indicates a payload of type number is required
-}
-
-const counter = createSlice<number, CounterActions>({
-  name: 'counter', // action types created by robodux will be prefixed with slice, e.g. { type: 'counter/increment' }
-  initialState: 0,
-  reducers: {
-    // reducers = reducer + actions (stupid, I know)
-    increment: (state) => state + 1, // state is type cast as a number from the supplied slice state type
-    decrement: (state) => state - 1,
-    multiply: (state, payload) => state * payload, // payload here is type cast as number as from CounterActions
-  },
-});
-
-interface User {
-  name: string;
-}
-
-interface UserActions {
-  setUserName: string;
-}
-
-const user = createSlice<UserActions, User>({
-  name: 'user', // slice is optional could be blank ''
-  initialState: { name: '' },
-  reducers: {
-    setUserName: (state, payload) => {
-      state.name = payload; // mutate the state all you want with immer
-    },
-  },
-});
-
-const reducers = createReducerMap(user, counter);
-const reducer = combineReducers(reducers);
-const store = createStore(reducer);
-
-store.dispatch(counter.actions.increment());
-// New State -> { counter: 1, user: { name: '' } }
-store.dispatch(counter.actions.increment());
-// New State -> { counter: 2, user: { name: '' } }
-store.dispatch(counter.actions.multiply(3));
-// New State -> { counter: 6, user: { name: '' } }
-console.log(`${counter.actions.decrement}`);
-// -> counter/decrement
-store.dispatch(user.actions.setUserName('eric'));
-// New State -> { counter: 6, user: { name: 'eric' } }
-const state = store.getState();
-console.log(state[users.name]);
-// -> { name: 'eric' }
-console.log(state[counter.name]);
-// -> 6
-```
-
-## Typescript Types
-
-### without explicit types
-
-`createSlice` can be used without supplying interfaces, it will instead infer
-the types for you
-
-```ts
-import { createSlice } from 'robodux';
-import { Action } from 'redux';
-
-const defaultState = {
-  test: '',
-  wow: 0,
-};
-
-const { actions, selectors, reducer } = createSlice({
-  name: 'hi',
-  initialState: defaultState,
-  reducers: {
-    // state type is inferred from initial state
-    setTest: (state, payload: string) => {
-      state.test = payload;
-    }, // payload is typecast as string
-    setWow: (state, payload: number) => {
-      state.wow = payload;
-    }, // payload is typecast as number
-    reset: (state, payload: never) => defaultState,
-  },
-});
-
-actions.setTest('ok'); // autocomplete and type checking for payload(string), type error if called without payload
-actions.setTest(0); // autocomplete and type checking for payload(number), type error if called without payload
-actions.reset(); // type checks to ensure action is called without params
-```
-
-`createSlice` accepts two generics: `Actions` and `SliceState`.
-
-`Actions` helps improve auto-complete and typing for the `actions` object
-returned from `robodux`. Supply an interface where they keys are the action
-names and the values are the payload types, which should be `never` if the
-action takes no payload.
-
-`SliceState` is the state shape of the particular slice created with
-`createSlice`. If there is no slice passed to the state, then this will assume
-that this is the entire state shape.
-
-```ts
-import { createSlice } from 'robodux';
-import { Action } from 'redux';
-
-interface SliceState {
-  test: string;
-  wow: number;
-}
-
-interface Actions {
-  setTest: string;
-  setWow: number;
-  reset: never;
-}
-
-const defaultState = {
-  test: '',
-  wow: 0,
-};
-
-const { actions, selectors, reducer } = createSlice<SliceState, Actions>({
-  name: 'hi',
-  initialState: defaultState,
-  reducers: {
-    setTest: (state, payload) => {
-      state.test = payload;
-    }, // payload is type string from Actions
-    setWow: (state, payload) => {
-      state.wow = payload;
-    }, // payload is type number from Actions
-    reset: (state) => defaultState,
-  },
-});
-
-actions.setTest('ok'); // autocomplete and type checking for payload(string), type error if called without payload
-actions.setTest(0); // autocomplete and type checking for payload(number), type error if called without payload
-actions.reset(); // type checks to ensure action is called without params
-```
