@@ -51,7 +51,7 @@ reuseable components which dramatically reducers boilerplate.
 Please see [style-guide](https://erock.io/redux-saga-style-guide) for more
 details.
 
-## Install
+## Getting started
 
 ```bash
 yarn add robodux
@@ -64,7 +64,7 @@ those as well as they're peer dependencies.
 yarn add redux immer reselect
 ```
 
-## Usage
+### Usage
 
 The primary philosophical change between this library and other libraries is to
 think of your redux store as a database.
@@ -131,3 +131,7 @@ const commentOne = selectors.selectById(state, { id: '1' });
 const foundComments = selectors.selectByIds(state, { ids: ['1', '3'] });
 ```
 
+## References
+
+- [saga-query](https://github.com/neurosnap/saga-query)
+- [redux-toolkit](https://redux-toolkit.js.org/)
