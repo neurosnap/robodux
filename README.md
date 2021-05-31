@@ -16,7 +16,7 @@ one line of code.
 
 - Create actions, reducer, and selectors for common data structures
 - Automates the boring parts of redux
-- Dramatically reduce redux boilerplate
+- Dramatically reduces redux boilerplate
 - Works well with [saga-query](https://github.com/neurosnap/saga-query)
 
 ## What's included
