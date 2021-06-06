@@ -39,23 +39,26 @@ export interface LoaderTableSelectors<M = string, S = any> {
 export function loaderTableSelectors<M = string, S = any>(
   selectTable: (s: S) => State<M>,
 ): LoaderTableSelectors<M, S> {
-  const findById = (data: State<M>, { id }: PropId) => data[id];
+  const initLoader = defaultLoadingItem();
+  const findById = (data: State<M>, { id }: PropId) => data[id] || initLoader;
   const findByIds = (data: State<M>, { ids }: PropIds): LoadingItemState<M>[] =>
     ids.map((id) => data[id]).filter(excludesFalse);
   const selectById = (state: S, { id }: PropId): LoadingItemState<M> => {
     const data = selectTable(state);
     return findById(data, { id });
   };
+  const selectByIds = createSelector(
+    selectTable,
+    (s: S, p: PropIds) => p,
+    findByIds,
+  );
+
   return {
     findById,
     findByIds,
     selectTable,
     selectById,
-    selectByIds: createSelector(
-      selectTable,
-      (s: S, p: PropIds) => p,
-      findByIds,
-    ),
+    selectByIds,
   };
 }
 
