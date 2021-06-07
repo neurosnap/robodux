@@ -1,4 +1,4 @@
-import createLoaderTable from './create-loader-table';
+import createLoaderTable, { defaultLoader } from './create-loader-table';
 import { defaultLoadingItem, LoadingItemState } from './create-loader';
 
 interface State {
@@ -26,9 +26,7 @@ describe('createLoaderTable', () => {
 
     expect(reducer({}, actions.loading({ id: 'default' }))).toEqual({
       default: {
-        loading: true,
-        success: false,
-        error: false,
+        status: 'loading',
         message: '',
         meta: {},
         lastRun: 123,
@@ -42,9 +40,7 @@ describe('createLoaderTable', () => {
 
     expect(reducer({}, actions.success({ id: 'default' }))).toEqual({
       default: {
-        loading: false,
-        success: true,
-        error: false,
+        status: 'success',
         message: '',
         lastRun: 0,
         meta: {},
@@ -60,9 +56,7 @@ describe('createLoaderTable', () => {
       reducer({}, actions.error({ id: 'default', message: 'foobar' })),
     ).toEqual({
       default: {
-        loading: false,
-        success: false,
-        error: true,
+        status: 'error',
         message: 'foobar',
         lastRun: 0,
         meta: {},
@@ -78,9 +72,7 @@ describe('createLoaderTable', () => {
       reducer(
         {
           default: {
-            loading: true,
-            success: true,
-            error: true,
+            status: 'error',
             message: 'a message that will be cleared',
             lastRun: 0,
             lastSuccess: 0,
@@ -101,9 +93,7 @@ describe('createLoaderTable', () => {
       reducer(
         {
           default: {
-            loading: true,
-            success: true,
-            error: true,
+            status: 'loading',
             message: 'a message that will be cleared',
             lastRun: 0,
             lastSuccess: 0,
@@ -119,7 +109,7 @@ describe('createLoaderTable', () => {
     it('should select the entire table', () => {
       const { getSelectors } = buildLoader();
       const selectors = getSelectors((state: State) => state);
-      const users = defaultLoadingItem({ success: true });
+      const users = defaultLoadingItem({ status: 'success' });
       const token = defaultLoadingItem({ message: 'wow' });
       expect(
         selectors.selectTable({
@@ -132,8 +122,8 @@ describe('createLoaderTable', () => {
     it('should select a single loader', () => {
       const { getSelectors } = buildLoader();
       const selectors = getSelectors((state: State) => state);
-      const users = defaultLoadingItem({ success: true });
-      const token = defaultLoadingItem({ message: 'wow' });
+      const users = defaultLoader(defaultLoadingItem({ status: 'success' }));
+      const token = defaultLoader(defaultLoadingItem({ message: 'wow' }));
       const result = selectors.selectById(
         {
           users,
@@ -147,8 +137,8 @@ describe('createLoaderTable', () => {
     it('should select multiple loaders', () => {
       const { getSelectors } = buildLoader();
       const selectors = getSelectors((state: State) => state);
-      const users = defaultLoadingItem({ success: true });
-      const token = defaultLoadingItem({ message: 'wow' });
+      const users = defaultLoader(defaultLoadingItem({ status: 'success' }));
+      const token = defaultLoader(defaultLoadingItem({ message: 'wow' }));
       expect(
         selectors.selectByIds(
           {
