@@ -11,9 +11,13 @@ import {
 } from './create-loader';
 import { MapEntity } from './types';
 
-export type LoaderTableState = MapEntity<LoadingItemState>;
+export type LoaderTableState<
+  M extends Record<string, any> = Record<string, any>
+> = MapEntity<LoadingItemState<M>>;
 
-export interface LoadingState extends LoadingItemState {
+export interface LoadingState<
+  M extends Record<string, any> = Record<string, any>
+> extends LoadingItemState<M> {
   isError: boolean;
   isSuccess: boolean;
   isIdle: boolean;
@@ -35,15 +39,17 @@ export const defaultLoader = (
   };
 };
 
-export type LoadingMapPayload = LoadingPayload & { id: string };
+export type LoadingMapPayload<
+  M extends Record<string, any> = Record<string, any>
+> = LoadingPayload<M> & { id: string };
 
-function reducerCreator(
+function reducerCreator<M extends Record<string, any> = Record<string, any>>(
   reducer: (
-    s: LoadingItemState | undefined,
-    p: LoadingPayload,
-  ) => LoadingItemState,
+    s: LoadingItemState<M> | undefined,
+    p: LoadingPayload<M>,
+  ) => LoadingItemState<M>,
 ) {
-  return (state: LoaderTableState, payload: LoadingMapPayload) => ({
+  return (state: LoaderTableState<M>, payload: LoadingMapPayload<M>) => ({
     ...state,
     [payload.id]: reducer(state[payload.id], payload),
   });
@@ -57,7 +63,7 @@ export interface LoaderTableSelectors<S = any> {
   selectByIds: (s: S, p: { ids: string[] }) => LoadingState[];
 }
 
-export function loaderTableSelectors<M = string, S = any>(
+export function loaderTableSelectors<S = any>(
   selectTable: (s: S) => LoaderTableState,
 ): LoaderTableSelectors<S> {
   const initLoader = defaultLoader();
@@ -92,33 +98,37 @@ export function loaderTableSelectors<M = string, S = any>(
   };
 }
 
-interface LoadingMapActions {
-  loading: LoadingMapPayload;
-  success: LoadingMapPayload;
-  error: LoadingMapPayload;
+interface LoadingMapActions<
+  M extends Record<string, any> = Record<string, any>
+> {
+  loading: LoadingMapPayload<M>;
+  success: LoadingMapPayload<M>;
+  error: LoadingMapPayload<M>;
   remove: string[];
   resetById: string;
   resetAll: never;
 }
 
-export default function createLoaderTable({
+export default function createLoaderTable<
+  M extends Record<string, any> = Record<string, any>
+>({
   name,
   initialState = {},
   extraReducers,
-}: SliceHelper<LoaderTableState>) {
-  const loading = loadingReducers(defaultLoadingItem());
+}: SliceHelper<LoaderTableState<M>>) {
+  const loading = loadingReducers<M>(defaultLoadingItem<M>());
   const map = mapReducers(initialState);
 
-  const slice = createSlice<LoaderTableState, LoadingMapActions>({
+  const slice = createSlice<LoaderTableState<M>, LoadingMapActions<M>>({
     name,
     initialState,
     extraReducers,
     useImmer: false,
     reducers: {
-      loading: reducerCreator(loading.loading),
-      success: reducerCreator(loading.success),
-      error: reducerCreator(loading.error),
-      resetById: (state: LoaderTableState, id: string) => ({
+      loading: reducerCreator<M>(loading.loading as any),
+      success: reducerCreator<M>(loading.success as any),
+      error: reducerCreator<M>(loading.error as any),
+      resetById: (state: LoaderTableState<M>, id: string) => ({
         ...state,
         [id]: loading.reset(),
       }),
@@ -129,7 +139,7 @@ export default function createLoaderTable({
 
   return {
     ...slice,
-    getSelectors: <S>(stateFn: (s: S) => LoaderTableState) =>
+    getSelectors: <S>(stateFn: (s: S) => LoaderTableState<M>) =>
       loaderTableSelectors(stateFn),
   };
 }

@@ -191,4 +191,35 @@ describe('createLoader', () => {
       lastSuccess: 0,
     });
   });
+
+  describe('create loader with generic metadata', () => {
+    it('should hold the correct metadata', () => {
+      const name = 'loading';
+      const { reducer, actions } = createLoader<{
+        error: string;
+        code: number;
+      }>({ name });
+      const state = freeze({
+        status: 'loading' as 'loading',
+        message: 'cool',
+        lastRun: 0,
+        meta: { error: '', code: 0 },
+        lastSuccess: 0,
+      });
+      const actual = reducer(
+        state,
+        actions.error({
+          message: 'something',
+          meta: { error: 'bad', code: 400 },
+        }),
+      );
+      expect(actual).toEqual({
+        status: 'error' as 'error',
+        message: 'something',
+        meta: { error: 'bad', code: 400 },
+        lastRun: 0,
+        lastSuccess: 0,
+      });
+    });
+  });
 });
