@@ -12,7 +12,7 @@ one.actions.success();
 // $ExpectType (payload?: Partial<{ message: string; timestamp: number; meta: { [key: string]: any; }; }> | undefined) => Action<Partial<{ message: string; timestamp: number; meta: { [key: string]: any; }; }>, string>
 one.actions.error;
 one.actions.error();
-// $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
+// $ExpectType Reducer<LoadingItemState, Action<any, string>>
 one.reducer;
 
 const withPayload = createLoader({ name: 'SLICE' });
@@ -21,23 +21,21 @@ withPayload.actions;
 withPayload.actions.loading({ message: 'hi' });
 withPayload.actions.success({ message: 'nice' });
 withPayload.actions.error({ message: 'hi' });
-// $ExpectType Reducer<LoadingItemState<string>, Action<any, string>>
+// $ExpectType Reducer<LoadingItemState, Action<any, string>>
 withPayload.reducer;
 
-const two = createLoader<string | Error>({
+const two = createLoader({
   name: 'SLICE',
   initialState: {
     message: '',
-    error: false,
-    success: false,
-    loading: false,
+    status: 'idle' as 'idle',
     lastRun: 0,
     lastSuccess: 0,
     meta: {},
   },
 });
 two.actions;
-two.actions.error({ message: new Error('wow') });
+two.actions.error({ message: 'wow' });
 two.actions.loading({ message: 'loading' });
-// $ExpectType Reducer<LoadingItemState<string | Error>, Action<any, string>>
+// $ExpectType Reducer<LoadingItemState, Action<any, string>>
 two.reducer;

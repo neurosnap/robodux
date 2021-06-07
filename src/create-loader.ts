@@ -4,26 +4,61 @@ import { Reducer } from 'redux';
 
 const ts = () => Date.now();
 
-export function loadingReducers<M>(initialState: LoadingItemState<M>) {
+export type LoadingStatus = 'loading' | 'success' | 'error' | 'idle';
+
+export interface LoadingItemState {
+  status: LoadingStatus;
+  message: string;
+  lastRun: number;
+  lastSuccess: number;
+  meta: { [key: string]: any };
+}
+
+export type LoadingPayload = Partial<{
+  message: string;
+  timestamp: number;
+  meta: { [key: string]: any };
+}>;
+
+interface LoadingActions {
+  loading: LoadingPayload;
+  success: LoadingPayload;
+  error: LoadingPayload;
+  reset: never;
+}
+
+export function defaultLoadingItem(
+  li: Partial<LoadingItemState> = {},
+): LoadingItemState {
+  return {
+    status: 'idle',
+    message: '',
+    lastRun: 0,
+    lastSuccess: 0,
+    meta: {},
+    ...li,
+  };
+}
+
+export function loadingReducers(initialState: LoadingItemState) {
   return {
     success: (
-      state: LoadingItemState<any>,
-      payload: LoadingPayload<M> = {},
+      state: LoadingItemState | undefined,
+      payload: LoadingPayload = {},
     ) => ({
-      error: false,
+      status: 'success' as 'success',
       message: payload.message || initialState.message,
       meta: payload.meta || {},
-      loading: false,
-      success: true,
       lastRun: state && state.lastRun ? state.lastRun : initialState.lastRun,
       lastSuccess: payload.timestamp || ts(),
     }),
-    error: (state: LoadingItemState<any>, payload: LoadingPayload<M> = {}) => ({
-      error: true,
+    error: (
+      state: LoadingItemState | undefined,
+      payload: LoadingPayload = {},
+    ) => ({
+      status: 'error' as 'error',
       message: payload.message || initialState.message,
       meta: payload.meta || {},
-      loading: false,
-      success: false,
       lastRun: state && state.lastRun ? state.lastRun : initialState.lastRun,
       lastSuccess:
         state && state.lastSuccess
@@ -31,14 +66,12 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
           : initialState.lastSuccess,
     }),
     loading: (
-      state: LoadingItemState<any>,
-      payload: LoadingPayload<M> = {},
+      state: LoadingItemState | undefined,
+      payload: LoadingPayload = {},
     ) => ({
-      error: false,
+      status: 'loading' as 'loading',
       message: payload.message || initialState.message,
       meta: payload.meta || {},
-      loading: true,
-      success: false,
       lastRun: payload.timestamp || ts(),
       lastSuccess:
         state && state.lastSuccess
@@ -49,59 +82,17 @@ export function loadingReducers<M>(initialState: LoadingItemState<M>) {
   };
 }
 
-export interface LoadingItemState<M = string> {
-  message: M;
-  error: boolean;
-  loading: boolean;
-  success: boolean;
-  lastRun: number;
-  lastSuccess: number;
-  meta: { [key: string]: any };
-}
-
-export function defaultLoadingItem(
-  li: Partial<LoadingItemState> = {},
-): LoadingItemState<string> {
-  return {
-    error: false,
-    message: '',
-    loading: false,
-    success: false,
-    lastRun: 0,
-    lastSuccess: 0,
-    meta: {},
-    ...li,
-  };
-}
-
-export type LoadingPayload<M = string> = Partial<{
-  message: M;
-  timestamp: number;
-  meta: { [key: string]: any };
-}>;
-
-interface LoadingActions<M = string> {
-  loading: LoadingPayload<M>;
-  success: LoadingPayload<M>;
-  error: LoadingPayload<M>;
-  reset: never;
-}
-
 export default function createLoader({
   name,
   initialState,
   extraReducers,
-}: SliceHelper<LoadingItemState<string>>): {
+}: SliceHelper<LoadingItemState>): {
   name: string;
-  reducer: Reducer<LoadingItemState<string>, Action>;
+  reducer: Reducer<LoadingItemState, Action>;
   actions: {
-    [key in keyof LoadingActions<string>]: LoadingActions<
-      string
-    >[key] extends never
+    [key in keyof LoadingActions]: LoadingActions[key] extends never
       ? () => Action
-      : (
-          payload?: LoadingActions<string>[key],
-        ) => Action<LoadingActions<string>[key]>;
+      : (payload?: LoadingActions[key]) => Action<LoadingActions[key]>;
   };
   toString: () => string;
 };
@@ -109,13 +100,13 @@ export default function createLoader<M>({
   name,
   initialState,
   extraReducers,
-}: SliceHelper<LoadingItemState<M>>): {
+}: SliceHelper<LoadingItemState>): {
   name: string;
-  reducer: Reducer<LoadingItemState<M>, Action>;
+  reducer: Reducer<LoadingItemState, Action>;
   actions: {
-    [key in keyof LoadingActions<M>]: LoadingActions<M>[key] extends never
+    [key in keyof LoadingActions]: LoadingActions[key] extends never
       ? () => Action
-      : (payload?: LoadingActions<M>[key]) => Action<LoadingActions<M>[key]>;
+      : (payload?: LoadingActions[key]) => Action<LoadingActions[key]>;
   };
   toString: () => string;
 };
@@ -123,8 +114,8 @@ export default function createLoader({
   name,
   initialState = defaultLoadingItem(),
   extraReducers,
-}: SliceHelper<LoadingItemState<any>>) {
-  return createSlice<LoadingItemState<any>, LoadingActions<any>>({
+}: SliceHelper<LoadingItemState>) {
+  return createSlice<LoadingItemState, LoadingActions>({
     name,
     initialState,
     extraReducers,

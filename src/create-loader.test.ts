@@ -8,10 +8,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'idle' as 'idle',
         message: '',
-        loading: false,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -19,10 +17,8 @@ describe('createLoader', () => {
       const actual = reducer(state, actions.loading({ timestamp: 1 }));
 
       expect(actual).toEqual({
-        loading: true,
-        error: false,
+        status: 'loading' as 'loading',
         message: '',
-        success: false,
         lastRun: 1,
         meta: {},
         lastSuccess: 0,
@@ -33,10 +29,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'idle' as 'idle',
         message: '',
-        loading: false,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -47,10 +41,8 @@ describe('createLoader', () => {
       );
 
       expect(actual).toEqual({
-        loading: true,
-        error: false,
+        status: 'loading' as 'loading',
         message: 'hi there',
-        success: false,
         lastRun: 2,
         meta: {},
         lastSuccess: 0,
@@ -61,10 +53,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'idle' as 'idle',
         message: '',
-        loading: true,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -76,10 +66,8 @@ describe('createLoader', () => {
       Date.now = actualNow;
 
       expect(actual).toEqual({
-        loading: true,
-        error: false,
+        status: 'loading' as 'loading',
         message: '',
-        success: false,
         lastSuccess: 0,
         meta: {},
         lastRun: 123,
@@ -92,10 +80,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'loading' as 'loading',
         message: '',
-        loading: true,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -103,10 +89,8 @@ describe('createLoader', () => {
       const actual = reducer(state, actions.success({ timestamp: 5 }));
 
       expect(actual).toEqual({
-        loading: false,
-        error: false,
+        status: 'success' as 'success',
         message: '',
-        success: true,
         lastSuccess: 5,
         meta: {},
         lastRun: 0,
@@ -117,10 +101,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'loading' as 'loading',
         message: '',
-        loading: true,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -131,10 +113,8 @@ describe('createLoader', () => {
       );
 
       expect(actual).toEqual({
-        loading: false,
-        error: false,
+        status: 'success' as 'success',
         message: '',
-        success: true,
         lastSuccess: 5,
         meta: { something: 'great' },
         lastRun: 0,
@@ -145,10 +125,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'idle' as 'idle',
         message: '',
-        loading: true,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -159,10 +137,8 @@ describe('createLoader', () => {
       );
 
       expect(actual).toEqual({
-        loading: false,
-        error: false,
+        status: 'success' as 'success',
         message: 'wow',
-        success: true,
         meta: {},
         lastSuccess: 2,
         lastRun: 0,
@@ -173,10 +149,8 @@ describe('createLoader', () => {
       const name = 'loading';
       const { reducer, actions } = createLoader({ name });
       const state = freeze({
-        error: false,
+        status: 'idle' as 'idle',
         message: '',
-        loading: true,
-        success: false,
         lastRun: 0,
         meta: {},
         lastSuccess: 0,
@@ -188,10 +162,8 @@ describe('createLoader', () => {
       Date.now = actualNow;
 
       expect(actual).toEqual({
-        loading: false,
-        error: false,
+        status: 'success' as 'success',
         message: '',
-        success: true,
         meta: {},
         lastSuccess: 123,
         lastRun: 0,
@@ -203,10 +175,8 @@ describe('createLoader', () => {
     const name = 'loading';
     const { reducer, actions } = createLoader({ name });
     const state = freeze({
-      error: false,
+      status: 'loading' as 'loading',
       message: 'cool',
-      loading: true,
-      success: false,
       lastRun: 0,
       meta: {},
       lastSuccess: 0,
@@ -214,10 +184,8 @@ describe('createLoader', () => {
     const actual = reducer(state, actions.error({ message: 'something' }));
 
     expect(actual).toEqual({
-      loading: false,
+      status: 'error' as 'error',
       message: 'something',
-      error: true,
-      success: false,
       meta: {},
       lastRun: 0,
       lastSuccess: 0,
