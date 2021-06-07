@@ -107,26 +107,24 @@ interface CreateListTableReturn<M extends any[]> {
 ## createLoader
 
 ```ts
-interface LoadingItemState<M = string> {
-  message: M;
-  error: boolean;
-  loading: boolean;
-  success: boolean;
+interface LoadingItemState {
+  status: 'idle' | 'loading' | 'error' | 'success'
+  message: string;
   lastRun: number;
   lastSuccess: number;
   meta: { [key: string]: any };
 }
 
-interface LoadingActions<M = string> {
-  loading: LoadingPayload<M>;
-  success: LoadingPayload<M>;
-  error: LoadingPayload<M>;
+interface LoadingActions {
+  loading: LoadingPayload;
+  success: LoadingPayload;
+  error: LoadingPayload;
   reset: never;
 }
 
-interface CreateLoaderReturn<M> {
+interface CreateLoaderReturn {
   name: string;
-  actions: LoadingActions<M>;
+  actions: LoadingActions;
   reducer: Reducer;
 }
 ```
@@ -140,80 +138,51 @@ as any combination of fetches.
 
 `createLoader` creates a global loader that can be used as a single loader.
 
-```ts
-import { createLoader, LoadingItemState } from 'robodux';
-
-const { actions, reducer } = createLoader({ name: 'loading' });
-store.dispatch(actions.loading('something loading'));
-// timestamps as unix timestamps
-/*
-{
-  loading: {
-    error: false, message: 'something loading', loading: true, success: false, lastRun: 111111111, lastSuccess: 0
-  }
-}
-*/
-
-store.dispatch(actions.success('great success'));
-/*
-{
-  loading: {
-    error: false, message: 'great success', loading: false, success: true, lastRun: 111111111, lastSuccess: 22222222
-  }
-}
-*/
-
-store.dispatch(actions.error('something happened'));
-/*
-{
-  loading: {
-    error: 'something happened', loading: false, success: false, lastRun: 111111111, lastSuccess: 22222222
-  }
-}
-*/
-```
-
 ## createLoaderTable
 
 ```ts
-interface LoadingItemState<M = string> {
-  message: M;
-  error: boolean;
-  loading: boolean;
-  success: boolean;
+interface LoadingItemState {
+  status: 'idle' | 'loading' | 'error' | 'success';
+  message: string;
   lastRun: number;
   lastSuccess: number;
   meta: { [key: string]: any };
 }
 
-interface State<M> {
-  [key: string]: LoadingItemState<M>;
+interface LoadingState extends LoadingItemState {
+  isError: boolean;
+  isSuccess: boolean;
+  isIdle: boolean;
+  isLoading: boolean;
+  isInitialLoading: boolean;
 }
 
-type LoadingMapPayload<M> = LoadingPayload<M> & { id: string };
+type LoaderTableState = MapEntity<LoadingItemState>;
 
-interface LoadingMapActions<M = string> {
-  loading: LoadingMapPayload<M>;
-  success: LoadingMapPayload<M>;
-  error: LoadingMapPayload<M>;
+type LoadingMapPayload = LoadingPayload & { id: string };
+
+interface LoadingMapActions {
+  loading: LoadingMapPayload;
+  success: LoadingMapPayload;
+  error: LoadingMapPayload;
   remove: string[];
   resetById: string;
   resetAll: never;
 }
 
-interface LoaderTableSelectors<M = string, S = any> {
-  findById: (d: State<M>, { id }: PropId) => LoadingItemState<M>;
-  findByIds: (d: State<M>, { ids }: PropIds) => LoadingItemState<M>[];
-  selectTable: (s: S) => State<M>;
-  selectById: (s: S, p: PropId) => LoadingItemState<M>;
-  selectByIds: (s: S, p: { ids: string[] }) => LoadingItemState<M>[];
+interface LoaderTableSelectors<S = any> {
+  findById: (d: LoaderTableState, { id }: PropId) => LoadingState;
+  findByIds: (d: LoaderTableState, { ids }: PropIds) => LoadingState[];
+  selectTable: (s: S) => LoaderTableState;
+  selectById: (s: S, p: PropId) => LoadingState;
+  selectByIds: (s: S, p: { ids: string[] }) => LoadingState[];
 }
 
-interface CreateLoaderTableReturn<M> {
+interface CreateLoaderTableReturn {
   name: string;
-  actions: LoadingMapActions<M>;
+  actions: LoadingMapActions;
   reducer: Reducer;
-  getSelectors: <S>(state: S) => LoaderTableSelectors<M, S>;
+  getSelectors: <S>(state: S) => LoaderTableSelectors<S>;
 }
 ```
 

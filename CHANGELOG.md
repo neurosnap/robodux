@@ -1,5 +1,11 @@
 # CHANGES
 
+## 11.0.0 (06-06-2021)
+
+- :wrench: Remove `immer` as a peer dependency and made it a normal dependency
+- :boom: `createLoader` and `createLoaderTable` now hold different state,
+  please see documentation for details
+
 ## 10.1.3 (05-31-2021)
 
 - :sparkles: `createLoaderTable` now returns `getSelectors` function that makes
@@ -13,6 +19,7 @@
 
 - :sparkles: `createListTable` which makes it easier to have a table of lists
 - :wrench: added `meta` object to `createLoader` state so we can pass arbitrary data through our loaders
+
 ## 10.0.0 (10-08-2020)
 
 - :heavy_plus_sign: added `reselect` as a peer dependency

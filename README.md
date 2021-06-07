@@ -1,6 +1,6 @@
 # robodux 
 
-[![Build Status](https://travis-ci.org/neurosnap/robodux.svg?branch=master)](https://travis-ci.org/neurosnap/robodux)
+[![Node.js CI](https://github.com/neurosnap/robodux/actions/workflows/node.js.yml/badge.svg)](https://github.com/neurosnap/robodux/actions/workflows/node.js.yml)
 
 - [Documentation](./docs/index.md)
 - [Example repo](https://github.com/neurosnap/listifi)

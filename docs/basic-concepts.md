@@ -185,18 +185,29 @@ store.dispatch(actions.reset());
 
 ## createLoaderTable
 
-This is a table of loaders so we can build an infinite number of loaders for our app keyed by the id.
+This is a table of loaders so we can build an infinite number of loaders for 
+our app keyed by the id.
 
 ```ts
 const { createLoaderTable } from 'robodux';
 
-const { actions, reducer } = createLoaderTable({ name: 'loaders' });
-store.dispatch(actions.loading({ id: 'users', message: 'fetching users ...' }));
+const loaders = createLoaderTable({ name: 'loaders' });
+const { actions, reducer } = loaders;
+const { selectById: selectLoaderById } = loaders.getSelectors(
+  (s: State) => loaders.name
+);
+
+store.dispatch(
+  actions.loading({ id: 'users', message: 'fetching users ...' })
+);
 /*
 {
   loaders: {
     users: {
-      error: false, message: 'fetching users ...', loading: true, success: false, lastRun: 11111111, lastSuccess: 0
+      status: 'loading',
+      message: 'fetching users ...',
+      lastRun: 11111111, 
+      lastSuccess: 0
     }
   }
 }
@@ -207,7 +218,10 @@ store.dispatch(actions.success({ id: 'users' }));
 {
   loaders: {
     users: {
-      error: false, message: 'fetching users ...', loading: false, success: true, lastRun: 11111111, lastSuccess: 22222222
+      status: 'success',
+      message: 'fetching users ...', 
+      lastRun: 11111111, 
+      lastSuccess: 22222222
     }
   }
 }
@@ -218,7 +232,10 @@ store.dispatch(actions.error({ id: 'users', message: 'something happened' }));
 {
   loaders: {
     users: {
-      error: true, message: 'something happened', loading: false, success: false, lastRun: 11111111, lastSuccess: 22222222
+      status: 'error',
+      message: 'something happened',
+      lastRun: 11111111, 
+      lastSuccess: 22222222
     }
   }
 }
@@ -229,15 +246,50 @@ store.dispatch(actions.loading({ id: 'posts' }));
 {
   loaders: {
     users: {
-      error: true, message: 'something happened', loading: false, success: false, lastRun: 11111111, lastSuccess: 22222222
+      status: 'error',
+      message: 'something happened', 
+      lastRun: 11111111, 
+      lastSuccess: 22222222
     },
     posts: {
-      error: false, message: '', loading: true, success: false, lastRun: 33333333, lastSuccess: 0
+      status: 'loading',
+      message: '',
+      lastRun: 33333333, 
+      lastSuccess: 0
     }
   }
 }
 */
 ```
+
+The selectors returned from `getSelectors` will embellish the
+`LoadingItemState` with some extra derived values that can help with the logic
+of loading data in the view layer:
+
+```ts
+selectLoaderById(store.getState(), { id: 'posts' });
+/*
+{
+  status: 'loading',
+  message: '',
+  lastRun: 33333333, 
+  lastSuccess: 0,
+  isInitialLoading: false,
+  isLoading: true,
+  isError: false,
+  isSuccess: false,
+  isIdle: false,
+}
+*/
+```
+
+The values are derived by:
+
+`isIdle` => `status === 'idle'`
+`isLoading` => `status === 'loading'`
+`isError` => `status === 'error'`
+`isSuccess` => `status === 'success'`
+`isInitialLoading` => `status === 'loading' && lastRun === 0`
 
 ## createReducerMap
 

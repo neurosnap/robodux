@@ -20,9 +20,10 @@
     "prettier-md": "prettier --config prettier.md.js --write *.md docs/*.md",
     "format": "yarn prettier-js && yarn prettier-md"
   },
-  "dependencies": {},
+  "dependencies": {
+    "immer": ">=4.0.0"
+  },
   "peerDependencies": {
-    "immer": ">=4.0.0",
     "redux": ">=4.0.4",
     "reselect": ">=4.0.0"
   },
