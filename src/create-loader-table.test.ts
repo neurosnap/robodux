@@ -134,6 +134,14 @@ describe('createLoaderTable', () => {
       expect(result).toEqual(users);
     });
 
+    describe('when the loader is not found', () => {
+      const { getSelectors } = buildLoader();
+      const selectors = getSelectors((state: State) => state);
+      const result = selectors.selectById(undefined as any, { id: 'users' });
+
+      expect(result).toEqual(defaultLoader());
+    });
+
     it('should select multiple loaders', () => {
       const { getSelectors } = buildLoader();
       const selectors = getSelectors((state: State) => state);

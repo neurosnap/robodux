@@ -66,9 +66,8 @@ export interface LoaderTableSelectors<S = any> {
 export function loaderTableSelectors<S = any>(
   selectTable: (s: S) => LoaderTableState,
 ): LoaderTableSelectors<S> {
-  const initLoader = defaultLoader();
-  const findById = (data: LoaderTableState, { id }: PropId) =>
-    defaultLoader(data[id]) || initLoader;
+  const findById = (data: LoaderTableState = {}, { id }: PropId) =>
+    defaultLoader(data[id]);
   const findByIds = (
     data: LoaderTableState,
     { ids }: PropIds,
