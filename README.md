@@ -1,6 +1,6 @@
-# robodux 
+# robodux
 
-[![ci](https://github.com/neurosnap/robodux/actions/workflows/node.js.yml/badge.svg)](https://github.com/neurosnap/robodux/actions/workflows/node.js.yml)
+[![ci](https://github.com/neurosnap/robodux/actions/workflows/ci.yml/badge.svg)](https://github.com/neurosnap/robodux/actions/workflows/ci.yml)
 
 - [Documentation](./docs/index.md)
 - [Example repo](https://github.com/neurosnap/listifi)

@@ -1,5 +1,7 @@
 # CHANGES
 
+**DEPRECATED: Please see [github releases](https://github.com/neurosnap/robodux/releases) to a changelog**
+
 ## 11.0.0 (06-06-2021)
 
 - :wrench: Remove `immer` as a peer dependency and made it a normal dependency
