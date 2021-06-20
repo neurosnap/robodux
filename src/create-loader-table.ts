@@ -35,7 +35,9 @@ export const defaultLoader = (
     isError: loading.status === 'error',
     isSuccess: loading.status === 'success',
     isLoading: loading.status === 'loading',
-    isInitialLoading: loading.status === 'loading' && loading.lastRun === 0,
+    isInitialLoading:
+      (loading.status === 'idle' || loading.status === 'loading') &&
+      loading.lastSuccess === 0,
   };
 };
 
