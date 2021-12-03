@@ -21,7 +21,7 @@ interface ListCreateTable<S> {
 }
 
 export default function createListTable<
-  State extends { [name: string]: string[] }
+  State extends { [name: string]: string[] },
 >({ name, initialState = {} as State, extraReducers }: SliceHelper<State>) {
   // here we are reusing reducers created for createTable
   const { add, set, remove, reset } = mapReducers(initialState);

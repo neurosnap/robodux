@@ -1,12 +1,14 @@
 # CHANGES
 
-**DEPRECATED: Please see [github releases](https://github.com/neurosnap/robodux/releases) to a changelog**
+**DEPRECATED: Please see
+[github releases](https://github.com/neurosnap/robodux/releases) to a
+changelog**
 
 ## 11.0.0 (06-06-2021)
 
 - :wrench: Remove `immer` as a peer dependency and made it a normal dependency
-- :boom: `createLoader` and `createLoaderTable` now hold different state,
-  please see documentation for details
+- :boom: `createLoader` and `createLoaderTable` now hold different state, please
+  see documentation for details
 
 ## 10.1.3 (05-31-2021)
 
@@ -20,7 +22,8 @@
 ## 10.1.0 (12-20-2020)
 
 - :sparkles: `createListTable` which makes it easier to have a table of lists
-- :wrench: added `meta` object to `createLoader` state so we can pass arbitrary data through our loaders
+- :wrench: added `meta` object to `createLoader` state so we can pass arbitrary
+  data through our loaders
 
 ## 10.0.0 (10-08-2020)
 

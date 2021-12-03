@@ -21,12 +21,12 @@ without the performance overhead of `immer`
 
 ## createTable
 
-This is probably the most useful slice helper provided by `robodux`.  It
-creates a redux slice that acts like a database table.  The key is the id of
-the record and the value is the record itself.  You are responsible for
-setting the object up as `robodux` has no way to know what the record id is.
-We could have created a function that you provide that tells us what the `id`
-is but we made the design decision to keep this API interface simple. 
+This is probably the most useful slice helper provided by `robodux`. It creates
+a redux slice that acts like a database table. The key is the id of the record
+and the value is the record itself. You are responsible for setting the object
+up as `robodux` has no way to know what the record id is. We could have created
+a function that you provide that tells us what the `id` is but we made the
+design decision to keep this API interface simple.
 
 ```ts
 import { createTable } from 'robodux';
@@ -124,8 +124,8 @@ const usersById = selectors.selectByIds(state, { ids: ['1', '6'] });
 
 These are common operations when dealing with a slice that simply needs to be
 set or reset. You can think of this slice helper as a basic setter. I regularly
-use this for simple types like strings or if I'm prototyping and I
-just need something quick.
+use this for simple types like strings or if I'm prototyping and I just need
+something quick.
 
 ```ts
 import { createAssign } from 'robodux';
@@ -185,8 +185,8 @@ store.dispatch(actions.reset());
 
 ## createLoaderTable
 
-This is a table of loaders so we can build an infinite number of loaders for 
-our app keyed by the id.
+This is a table of loaders so we can build an infinite number of loaders for our
+app keyed by the id.
 
 ```ts
 const { createLoaderTable } from 'robodux';
@@ -206,7 +206,7 @@ store.dispatch(
     users: {
       status: 'loading',
       message: 'fetching users ...',
-      lastRun: 11111111, 
+      lastRun: 11111111,
       lastSuccess: 0
     }
   }
@@ -219,8 +219,8 @@ store.dispatch(actions.success({ id: 'users' }));
   loaders: {
     users: {
       status: 'success',
-      message: 'fetching users ...', 
-      lastRun: 11111111, 
+      message: 'fetching users ...',
+      lastRun: 11111111,
       lastSuccess: 22222222
     }
   }
@@ -234,7 +234,7 @@ store.dispatch(actions.error({ id: 'users', message: 'something happened' }));
     users: {
       status: 'error',
       message: 'something happened',
-      lastRun: 11111111, 
+      lastRun: 11111111,
       lastSuccess: 22222222
     }
   }
@@ -247,14 +247,14 @@ store.dispatch(actions.loading({ id: 'posts' }));
   loaders: {
     users: {
       status: 'error',
-      message: 'something happened', 
-      lastRun: 11111111, 
+      message: 'something happened',
+      lastRun: 11111111,
       lastSuccess: 22222222
     },
     posts: {
       status: 'loading',
       message: '',
-      lastRun: 33333333, 
+      lastRun: 33333333,
       lastSuccess: 0
     }
   }
@@ -262,9 +262,9 @@ store.dispatch(actions.loading({ id: 'posts' }));
 */
 ```
 
-The selectors returned from `getSelectors` will embellish the
-`LoadingItemState` with some extra derived values that can help with the logic
-of loading data in the view layer:
+The selectors returned from `getSelectors` will embellish the `LoadingItemState`
+with some extra derived values that can help with the logic of loading data in
+the view layer:
 
 ```ts
 selectLoaderById(store.getState(), { id: 'posts' });
@@ -285,17 +285,15 @@ selectLoaderById(store.getState(), { id: 'posts' });
 
 The values are derived by:
 
-`isIdle` => `status === 'idle'`
-`isLoading` => `status === 'loading'`
-`isError` => `status === 'error'`
-`isSuccess` => `status === 'success'`
-`isInitialLoading` => `status === 'loading' && lastRun === 0`
+`isIdle` => `status === 'idle'` `isLoading` => `status === 'loading'` `isError`
+=> `status === 'error'` `isSuccess` => `status === 'success'` `isInitialLoading`
+=> `status === 'loading' && lastRun === 0`
 
 ## createReducerMap
 
-This is a very useful function that will convert a list of slices into an
-object of reducers where the key is the name of the slice and the value is the
-reducer itself.  This allows us to compose slices together and prepare it for
+This is a very useful function that will convert a list of slices into an object
+of reducers where the key is the name of the slice and the value is the reducer
+itself. This allows us to compose slices together and prepare it for
 `combineReducers`.
 
 ```ts
@@ -321,13 +319,13 @@ const roorReducer = combineReducers(reducers);
 
 ## createApp
 
-If we are [following the `robodux` modular
-pattern](https://erock.io/2020/01/01/redux-saga-style-guide.html#the-robodux-pattern)
-then when we are building our slices they live within their own modules.  Each
+If we are
+[following the `robodux` modular pattern](https://erock.io/2020/01/01/redux-saga-style-guide.html#the-robodux-pattern)
+then when we are building our slices they live within their own modules. Each
 module exports a variable `reducers` which contains all the reducers created
-within the module.  When we want to build our root reducer, we need a way to
-combine all the module reducers into one reducer.  `createApp` helps combine
-all the reducers from all modules into a single reducer.
+within the module. When we want to build our root reducer, we need a way to
+combine all the module reducers into one reducer. `createApp` helps combine all
+the reducers from all modules into a single reducer.
 
 ```ts
 import { createStore } from 'redux';
@@ -346,7 +344,7 @@ const store = createStore(reducer);
 
 By default `createSlice` will prefix any action type with the name of the slice.
 However, sometimes it is necessary to allow external action types to effect the
-reducer.  All slice helpers also accept `extraReducers` which will be passed
+reducer. All slice helpers also accept `extraReducers` which will be passed
 through to `createSlice`.
 
 ```ts

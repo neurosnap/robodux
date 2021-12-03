@@ -51,7 +51,7 @@ interface CreateTableReturn<Entity> {
   name: string;
   actions: TableActions<MapEntity<Entity>>;
   reducer: Reducer;
-  getSelectors: <S>(state: S) => TableSelectors<Entity, S>
+  getSelectors: <S>(state: S) => TableSelectors<Entity, S>;
 }
 ```
 
@@ -108,7 +108,7 @@ interface CreateListTableReturn<M extends any[]> {
 
 ```ts
 interface LoadingItemState {
-  status: 'idle' | 'loading' | 'error' | 'success'
+  status: 'idle' | 'loading' | 'error' | 'success';
   message: string;
   lastRun: number;
   lastSuccess: number;
@@ -129,12 +129,12 @@ interface CreateLoaderReturn {
 }
 ```
 
-Helper slice that will handle loading data.  The main idea here is that we want 
-to decouple data from UI and since loaders are primarily used to display loaders 
+Helper slice that will handle loading data. The main idea here is that we want
+to decouple data from UI and since loaders are primarily used to display loaders
 in the UI, they should be separated.
 
-This has a unique benefit to where we can create loaders for any data as well 
-as any combination of fetches.
+This has a unique benefit to where we can create loaders for any data as well as
+any combination of fetches.
 
 `createLoader` creates a global loader that can be used as a single loader.
 
@@ -204,13 +204,15 @@ interface CreateMapReturn<S> {
 }
 ```
 
-This has the same actions as `createTable` but doesn't have to adhere to the 
+This has the same actions as `createTable` but doesn't have to adhere to the
 value being a json object.
 
 ```ts
 import { createMap } from 'robodux';
 
-const { reducer, actions } = createMap<{ [key: string]: string }>({ name: 'text' });
+const { reducer, actions } = createMap<{ [key: string]: string }>({
+  name: 'text',
+});
 store.dispatch(actions.add({ 1: 'some text' }));
 /*
 {
@@ -232,8 +234,8 @@ createReducerMap(
 ## createApp
 
 ```ts
-createApp<S = any>({ 
-  reducers: { [key: string]: Reducer } 
+createApp<S = any>({
+  reducers: { [key: string]: Reducer }
 }[]) => { reducer: Reducer }
 ```
 
