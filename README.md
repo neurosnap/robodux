@@ -4,7 +4,6 @@
 
 - [Documentation](./docs/index.md)
 - [Example repo](https://github.com/neurosnap/listifi)
-- [Style guide](https://erock.io/2020/01/01/redux-saga-style-guide.html)
 
 One of the biggest complaints developers have with redux is the amount of
 boilerplate and new concepts they have to learn to use it. By using the
@@ -14,13 +13,14 @@ one line of code.
 
 ## Features
 
+- Data fetching and caching for react applications
 - Create actions, reducer, and selectors for common data structures
-- Automates the boring parts of redux
 - Dramatically reduces redux boilerplate
-- Works well with [saga-query](https://github.com/neurosnap/saga-query)
 
 ## What's included
 
+- [createApi](./docs/create-api.md): data fetching library that leverages a
+  simple and robust middleware system
 - [createTable](./docs/basic-concepts.md#createtable): Thinking of reducers as
   database tables, this function builds actions, reducer, and selectors that
   builds simple and repeatable operations for that table.
@@ -28,8 +28,6 @@ one line of code.
   structure that makes it easy to set or reset the reducer.
 - [createList](./docs/basic-concepts.md#createlist): Store an array of items in
   a slice
-- [createLoaderTable](./docs/basic-concepts#createloadertable): Store as many
-  independent loaders in this reducer which are all accessible by an `id`.
 - [createSlice](./docs/api.md#createslice): Core function that the above slice
   helpers leverage. Build action types, action creators, and reducer pairs with
   one simple function.
@@ -37,7 +35,7 @@ one line of code.
 
 ## Core principles
 
-The overriding principle is that effects (like sagas) should be the central
+The overriding principle is that effects should be the central
 processing unit for all business logic in a react/redux application. We should
 remove as much business logic as possible from reducers and instead centralize
 them inside of our side-effect handlers.
