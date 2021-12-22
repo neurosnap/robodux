@@ -21,16 +21,18 @@ one line of code.
 
 ## What's included
 
-- [createTable](./docs/basic-concepts.md#createtable): Thinking of reducers as database tables, this function builds
-  actions, reducer, and selectors that builds simple and repeatable operations for
-  that table.
-- [createAssign](./docs/basic-concepts.md#createassign): A catch-all data structure that makes it easy to set or reset
-  the reducer.
-- [createList](./docs/basic-concepts.md#createlist): Store an array of items in a slice
-- [createLoaderTable](./docs/basic-concepts#createloadertable): Store as many independent loaders in this reducer which
-  are all accessible by an `id`.
-- [createSlice](./docs/api.md#createslice): Core function that the above slice helpers leverage. Build
-  action types, action creators, and reducer pairs with one simple function.
+- [createTable](./docs/basic-concepts.md#createtable): Thinking of reducers as
+  database tables, this function builds actions, reducer, and selectors that
+  builds simple and repeatable operations for that table.
+- [createAssign](./docs/basic-concepts.md#createassign): A catch-all data
+  structure that makes it easy to set or reset the reducer.
+- [createList](./docs/basic-concepts.md#createlist): Store an array of items in
+  a slice
+- [createLoaderTable](./docs/basic-concepts#createloadertable): Store as many
+  independent loaders in this reducer which are all accessible by an `id`.
+- [createSlice](./docs/api.md#createslice): Core function that the above slice
+  helpers leverage. Build action types, action creators, and reducer pairs with
+  one simple function.
 - [and more!](./docs/api.md)
 
 ## Core principles
@@ -53,8 +55,8 @@ details.
 yarn add robodux
 ```
 
-If you don't already have `redux`, `immer`, and `reselect` installed, you'll need to install
-those as well as they're peer dependencies.
+If you don't already have `redux`, `immer`, and `reselect` installed, you'll
+need to install those as well as they're peer dependencies.
 
 ```bash
 yarn add redux immer reselect
@@ -65,8 +67,8 @@ yarn add redux immer reselect
 The primary philosophical change between this library and other libraries is to
 think of your redux store as a database.
 
-Reducers are database tables and operating on those tables should
-have a consistent API for managing them.
+Reducers are database tables and operating on those tables should have a
+consistent API for managing them.
 
 `robodux` has a few slice helpers that cover ~90% of the logic and data
 structures needed to build and scale your state.
@@ -76,9 +78,9 @@ reducers using a simple set of lower-level functions. There's no magic here,
 it's more of how we think about our state that has made it dramatically simple
 to automate repetitive tasks in redux.
 
-One of the more useful APIs from this library is `createTable`.  This slice
-helper creates a reducer and a set of actions that make it easy to treat a
-slice as a database table.
+One of the more useful APIs from this library is `createTable`. This slice
+helper creates a reducer and a set of actions that make it easy to treat a slice
+as a database table.
 
 ```ts
 import { combineReducers, createStore } from 'redux';
@@ -114,8 +116,8 @@ store.dispatch(
 store.dispatch(
   actions.patch({
     1: { message: 'Are you awake?' },
-  })
-)
+  }),
+);
 // { comments: { 1: { message: 'Are you awake?', timestamp: 1577117359 } } }
 
 const state = store.getState();

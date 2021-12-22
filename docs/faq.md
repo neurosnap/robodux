@@ -21,9 +21,10 @@ At this point in time, the primary benefit to use `robodux` over `redux-toolkit`
 is to leverage slice helpers.
 
 The only parallel to the slice helpers we have created would be the
-`createEntityAdapter` which more directly resembles our `createTable`. We have built more helpers to accommodate different use-cases
-such as simple data structures `createAssign`, `createMap`, `createList` and something more functional like
-our loaders `createLoader` or `createLoaderTable`.
+`createEntityAdapter` which more directly resembles our `createTable`. We have
+built more helpers to accommodate different use-cases such as simple data
+structures `createAssign`, `createMap`, `createList` and something more
+functional like our loaders `createLoader` or `createLoaderTable`.
 
 `redux-toolkit` is also trying to be opinionated about how people should use it.
 The driving motivation for `redux-toolkit` is to be able to install it and
