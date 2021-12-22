@@ -21,7 +21,7 @@
     "format": "yarn prettier-js && yarn prettier-md"
   },
   "dependencies": {
-    "immer": "^8.0.1",
+    "immer": "^9.0.7",
     "redux-batched-actions": "^0.5.0"
   },
   "peerDependencies": {
