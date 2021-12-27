@@ -90,7 +90,7 @@ export function createPipe<
     use: (md: Middleware<CurCtx>) => {
       middleware.push(md);
     },
-    routes: () => async (ctx: CurCtx, next: Next) => {
+    actions: () => async (ctx: CurCtx, next: Next) => {
       const match = middlewareMap[ctx.name];
       if (!match) {
         await next();
@@ -100,7 +100,7 @@ export function createPipe<
       const md = compose<CurCtx>(match);
       await md(ctx, next);
     },
-    action: (
+    create: (
       name: string,
       md: MiddlewareCo<CurCtx> = async (_, next) => {
         await next();
@@ -143,19 +143,19 @@ export function createPipe<
 
 export function createApi<CurCtx extends ApiCtx = ApiCtx>(): CreateApi<CurCtx> {
   const pipe = createPipe<CurCtx>();
-  const create = (name: string) => {
+  const uri = (name: string) => {
     return {
-      get: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [GET]`, md),
-      post: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [POST]`, md),
-      put: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [PUT]`, md),
-      patch: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [PATCH]`, md),
-      delete: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [DELETE]`, md),
+      get: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [GET]`, md),
+      post: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [POST]`, md),
+      put: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [PUT]`, md),
+      patch: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [PATCH]`, md),
+      delete: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [DELETE]`, md),
       options: (md: MiddlewareCo<CurCtx>) =>
-        pipe.action(`${name} [OPTIONS]`, md),
-      head: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [HEAD]`, md),
+        pipe.create(`${name} [OPTIONS]`, md),
+      head: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [HEAD]`, md),
       connect: (md: MiddlewareCo<CurCtx>) =>
-        pipe.action(`${name} [CONNECT]`, md),
-      trace: (md: MiddlewareCo<CurCtx>) => pipe.action(`${name} [TRACE]`, md),
+        pipe.create(`${name} [CONNECT]`, md),
+      trace: (md: MiddlewareCo<CurCtx>) => pipe.create(`${name} [TRACE]`, md),
     };
   };
   return {
@@ -164,17 +164,15 @@ export function createApi<CurCtx extends ApiCtx = ApiCtx>(): CreateApi<CurCtx> {
       ctx.request = req;
       await next();
     },
-    create,
-    get: (name: string, md: MiddlewareCo<CurCtx>) => create(name).get(md),
-    post: (name: string, md: MiddlewareCo<CurCtx>) => create(name).post(md),
-    put: (name: string, md: MiddlewareCo<CurCtx>) => create(name).put(md),
-    patch: (name: string, md: MiddlewareCo<CurCtx>) => create(name).patch(md),
-    delete: (name: string, md: MiddlewareCo<CurCtx>) => create(name).delete(md),
-    options: (name: string, md: MiddlewareCo<CurCtx>) =>
-      create(name).options(md),
-    head: (name: string, md: MiddlewareCo<CurCtx>) => create(name).head(md),
-    connect: (name: string, md: MiddlewareCo<CurCtx>) =>
-      create(name).connect(md),
-    trace: (name: string, md: MiddlewareCo<CurCtx>) => create(name).trace(md),
+    uri,
+    get: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).get(md),
+    post: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).post(md),
+    put: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).put(md),
+    patch: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).patch(md),
+    delete: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).delete(md),
+    options: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).options(md),
+    head: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).head(md),
+    connect: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).connect(md),
+    trace: (name: string, md: MiddlewareCo<CurCtx>) => uri(name).trace(md),
   };
 }

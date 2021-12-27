@@ -104,10 +104,10 @@ export interface FetchCtx<D = any, P = any, E = any> extends ApiCtx {
 
 export interface PipeApi<CurCtx extends Ctx = Ctx> {
   use: (fn: Middleware<CurCtx>) => void;
-  routes: () => Middleware<CurCtx>;
+  actions: () => Middleware<CurCtx>;
 
-  action(name: string, fn?: MiddlewareCo<CurCtx>): CreateAction<CurCtx>;
-  action<P>(
+  create(name: string, fn?: MiddlewareCo<CurCtx>): CreateAction<CurCtx>;
+  create<P>(
     name: string,
     fn?: MiddlewareCo<CurCtx>,
   ): CreateActionWithPayload<CurCtx, P>;
@@ -145,7 +145,7 @@ export interface ApiHttpMethods<CurCtx extends ApiCtx = ApiCtx> {
 export interface CreateApi<CurCtx extends ApiCtx = ApiCtx>
   extends PipeApi<CurCtx> {
   request: (r: CurCtx['request']) => Middleware<CurCtx>;
-  create(name: string): ApiHttpMethods<CurCtx>;
+  uri(name: string): ApiHttpMethods<CurCtx>;
 
   get(name: string, fn: MiddlewareCo<CurCtx>): CreateAction<CurCtx>;
   get<P>(

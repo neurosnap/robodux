@@ -47,7 +47,7 @@ describe('createPipe', () => {
   test('middleware - order of execution', async () => {
     let acc = '';
     const api = createPipe();
-    api.use(api.routes());
+    api.use(api.actions());
 
     api.use(async (_, next) => {
       await delay(10);
@@ -65,7 +65,7 @@ describe('createPipe', () => {
       acc += 'e';
     });
 
-    const action = api.action('/api', async (_, next) => {
+    const action = api.create('/api', async (_, next) => {
       acc += 'a';
       await next();
       acc += 'g';
@@ -79,7 +79,7 @@ describe('createPipe', () => {
 
   test('middleware - error handling', (done) => {
     const api = createPipe();
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(async (_, next) => {
       try {
         await next();
@@ -92,19 +92,19 @@ describe('createPipe', () => {
       throw new Error('some error');
     });
 
-    const action = api.action('/error');
+    const action = api.create('/error');
     const store = setupStore();
     store.dispatch(action());
   });
 
   test('action() - error handling', (done) => {
     const api = createPipe();
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(async () => {
       throw new Error('some error');
     });
 
-    const action = api.action(`/error`, async (_, next) => {
+    const action = api.create(`/error`, async (_, next) => {
       try {
         await next();
       } catch (err) {
@@ -118,7 +118,7 @@ describe('createPipe', () => {
 
   test('action() - middleware array', () => {
     const api = createPipe<FnCtx>();
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(async (ctx, next) => {
       expect(ctx.request).toEqual({
         method: 'POST',
@@ -129,7 +129,7 @@ describe('createPipe', () => {
       await next();
     });
 
-    const action = api.action('/users', [
+    const action = api.create('/users', [
       async (ctx, next) => {
         ctx.request = {
           method: 'POST',
@@ -149,7 +149,7 @@ describe('createPipe', () => {
   test('undo', async () => {
     const api = createPipe<UndoCtx>();
     api.use(requestMonitor());
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(undoer());
 
     api.use(async (ctx, next) => {
@@ -164,7 +164,7 @@ describe('createPipe', () => {
       await next();
     });
 
-    const createUser = api.action('/users', async (ctx, next) => {
+    const createUser = api.create('/users', async (ctx, next) => {
       ctx.undoable = true;
       await next();
     });
@@ -189,7 +189,7 @@ describe('createApi', () => {
     const api = createApi<FetchCtx>();
 
     api.use(requestMonitor());
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(requestParser());
     api.use(async (ctx, next) => {
       expect(ctx.request).toEqual({
@@ -204,7 +204,7 @@ describe('createApi', () => {
       await next();
     });
 
-    const usersApi = api.create('/users');
+    const usersApi = api.uri('/users');
     const createUser = usersApi.post<{ email: string }>(
       async (ctx: FetchCtx<{ users: User[] }, { email: string }>, next) => {
         ctx.request = {
@@ -249,22 +249,22 @@ describe('createApi', () => {
   test('request fn', (done) => {
     const api = createApi();
     api.use(requestMonitor());
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(requestParser());
     api.use(async (ctx) => {
       expect(ctx.request).toEqual({ method: 'POST', url: '/users' });
       done();
     });
-    const createUser = api.action('/users', api.request({ method: 'POST' }));
+    const createUser = api.create('/users', api.request({ method: 'POST' }));
     const store = setupStore();
     store.dispatch(createUser());
   });
 
   test('dependent queries', (done) => {
     const api = createApi();
-    api.use(api.routes());
+    api.use(api.actions());
     let acc = '';
-    const userApi = api.create('/users/:id');
+    const userApi = api.uri('/users/:id');
     const action1 = userApi.get<{ id: string }>(async (_, next) => {
       await next();
       acc += 'a';
@@ -284,7 +284,7 @@ describe('createApi', () => {
   test('simpleCache', async () => {
     const api = createApi<FetchCtx>();
     api.use(requestMonitor());
-    api.use(api.routes());
+    api.use(api.actions());
     api.use(requestParser());
     api.use(async (ctx, next) => {
       ctx.response = {

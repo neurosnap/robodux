@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import type { LoadingState } from './create-loader-table';
@@ -50,4 +51,13 @@ export function useSimpleCache<D = any, S = any>(action: {
   };
 
   return { ...loader, trigger, data: data || null };
+}
+
+export function useLoaderSuccess(cur: LoadingState, success: () => any) {
+  const [prev, setPrev] = useState(cur);
+  useEffect(() => {
+    const curSuccess = !cur.isLoading && cur.isSuccess;
+    if (prev.isLoading && curSuccess) success();
+    setPrev(cur);
+  }, [cur.isSuccess, cur.isLoading]);
 }
