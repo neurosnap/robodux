@@ -181,8 +181,7 @@ export async function simpleCache(ctx: ApiCtx, next: Next) {
   await next();
   if (!ctx.request.simpleCache) return;
   const { data } = ctx.response;
-  const key = ctx.key;
-  ctx.actions.push(addData({ [key]: data }));
+  ctx.actions.push(addData({ [ctx.key]: data }));
 }
 
 export function requestMonitor(errorFn?: (ctx: ApiCtx) => string) {

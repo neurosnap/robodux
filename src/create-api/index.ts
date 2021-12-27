@@ -14,6 +14,7 @@ import { compose } from './compose';
 import { FX_CALL } from './constants';
 import { EventEmitter } from './emitter';
 import { cancelable, wrap } from './cancelable';
+import { encodeBase64 } from './encoding';
 
 export * from './compose';
 export * from './constants';
@@ -113,9 +114,9 @@ export function createPipe<
       }
 
       const actionFn = (payload?: any) => {
-        const key = Buffer.from(
+        const key = encodeBase64(
           JSON.stringify({ name: resolvedName, payload }),
-        ).toString('base64');
+        );
         return {
           type: FX_CALL,
           payload: {
