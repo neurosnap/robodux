@@ -8,7 +8,6 @@ Quickly build data loading within your redux application and reduce boilerplate.
 **This API is undergoing active development. Consider this in a beta
 state.**
 
-- [Examples](#examples)
 - [Control your data cache](#control-your-data-cache)
 - [Manipulating the request](#manipulating-the-request)
 - [Simple cache](#simple-cache)
@@ -22,14 +21,13 @@ state.**
 - [Polling](#polling)
 - [Optimistic UI](#optimistic-ui)
 - [Undo](#undo)
-- [redux-toolkit](#redux-toolkit)
 
 ## Features
 
 - Write middleware to handle fetching, synchronizing, and caching API requests
   on the front-end
 - A familiar middleware system that node.js developers are familiar with
-  (e.g. koa)
+  (e.g. express)
 - Simple recipes to handle complex use-cases like cancellation, polling,
   optimistic updates, loading states, undo, react
 - Full control over the data fetching and caching layers in your application
@@ -42,7 +40,7 @@ import { createApi, requestMonitor, requestParser } from 'robodux';
 const api = createApi();
 api.use(requestMonitor());
 // where all the routes get placed in the middleware stack
-api.use(api.routes()); 
+api.use(api.actions()); 
 api.use(requestParser());
 
 api.use(async (ctx, next) => {
@@ -127,15 +125,6 @@ for using redux and a flexible middleware to handle all business logic.
 - A minimal API that encourages end-developers to write code instead of
   configuring objects
 
-### Examples
-
-- [Simple](https://codesandbox.io/s/saga-query-simple-ifcwf)
-- [With Loader](https://codesandbox.io/s/saga-query-basic-jtceo)
-- [Simple cache](https://codesandbox.io/s/saga-query-simple-cache-0ge33)
-- [Polling](https://codesandbox.io/s/saga-query-polling-1fwfo)
-- [Optimistic update](https://codesandbox.io/s/saga-query-optimistic-xwzz2)
-- [Undo](https://codesandbox.io/s/saga-query-undo-nn7fn)
-
 ## How does it work?
 
 `createApi` will build a set of actions and async functions for each `action` or http
@@ -156,7 +145,7 @@ test('middleware order of execution', async (t) => {
   t.plan(1);
   let acc = '';
   const api = createApi();
-  api.use(api.routes());
+  api.use(api.actions());
 
   api.use(async (ctx, next) => {
     await delay(10);
@@ -174,7 +163,7 @@ test('middleware order of execution', async (t) => {
     acc += 'e';
   });
 
-  const action = api.action('/api', async (ctx, next) => {
+  const action = api.create('/api', async (ctx, next) => {
     acc += 'a';
     await next();
     acc += 'g';
@@ -227,7 +216,7 @@ api.use(requestMonitor());
 // get added to the middleware stack.  It is recommended to put this as close to
 // the beginning of the stack so everything after `yield next()`
 // happens at the end of the effect.
-api.use(api.routes());
+api.use(api.actions());
 
 // This middleware is composed of other middleware: queryCtx, urlParser, and
 // simpleCache
@@ -305,8 +294,6 @@ const store = createStore(
   undefined,
   applyMiddleware(...prepared.middleware),
 );
-// This runs the sagas
-prepared.run();
 
 store.dispatch(fetchUsers());
 ```
@@ -390,45 +377,14 @@ const store = createStore(
   undefined,
   applyMiddleware(...prepared.middleware),
 );
-// This runs the sagas
-prepared.run();
-```
-
-```tsx
-// use-query.ts
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { LoadingState, QueryState, selectLoaderById, selectDataById } from 'robodux';
-
-type Data<D = any> = LoadingState & { data: D };
-
-export function useQuery<D = any>(
-  action: {
-    payload: { name: string; key: string };
-  },
-): Data<D> {
-  const { name } = action.payload;
-  const dispatch = useDispatch();
-  const loader = useSelector(
-    (s: QueryState) => selectLoaderById(s, { id: name }),
-  );
-  const data = useSelector((s: QueryState) => selectDataById(s, { id: key }));
-
-  useEffect(() => {
-    if (!name) return;
-    dispatch(action);
-  }, [id, name]);
-
-  return { ...loader, data };
-}
 ```
 
 ```tsx
 // app.tsx
 import React from 'react';
+import { useQuery } from 'robodux';
 
 import { fetchUsers } from './api';
-import { useQuery } from './use-query';
 
 interface User {
   id: string;
@@ -477,7 +433,7 @@ const fetchMailbox = api.get('/mailboxes');
 const fetchMessages = api.get<{ id: string }>(
   '/mailboxes/:id/messages',
   async (ctx, next) => {
-    // The return value of a `.run` is the entire `ctx` object.
+    // The return value of this is the entire `ctx` object.
     const mailCtx = await fetchMailbox();
 
     if (!mailCtx.response.ok) {
@@ -553,8 +509,8 @@ interface that contains all the state types that `robodyx` provides.
 // app.tsx
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectLoaderById, QueryState } from 'robodux';
-import { MapEntity } from 'robodux';
+import { selectLoaderById } from 'robodux';
+import type { MapEntity, QueryState } from 'robodux';
 
 import {
   fetchUsers,
@@ -678,50 +634,16 @@ const fetchUsers = usersApi.get([
 ### Polling
 ### Optimistic UI
 
-Here is the manual, one-off way to handle optimistic ui:
-
-```ts
-const updateUser = api.patch<Partial<User> & { id: string }>(
-  `/users/:id`,
-  async (ctx: FetchCtx<User>, next) => {
-    const { id, email } = ctx.payload;
-    ctx.request = {
-      body: JSON.stringify(email),
-    };
-
-    // save the current user record in a variable
-    const prevUser = selectUserById(ctx.getState(), { id });
-    // optimistically update user
-    ctx.actions.push(users.actions.patch({ [user.id]: { email } }));
-
-    // activate PATCH request
-    await next();
-
-    // oops something went wrong, revert!
-    if (!ctx.response.ok) {
-      ctx.actions.push(users.actions.add({ [prevUser.id]: prevUser }));
-      return;
-    }
-
-    // even though we know what was updated, it's still a good habit to
-    // update our local cache with what the server sent us
-    const nextUser = ctx.response.data;
-    ctx.actions.push(users.actions.add({ [nextUser.id]: nextUser }));
-  },
-)
-```
-
-Not too bad, but we built an optimistic middleware for you:
-
 ```tsx
-import { MapEntity, PatchEntity } from 'robodux';
-import { OptimisticCtx, optimistic } from 'saga-query';
+import type { MapEntity, PatchEntity, OptimisticCtx } from 'robodux';
+import { optimistic } from 'robodux';
 
 const api = createApi();
-api.use(api.routes());
+api.use(api.actions());
 api.use(optimistic);
 
-api.patch(
+const updateUser = api.patch(
+  'update-user',
   async (ctx: OptimisticCtx<PatchEntity<User>, MapEntity<User>>, next) => {
     const { id, email } = ctx.payload;
     const prevUser = selectUserById(ctx.getState(), { id });
@@ -776,7 +698,7 @@ interface Message {
 const messages = createTable<Message>({ name: 'messages' });
 const api = createApi<UndoCtx>();
 api.use(requestMonitor());
-api.use(api.routes());
+api.use(api.actions());
 api.use(requestParser());
 api.use(undoer());
 
@@ -803,31 +725,4 @@ store.dispatch(archiveMessage({ id: '1' }));
 store.dispatch(undo());
 // -or- to activate the endpoint
 store.dispatch(doIt());
-```
-
-This is not the **only** way to implement an undo mechanism, it's just the one
-we provide out-of-the-box to work with a UI that fully controls the undo
-mechanism.
-
-For example, if you want the endpoint to be called automatically after some
-timer, you could build a middleware to do that for you:
-
-```ts
-import { delay } from 'rodobux';
-
-const undo = createAction('UNDO');
-function* undoer<Ctx extends UndoCtx = UndoCtx>() {
-  if (!ctx.undoable) {
-    await next();
-    return;
-  }
-
-  const winner = yield race({
-    timer: delay(3 * 1000),
-    undo: ctx.take(`${undo}`),
-  });
-
-  if (winner.undo) return;
-  await next();
-}
 ```

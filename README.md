@@ -5,11 +5,44 @@
 - [Documentation](./docs/index.md)
 - [Example repo](https://github.com/neurosnap/listifi)
 
-One of the biggest complaints developers have with redux is the amount of
-boilerplate and new concepts they have to learn to use it. By using the
-`robodux` pattern the amount of redux boilerplate is dramatically reduced. In
-most cases, wiring up action types, action creators, and reducers can be done in
-one line of code.
+Handling side-effects in any codebase is non-trivial, this is especially true
+for front-end apps. React provides the ability to handle side-effects with
+hooks but there is a cost associated with leveraging hooks for data fetching
+and caching: it collapses all layers within a front-end app into the react
+component lifecycle.
+
+`robodux` provides a robust middleware system for your side-effects.  It takes
+express-like middleware and applies it to the front-end application ecosystem.
+
+`robodux` also provides a set of helpers to build reducers, actions, and
+selectors automatically based on the type of data the user needs.  By treating
+the redux store as a database, we can remove a significant amount of
+boilerplate.
+
+```ts
+import { createPipe, delay } from 'robodux';
+
+const thunks = createPipe();
+thunks.use(async (ctx, next) => {
+  console.log('before thunk');
+  await next();
+  console.log('after thunk');
+});
+thunks.use(thunks.actions());
+
+const makeItSo = thunks.create('make-it-so', async (ctx, next) => {
+  console.log('thunk start');
+  await delay(500);  
+  console.log('thunk end');
+  await next();
+});
+
+store.dispatch(makeItSo());
+// before thunk
+// thunk start
+// thunk end
+// after thunk
+```
 
 ## Features
 
@@ -19,8 +52,10 @@ one line of code.
 
 ## What's included
 
-- [createApi](./docs/create-api.md): data fetching library that leverages a
-  simple and robust middleware system
+- [createPipe](./docs/create-pipe.md): robust middleware system for
+  side-effects
+- [createApi](./docs/create-api.md): data fetching function leveraging a robust
+  middleware system for side-effects
 - [createTable](./docs/basic-concepts.md#createtable): Thinking of reducers as
   database tables, this function builds actions, reducer, and selectors that
   builds simple and repeatable operations for that table.
@@ -29,7 +64,7 @@ one line of code.
 - [createList](./docs/basic-concepts.md#createlist): Store an array of items in
   a slice
 - [createSlice](./docs/api.md#createslice): Core function that the above slice
-  helpers leverage. Build action types, action creators, and reducer pairs with
+  helpers use. Build action types, action creators, and reducer pairs with
   one simple function.
 - [and more!](./docs/api.md)
 
@@ -53,81 +88,71 @@ details.
 yarn add robodux
 ```
 
-If you don't already have `redux`, `immer`, and `reselect` installed, you'll
+If you don't already have `redux` and `reselect` installed, you'll
 need to install those as well as they're peer dependencies.
 
 ```bash
-yarn add redux immer reselect
+yarn add redux reselect
 ```
 
-### Usage
+If you want to use the react-hooks for `createApi` then you also need to
+install
 
-The primary philosophical change between this library and other libraries is to
-think of your redux store as a database.
+```bash
+yarn add react react-dom react-redux
+```
 
-Reducers are database tables and operating on those tables should have a
-consistent API for managing them.
-
-`robodux` has a few slice helpers that cover ~90% of the logic and data
-structures needed to build and scale your state.
-
-These are one-line functions that create action types, action creators, and
-reducers using a simple set of lower-level functions. There's no magic here,
-it's more of how we think about our state that has made it dramatically simple
-to automate repetitive tasks in redux.
-
-One of the more useful APIs from this library is `createTable`. This slice
-helper creates a reducer and a set of actions that make it easy to treat a slice
-as a database table.
+## Usage
 
 ```ts
-import { combineReducers, createStore } from 'redux';
-import { createTable, createReducerMap, MapEntity } from 'robodux';
+// api.ts
+import { createApi, requestMonitor, requestParser } from 'robodux';
 
-// setup reducer state
-interface Comment {
-  message: string;
-  timestamp: number;
-}
+const api = createApi();
+api.use(requestMonitor());
+// where all the routes get placed in the middleware stack
+api.use(api.actions()); 
+api.use(requestParser());
 
-interface State {
-  comments: MapEntity<Comment>;
-}
+api.use(async (ctx, next) => {
+  const { url = "", ...options } = ctx.request;
+  const resp = await fetch(`https://api.github.com${url}`, options);
+  const data = await resp.json();
+  ctx.response = { status: resp.status, ok: resp.ok, data };
+  await next(); // call all middleware after this one
+});
 
-// create reducer and actions
-const comments = createTable<Comment>({ name: 'comments' });
-
-// converts multiple slices into an object of reducers to be used with combineReducers
-// { comments: (state, action) => state }
-const reducers = createReducerMap(comments);
-const rootReducer = combineReducers(reducers);
-const store = createStore(rootReducer);
-
-// dispatch action to add a record to our table
-store.dispatch(
-  actions.add({
-    1: { message: 'you awake?', timestamp: 1577117359 },
-  }),
+export const fetchRepo = api.get(
+  `/repos/neurosnap/saga-query`,
+  api.request({ simpleCache: true })
 );
-// { comments: { 1: { message: 'you awake?', timestamp: 1577117359 } } }
-
-store.dispatch(
-  actions.patch({
-    1: { message: 'Are you awake?' },
-  }),
-);
-// { comments: { 1: { message: 'Are you awake?', timestamp: 1577117359 } } }
-
-const state = store.getState();
-const selectors = comments.getSelectors((state) => state[comments.name]);
-
-const commentMap = selectors.selectTable(state);
-const commentList = selectors.selectTableAsList(state);
-const commentOne = selectors.selectById(state, { id: '1' });
-const foundComments = selectors.selectByIds(state, { ids: ['1', '3'] });
 ```
 
-## References
+```tsx
+// app.tsx
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useSimpleCache } from 'robodux';
+import { fetchUsers } from './api';
 
-- [saga-query](https://github.com/neurosnap/saga-query)
-- [redux-toolkit](https://redux-toolkit.js.org/)
+const App = () => {
+  const cache = useSimpleCache(fetchUsers());
+
+  useEffect(() => {
+    cache.trigger();
+  }, []);
+
+  if (cache.isInitialLoading) return <div>Loading ...</div>
+  if (cache.isError) return <div>{cache.message}</div>
+
+  return (
+    <div>
+      {cache.data.map((user) => <div key={user.id}>{user.email}</div>)}
+    </div>
+  );
+}
+```
+
+## Docs
+
+- [Documentation](./docs/index.md)
