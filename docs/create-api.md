@@ -51,7 +51,7 @@ api.use(async (ctx, next) => {
 });
 
 export const fetchRepo = api.get(
-  `/repos/neurosnap/saga-query`,
+  `/repos/neurosnap/robodux`,
   api.request({ simpleCache: true })
 );
 ```
@@ -408,7 +408,7 @@ export const App = () => {
 ### Dispatching many actions
 
 Sometimes we need to dispatch a bunch of actions for an endpoint.  From loading
-states to making multiple requests in a single saga, there can be a lot of
+states to making multiple requests in a single side-effect, there can be a lot of
 actions being dispatched.  When using `prepareStore` we automatically setup
 `redux-batched-actions` so you don't have to.  Anything that gets added to
 `ctx.actions` will be automatically dispatched by the `dispatchActions`
@@ -496,7 +496,7 @@ store.dispatch(action());
 When using `prepareStore` in conjunction with `dispatchActions`,
 `loadingMonitor`, and `requestParser` the loading state will automatically be
 added to all of your endpoints.  We also export `QueryState` which is the
-interface that contains all the state types that `robodyx` provides.
+interface that contains all the state types that `robodux` provides.
 
 ```tsx
 // app.tsx
@@ -592,14 +592,20 @@ as many times as we want but it will only get activated once every N
 milliseconds.  This effectively updates the cache on an interval.
 
 ```ts
-import { timer } from 'saga-query';
+import { timer } from 'robodux';
 
 const SECONDS = 1000;
 const MINUTES = 60 * SECONDS;
 
 const fetchUsers = api.get(
   '/users',
-  { saga: timer(5 * MINUTES) }
+  [
+    timer(10 * MINUTES), 
+    async (ctx, next) => {
+      // ...
+      await next(); 
+    },
+  ]
 );
 ```
 
