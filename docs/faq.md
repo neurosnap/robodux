@@ -7,7 +7,7 @@ This library was heavily inspired by
 [redux-toolkit](https://github.com/reduxjs/redux-toolkit). The reason why I
 decided to create a separate library was primarily for:
 
-- no external dependencies besides (`redux`, `immer`, `reselect`)
+- alternative approach to side effects
 - slice helpers
 - philosophical differences
 

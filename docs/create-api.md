@@ -18,7 +18,6 @@ state.**
 - [React](#react)
 - [Cache timer](#cache-timer)
 - [Take leading](#take-leading)
-- [Polling](#polling)
 - [Optimistic UI](#optimistic-ui)
 - [Undo](#undo)
 
@@ -94,9 +93,8 @@ We wanted to take some of the great things from those libraries but provide a
 little more control for the end-developer.  We also wanted to leverage a
 powerful middleware paradigm that has been used for years in the expressjs world.
 
-All three libraries above are reinventing async flow control and hiding them
-from the end-developer.  For the happy path, this works beautifully.  Why learn
-how to cache API data when a library can do it for you?  However:
+Why learn how to cache API data when a library can do it for you?  Here are
+some reasons:
 
 - What happens when [`useMemo` isn't good
   enough](https://medium.com/swlh/should-you-use-usememo-in-react-a-benchmarked-analysis-159faf6609b7)?
@@ -106,11 +104,6 @@ how to cache API data when a library can do it for you?  However:
   optimized way for your needs?
 - What happens when you want to reuse your business logic for another platform
 (e.g. a cli) and can't use `react`?
-
-If you've never needed to performance tune selector queries on the
-front-end, then this library might not be for you.  If you just need to make
-some API requests with loading states and not much else, then those other
-libraries are probably a better fit for you.
 
 This library is intended for large scale, complex flow control applications
 that need full control over the data cache layer while setting good standards
@@ -434,7 +427,7 @@ const fetchMessages = api.get<{ id: string }>(
   '/mailboxes/:id/messages',
   async (ctx, next) => {
     // The return value of this is the entire `ctx` object.
-    const mailCtx = await fetchMailbox();
+    const mailCtx = await store.dispatch(fetchMailbox());
 
     if (!mailCtx.response.ok) {
       await next();
@@ -594,8 +587,8 @@ const App = () => {
 
 ### Cache timer
 
-Only call the endpoint at most on an interval.  We can call the endpoint
-as many times as we want but it will only get activated once every X
+Only call the endpoint at most once per interval.  We can dispatch the action
+as many times as we want but it will only get activated once every N
 milliseconds.  This effectively updates the cache on an interval.
 
 ```ts
@@ -631,7 +624,6 @@ const fetchUsers = usersApi.get([
 ]);
 ```
 
-### Polling
 ### Optimistic UI
 
 ```tsx

@@ -1,9 +1,10 @@
 # robodux
 
+A powerful middleware and caching library for redux side-effects.
+
 [![ci](https://github.com/neurosnap/robodux/actions/workflows/ci.yml/badge.svg)](https://github.com/neurosnap/robodux/actions/workflows/ci.yml)
 
 - [Documentation](./docs/index.md)
-- [Example repo](https://github.com/neurosnap/listifi)
 
 Handling side-effects in any codebase is non-trivial, this is especially true
 for front-end apps. React provides the ability to handle side-effects with
@@ -46,6 +47,7 @@ store.dispatch(makeItSo());
 
 ## Features
 
+- Express-like middleware system for your thunks
 - Data fetching and caching for react applications
 - Create actions, reducer, and selectors for common data structures
 - Dramatically reduces redux boilerplate
@@ -77,9 +79,10 @@ them inside of our side-effect handlers.
 
 The other primary principle is to think of redux as a database and reducers as
 tables. This simplifies the action/reducer logic and makes it possible to build
-reuseable components which dramatically reducers boilerplate.
+reuseable components which dramatically reduces boilerplate.
 
-Please see [style-guide](https://erock.io/redux-saga-style-guide) for more
+This is in contrast to the official redux recommendations. Please see 
+[style-guide](https://erock.io/redux-saga-style-guide) for more
 details.
 
 ## Getting started

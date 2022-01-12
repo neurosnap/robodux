@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
-  "description": "reduce redux boilerplate",
+  "description": "a powerful middleware and caching library for redux side-effects",
   "author": "Eric Bower",
   "repository": {
     "type": "git",

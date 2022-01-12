@@ -239,6 +239,18 @@ export async function optimistic<
   }
 }
 
+export function timer<CurCtx extends Ctx = Ctx>(curTimer: number = 60 * 1000) {
+  let lastCalled: null | number = null;
+  return async (_: CurCtx, next: Next) => {
+    const now = new Date().getTime();
+    if (lastCalled && now < lastCalled + curTimer) {
+      return;
+    }
+    lastCalled = new Date().getTime();
+    await next();
+  };
+}
+
 export interface UndoCtx<R = any, P = any> extends ApiCtx<R, P> {
   undoable: boolean;
 }
