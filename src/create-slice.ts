@@ -53,22 +53,17 @@ export default function createSlice<SliceState, Actions extends ActionsAny>({
     ? createReducer<SliceState>(initialState, reducerMap)
     : createReducerPlain<SliceState>(initialState, reducerMap);
 
-  const actionMap = actionKeys.reduce<
-    {
-      [key in keyof Actions]: Object extends Actions[key] // ensures payload isn't inferred as {}
-        ? (payload?: any) => Action
-        : Actions[key] extends never
-        ? () => Action
-        : (payload: Actions[key]) => Action<Actions[key]>;
-    }
-  >(
-    (map, action) => {
-      const type = createActionType(action as string);
-      map[action] = createAction(type) as any;
-      return map;
-    },
-    {} as any,
-  );
+  const actionMap = actionKeys.reduce<{
+    [key in keyof Actions]: Object extends Actions[key] // ensures payload isn't inferred as {}
+      ? (payload?: any) => Action
+      : Actions[key] extends never
+      ? () => Action
+      : (payload: Actions[key]) => Action<Actions[key]>;
+  }>((map, action) => {
+    const type = createActionType(action as string);
+    map[action] = createAction(type) as any;
+    return map;
+  }, {} as any);
 
   return {
     actions: actionMap,

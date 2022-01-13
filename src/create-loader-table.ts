@@ -12,11 +12,11 @@ import {
 import { MapEntity } from './types';
 
 export type LoaderTableState<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 > = MapEntity<LoadingItemState<M>>;
 
 export interface LoadingState<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 > extends LoadingItemState<M> {
   isError: boolean;
   isSuccess: boolean;
@@ -42,7 +42,7 @@ export const defaultLoader = (
 };
 
 export type LoadingMapPayload<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 > = LoadingPayload<M> & { id: string };
 
 function reducerCreator<M extends Record<string, any> = Record<string, any>>(
@@ -100,7 +100,7 @@ export function loaderTableSelectors<S = any>(
 }
 
 interface LoadingMapActions<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 > {
   loading: LoadingMapPayload<M>;
   success: LoadingMapPayload<M>;
@@ -111,7 +111,7 @@ interface LoadingMapActions<
 }
 
 export default function createLoaderTable<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 >({
   name,
   initialState = {},

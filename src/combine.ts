@@ -75,7 +75,7 @@ export function createActionMap(...args: any[]): any {
 
 export function createReducerMap<
   KV extends Array<{ name: P; reducer: Reducer }>,
-  P extends keyof any
+  P extends keyof any,
 >(
   ...args: KV
 ): { [K in KV[number]['name']]: Extract<KV[number], { name: K }>['reducer'] };
