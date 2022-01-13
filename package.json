@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
-  "description": "a powerful middleware and caching library for redux side-effects",
+  "description": "caching in redux made simple",
   "author": "Eric Bower",
   "repository": {
     "type": "git",
@@ -16,31 +16,16 @@
     "test": "tsc && yarn tc && jest",
     "prepublish": "yarn build",
     "precommit": "lint-staged",
-    "prettier-js": "prettier --write src/**/*.ts",
+    "prettier-js": "prettier --write src/*.ts",
     "prettier-md": "prettier --config prettier.md.js --write *.md docs/*.md",
     "format": "yarn prettier-js && yarn prettier-md"
   },
   "dependencies": {
-    "immer": "^9.0.7",
-    "redux-batched-actions": "^0.5.0"
+    "immer": "^9.0.7"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": ">=7.0.0",
     "redux": ">=4.0.4",
     "reselect": ">=4.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-redux": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
@@ -55,9 +40,6 @@
     "jest": "^27.4.5",
     "lint-staged": "^7.2.0",
     "prettier": "^2.5.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^7.2.6",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",

@@ -7,7 +7,7 @@ const ts = () => Date.now();
 export type LoadingStatus = 'loading' | 'success' | 'error' | 'idle';
 
 export interface LoadingItemState<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 > {
   status: LoadingStatus;
   message: string;
@@ -17,7 +17,7 @@ export interface LoadingItemState<
 }
 
 export type LoadingPayload<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 > = Partial<{
   message: string;
   timestamp: number;
@@ -32,7 +32,7 @@ interface LoadingActions<M extends Record<string, any> = Record<string, any>> {
 }
 
 export function defaultLoadingItem<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 >(li: Partial<LoadingItemState<M>> = {}): LoadingItemState<M> {
   return {
     status: 'idle',
@@ -45,7 +45,7 @@ export function defaultLoadingItem<
 }
 
 export function loadingReducers<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 >(initialState: LoadingItemState<M>) {
   return {
     success: (
@@ -92,7 +92,7 @@ export function loadingReducers<
 }
 
 export default function createLoader<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 >({
   name,
   initialState,
@@ -108,7 +108,7 @@ export default function createLoader<
   toString: () => string;
 };
 export default function createLoader<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 >({
   name,
   initialState,
@@ -124,7 +124,7 @@ export default function createLoader<
   toString: () => string;
 };
 export default function createLoader<
-  M extends Record<string, any> = Record<string, any>
+  M extends Record<string, any> = Record<string, any>,
 >({
   name,
   initialState = defaultLoadingItem(),

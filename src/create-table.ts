@@ -38,9 +38,8 @@ export function tableSelectors<Entity extends AnyState = AnyState, S = any>(
     findByIds,
     tableAsList,
     selectTable,
-    selectTableAsList: createSelector(
-      selectTable,
-      (data): Entity[] => tableAsList(data),
+    selectTableAsList: createSelector(selectTable, (data): Entity[] =>
+      tableAsList(data),
     ),
     selectById,
     selectByIds: createSelector(
