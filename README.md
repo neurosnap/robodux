@@ -120,9 +120,9 @@ store.dispatch(
 );
 // { comments: { 1: { message: 'Are you awake?', timestamp: 1577117359 } } }
 
-const state = store.getState();
 const selectors = comments.getSelectors((state) => state[comments.name]);
 
+const state = store.getState();
 const commentMap = selectors.selectTable(state);
 const commentList = selectors.selectTableAsList(state);
 const commentOne = selectors.selectById(state, { id: '1' });
