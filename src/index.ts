@@ -5,7 +5,6 @@ export * from './create-table';
 export * from './create-map';
 export * from './create-loader';
 export * from './create-loader-table';
-export * from './create-api';
 
 import createSlice from './create-slice';
 export default createSlice;

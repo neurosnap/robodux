@@ -1,7 +1,5 @@
 # API
 
-- [createPipe](#createpipe)
-- [createApi](#createapi)
 - [createTable](#createtable)
 - [createAssign](#createassign)
 - [createList](#createlist)
@@ -12,14 +10,6 @@
 - [createReducerMap](#createreducermap)
 - [createApp](#createapp)
 - [createSlice](#createslice)
-
-## createPipe
-
-[createPipe](./create-pipe.md)
-
-## createApi
-
-[createApi](./create-api.md)
 
 ## Interface for all slice helpers
 

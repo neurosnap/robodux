@@ -4,8 +4,6 @@ Documentation is constantly a work-in-progress.  There are functions and
 features that are not described in our documentation.  If you are feeding
 adventurous, please read the source code.
 
-- [createPipe](./create-pipe.md)
-- [createApi](./create-api.md)
 - [Basic Concepts](./basic-concepts.md)
 - [Advanced Concepts](./advanced-concepts.md)
 - [Modular Redux](./modular-redux.md)
