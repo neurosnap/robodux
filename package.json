@@ -44,13 +44,7 @@
     "typings-checker": "^2.0.0"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.md": [
-      "prettier --config prettier.md.js --write",
-      "git add"
-    ]
+    "*.js": "prettier --write",
+    "*.md": "prettier --config prettier.md.js --write"
   }
 }
