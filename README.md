@@ -55,13 +55,6 @@ details.
 yarn add robodux
 ```
 
-If you don't already have `redux`, and `reselect` installed, you'll need to
-install those as well as they're peer dependencies.
-
-```bash
-yarn add redux reselect
-```
-
 ### Usage
 
 The primary philosophical change between this library and other libraries is to
