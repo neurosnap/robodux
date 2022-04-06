@@ -79,12 +79,12 @@ export function loaderTableSelectors<S = any>(
       .filter(excludesFalse)
       .map((loader) => defaultLoader(loader));
 
-  const selectById = createSelector(
+  const selectById: any = createSelector(
     selectTable,
     (s: S, p: PropId) => p,
     findById,
   );
-  const selectByIds = createSelector(
+  const selectByIds: any = createSelector(
     selectTable,
     (s: S, p: PropIds) => p,
     findByIds,

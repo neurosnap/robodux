@@ -40,13 +40,13 @@ export function tableSelectors<Entity extends AnyState = AnyState, S = any>(
     selectTable,
     selectTableAsList: createSelector(selectTable, (data): Entity[] =>
       tableAsList(data),
-    ),
+    ) as any,
     selectById,
     selectByIds: createSelector(
       selectTable,
       (s: S, p: PropIds) => p,
       findByIds,
-    ),
+    ) as any,
   };
 }
 
