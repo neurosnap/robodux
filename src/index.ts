@@ -6,24 +6,13 @@ export * from './create-map';
 export * from './create-loader';
 export * from './create-loader-table';
 
-import createSlice from './create-slice';
-export default createSlice;
+export { default as createSlice } from './create-slice';
 export { default as createAction } from './create-action';
 export { default as createReducer } from './create-reducer';
-import createTable from './create-table';
-import createMap from './create-map';
-import createLoader from './create-loader';
-import createLoaderTable from './create-loader-table';
-import createAssign from './create-assign';
-import createListTable from './create-list-table';
-import createList from './create-list';
-export {
-  createSlice,
-  createTable,
-  createMap,
-  createLoader,
-  createLoaderTable,
-  createAssign,
-  createListTable,
-  createList,
-};
+export { default as createAssign } from './create-assign';
+export { default as createMap } from './create-map';
+export { default as createTable } from './create-table';
+export { default as createLoader } from './create-loader';
+export { default as createLoaderTable } from './create-loader-table';
+export { default as createList } from './create-list';
+export { default as createListTable } from './create-list-table';
