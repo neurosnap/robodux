@@ -5,7 +5,6 @@
 - [createList](#createlist)
 - [createLoaderTable](#createloadertable)
 - [createReducerMap](#createreducermap)
-- [createApp](#createapp)
 - [extraReducers](#extrareducers)
 
 ## How to use slice helpers
@@ -315,29 +314,6 @@ const reducers = createReducerMap(users, threads, comments, token);
 }
 */
 const roorReducer = combineReducers(reducers);
-```
-
-## createApp
-
-If we are
-[following the `robodux` modular pattern](https://erock.io/2020/01/01/redux-saga-style-guide.html#the-robodux-pattern)
-then when we are building our slices they live within their own modules. Each
-module exports a variable `reducers` which contains all the reducers created
-within the module. When we want to build our root reducer, we need a way to
-combine all the module reducers into one reducer. `createApp` helps combine all
-the reducers from all modules into a single reducer.
-
-```ts
-import { createStore } from 'redux';
-import { createApp } from 'robodux';
-
-import * as users from '@app/users';
-import * as threads from '@app/threads';
-import * as comments from '@app/comments';
-import * as token from '@app/token';
-
-const { reducer } = createApp([users, threads, comments, tokens]);
-const store = createStore(reducer);
 ```
 
 ## extraReducers

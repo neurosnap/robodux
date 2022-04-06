@@ -8,7 +8,6 @@
 - [createLoaderTable](#createloadertable)
 - [createMap](#createmap)
 - [createReducerMap](#createreducermap)
-- [createApp](#createapp)
 - [createSlice](#createslice)
 
 ## Interface for all slice helpers
@@ -229,14 +228,6 @@ store.dispatch(actions.add({ 1: 'some text' }));
 createReducerMap(
   ...args: { name: string; reducer: Reducer }[]
 ) => { [key: string]: Reducer };
-```
-
-## createApp
-
-```ts
-createApp<S = any>({
-  reducers: { [key: string]: Reducer }
-}[]) => { reducer: Reducer }
 ```
 
 ## createSlice
