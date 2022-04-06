@@ -21,10 +21,7 @@
     "format": "yarn prettier-js && yarn prettier-md"
   },
   "dependencies": {
-    "immer": "^9.0.7"
-  },
-  "peerDependencies": {
-    "redux": ">=4.0.4",
+    "immer": "^9.0.7",
     "reselect": ">=4.0.0"
   },
   "devDependencies": {

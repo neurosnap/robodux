@@ -1,4 +1,25 @@
-import { Action as BaseAction } from 'redux';
+/**
+ * Inlined from redux
+ */
+export interface BaseAction<T extends string = string> {
+  type: T;
+}
+
+/**
+ * Inlined from redux
+ */
+export interface AnyAction extends BaseAction {
+  // Allows any extra properties to be defined in an action.
+  [extraProps: string]: any;
+}
+
+/**
+ * Inlined from redux
+ */
+export type Reducer<S = any, A extends Action = AnyAction> = (
+  state: S | undefined,
+  action: A,
+) => S;
 
 export interface Action<P = any, T extends string = string>
   extends BaseAction<T> {

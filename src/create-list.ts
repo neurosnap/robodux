@@ -1,5 +1,5 @@
 import createSlice from './create-slice';
-import { SliceHelper } from './types';
+import type { SliceHelper } from './types';
 
 export function listReducers<State extends any[]>(
   initialState = [] as unknown as State,
@@ -15,7 +15,7 @@ export function listReducers<State extends any[]>(
       });
       return newState;
     },
-    reset: (state: State): State => initialState,
+    reset: (_: State): State => initialState,
   };
 }
 

@@ -1,15 +1,15 @@
 import { createSelector } from 'reselect';
 import { mapReducers } from './create-map';
 import createSlice from './create-slice';
-import {
+import type {
   AnyState,
-  excludesFalse,
   MapEntity,
   PatchEntity,
   SliceHelper,
   PropId,
   PropIds,
 } from './types';
+import { excludesFalse } from './types';
 
 export interface TableSelectors<Entity extends AnyState = AnyState, S = any> {
   findById: (d: MapEntity<Entity>, { id }: PropId) => Entity | undefined;

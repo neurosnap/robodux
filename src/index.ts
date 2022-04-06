@@ -10,7 +10,6 @@ import createSlice from './create-slice';
 export default createSlice;
 export { default as createAction } from './create-action';
 export { default as createReducer } from './create-reducer';
-export { default as createApp } from './create-app';
 import createTable from './create-table';
 import createMap from './create-map';
 import createLoader from './create-loader';

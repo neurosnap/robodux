@@ -1,5 +1,5 @@
 import { listReducers } from './create-list';
-import { MapEntity, SliceHelper } from './types';
+import type { MapEntity, SliceHelper } from './types';
 import { mapReducers } from './create-map';
 import createSlice from './create-slice';
 

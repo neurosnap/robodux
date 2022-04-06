@@ -1,8 +1,6 @@
 import createNextState, { Draft } from 'immer';
 
-import { Action } from './types';
-import { ReducerMap } from './types';
-import { Reducer } from 'redux';
+import type { Action, ReducerMap, Reducer } from './types';
 
 export type CreateReducer<State = any> = {
   initialState: State;

@@ -1,5 +1,5 @@
 import createSlice from './create-slice';
-import { AnyState, PatchEntity, SliceHelper } from './types';
+import type { AnyState, PatchEntity, SliceHelper } from './types';
 
 export interface MapReducers<State extends AnyState = AnyState> {
   add: (state: State, payload: State) => State;
@@ -21,7 +21,7 @@ export function mapReducers<State extends AnyState>(
       });
       return newState;
     },
-    set: (state: State, payload: State) => payload,
+    set: (_: State, payload: State) => payload,
     remove: (state: State, payload: string[]) => {
       const newState = { ...state };
       payload.forEach((key) => {
@@ -29,7 +29,7 @@ export function mapReducers<State extends AnyState>(
       });
       return newState;
     },
-    reset: (state: State) => initialState,
+    reset: (_: State) => initialState,
     patch: (
       state: State,
       payload: { [key: string]: Partial<State[keyof State]> },

@@ -1,6 +1,5 @@
 import createSlice from './create-slice';
-import { Action, SliceHelper } from './types';
-import { Reducer } from 'redux';
+import type { Action, SliceHelper, Reducer } from './types';
 
 const ts = () => Date.now();
 

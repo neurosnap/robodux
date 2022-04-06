@@ -1,9 +1,9 @@
 import createSlice from './create-slice';
-import { SliceHelperRequired } from './types';
+import type { SliceHelperRequired } from './types';
 
 export function assignReducers<State>(initialState: State) {
   return {
-    set: (s: State, p: State) => p,
+    set: (_: State, p: State) => p,
     reset: () => initialState,
   };
 }

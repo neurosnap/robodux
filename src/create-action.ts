@@ -1,4 +1,4 @@
-import { ActionWithPayload } from './types';
+import type { ActionWithPayload } from './types';
 
 type Creator<P = any, T extends string = string> = (
   p: P,

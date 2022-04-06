@@ -1,8 +1,6 @@
-import { Reducer } from 'redux';
-
 import createAction from './create-action';
 import createReducer, { createReducerPlain } from './create-reducer';
-import { Action, ActionsObjWithSlice, ActionsAny, ReducerMap } from './types';
+import type { Action, ActionsObjWithSlice, ActionsAny, ReducerMap, Reducer } from './types';
 
 interface SliceOptions<SliceState = any, Ax = ActionsAny> {
   initialState: SliceState;

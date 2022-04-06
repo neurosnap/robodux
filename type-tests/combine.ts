@@ -1,4 +1,3 @@
-import createApp from '../src/create-app';
 import createSlice from '../src/create-slice';
 import { createActionMap, createReducerMap } from '../src/combine';
 
@@ -15,7 +14,7 @@ const createLoader = createSlice({
   name: 'loading',
   initialState: false,
   reducers: {
-    loading: (state, payload: boolean) => payload,
+    loading: (_, payload: boolean) => payload,
   },
 });
 
@@ -25,18 +24,3 @@ actions;
 const reducers = createReducerMap(counterSlice, createLoader);
 // $ExpectType { [x: string]: Reducer<number, Action<any, string>> | Reducer<boolean, Action<any, string>>; }
 reducers;
-
-const modA = {
-  reducers: { counter: counterSlice.reducer },
-};
-const modB = {
-  reducers: { loading: createLoader.reducer },
-};
-
-interface LocalState {
-  loading: boolean;
-  counter: number;
-}
-const app = createApp<LocalState>([modA, modB]);
-// $ExpectType { reducer: Reducer<LocalState, AnyAction>; }
-app;

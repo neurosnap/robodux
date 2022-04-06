@@ -1,7 +1,8 @@
 import { createSelector } from 'reselect';
 
 import createSlice from './create-slice';
-import { SliceHelper, PropId, PropIds, excludesFalse } from './types';
+import type { SliceHelper, PropId, PropIds, MapEntity } from './types';
+import { excludesFalse } from './types';
 import { mapReducers } from './create-map';
 import {
   LoadingItemState,
@@ -9,7 +10,6 @@ import {
   loadingReducers,
   defaultLoadingItem,
 } from './create-loader';
-import { MapEntity } from './types';
 
 export type LoaderTableState<
   M extends Record<string, any> = Record<string, any>,
