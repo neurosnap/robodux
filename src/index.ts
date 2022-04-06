@@ -27,10 +27,3 @@ export {
   createListTable,
   createList,
 };
-
-// All of these variable names are DEPRECATED
-const mapSlice = createMap;
-const loadingSlice = createLoader;
-const loadingMapSlice = createLoaderTable;
-const assignSlice = createAssign;
-export { mapSlice, loadingSlice, loadingMapSlice, assignSlice };
