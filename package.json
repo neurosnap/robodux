@@ -44,11 +44,11 @@
     "typings-checker": "^2.0.0"
   },
   "lint-staged": {
-    "*.{js}": [
+    "*.js": [
       "prettier --write",
       "git add"
     ],
-    "*.{md}": [
+    "*.md": [
       "prettier --config prettier.md.js --write",
       "git add"
     ]
