@@ -28,7 +28,7 @@ one line of code.
   structure that makes it easy to set or reset the reducer.
 - [createList](./docs/basic-concepts.md#createlist): Store an array of items in
   a slice
-- [createLoaderTable](./docs/basic-concepts#createloadertable): Store as many
+- [createLoaderTable](./docs/basic-concepts.md#createloadertable): Store as many
   independent loaders in this reducer which are all accessible by an `id`.
 - [createSlice](./docs/api.md#createslice): Core function that the above slice
   helpers leverage. Build action types, action creators, and reducer pairs with
