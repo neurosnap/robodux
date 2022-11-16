@@ -1,6 +1,10 @@
 test/
-prettier.config.js
+src/
+type-tests/
+prettier.config.cjs
+prettier.md.cjs
 tsconfig.json
 tsconfig.test.json
 .travis.yml
 yarn.lock
+jest.config.cjs
