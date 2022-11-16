@@ -1,8 +1,6 @@
 {
   "name": "robodux",
   "version": "0.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "license": "MIT",
   "description": "caching in redux made simple",
   "author": "Eric Bower",
@@ -10,14 +8,25 @@
     "type": "git",
     "url": "git+https://github.com/neurosnap/robodux.git"
   },
+  "type": "module",
+  "source": "./src/index.ts",
+  "main": "./dist/robodux.cjs",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/robodux.module.js",
+  "unpkg": "./dist/robodux.umd.js",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/robodux.cjs",
+    "default": "./dist/robodux.modern.js"
+  },
   "scripts": {
-    "build": "tsc",
+    "prebuild": "rm -rf dist",
+    "build": "microbundle",
     "tc": "typings-checker --allow-expect-error --project tsconfig.json type-tests/*.ts",
     "test": "tsc && yarn tc && jest",
-    "prepublish": "yarn build",
     "precommit": "lint-staged",
     "prettier-js": "prettier --write src/*.ts",
-    "prettier-md": "prettier --config prettier.md.js --write *.md docs/*.md",
+    "prettier-md": "prettier --config prettier.md.cjs --write *.md docs/*.md",
     "format": "yarn prettier-js && yarn prettier-md"
   },
   "dependencies": {
@@ -36,6 +45,7 @@
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.7",
+    "microbundle": "^0.15.1",
     "prettier": "^2.6.2",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",

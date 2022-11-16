@@ -1,6 +1,12 @@
 import createAction from './create-action';
 import createReducer, { createReducerPlain } from './create-reducer';
-import type { Action, ActionsObjWithSlice, ActionsAny, ReducerMap, Reducer } from './types';
+import type {
+  Action,
+  ActionsObjWithSlice,
+  ActionsAny,
+  ReducerMap,
+  Reducer,
+} from './types';
 
 interface SliceOptions<SliceState = any, Ax = ActionsAny> {
   initialState: SliceState;
