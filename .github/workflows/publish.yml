@@ -18,7 +18,7 @@ jobs:
       - name: test
         run: yarn test
       - name: version
-        run: yarn version --new-version "${GITHUB_REF:10}" --no-git-tag-version
+        run: yarn version --new-version "$(echo ${{github.ref_name}} | sed 's/^v//')" --no-git-tag-version
       - name: publish
         run: yarn publish --access public
         env:
