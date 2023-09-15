@@ -81,13 +81,13 @@ export function loaderTableSelectors<S = any>(
 
   const selectById: any = createSelector(
     selectTable,
-    (s: S, p: PropId) => p,
-    findById,
+    (_: S, p: PropId) => p.id,
+    (loaders, id) => findById(loaders, { id }),
   );
   const selectByIds: any = createSelector(
     selectTable,
-    (s: S, p: PropIds) => p,
-    findByIds,
+    (_: S, p: PropIds) => p.ids,
+    (loaders, ids) => findByIds(loaders, { ids }),
   );
 
   return {
